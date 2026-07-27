@@ -358,11 +358,38 @@ export const meals = {
   rotation: 'Weekly',
   custom: true,
   /**
-   * The chef relationship is the strongest claim on this page and the only
-   * unverifiable one. Name them and it becomes a credential; leave it vague and it
-   * is the one sentence on the site a reader cannot check.
+   * Owner 2026-07-27. This was the only unverifiable claim on the site; naming them
+   * makes it the strongest one. Both verified from their own sites 2026-07-27.
+   *
+   * BEFORE PUBLISHING: get written agreement from both. Naming a business as a
+   * partner is a claim about THEIR business, and trading on a decorated chef's
+   * record to sell housing is exactly the thing they would want to approve the
+   * wording of. `permissionConfirmed` gates it.
    */
-  chefs: tbd('chef_partners', 'Which chefs, and what the relationship actually is'),
+  chefs: {
+    execution: {
+      name: "J&T's Kitchen",
+      url: 'https://www.jtskitchendetroit.com/',
+      role: 'Cooks the meals and delivers them',
+      address: '8838 Third St, Detroit, MI 48202',
+      /** Measured 2026-07-27 via the Routes API. Same zip code as the house. */
+      distance: '0.2 miles from the house',
+      who: 'Juan and Tabitha, with more than 40 years in restaurants between them',
+    },
+    menu: {
+      name: 'M Cantina',
+      url: 'https://www.mcantina.com/our-chef',
+      chef: 'Junior Merino',
+      role: 'Develops the rotating weekly menu',
+      address: '13214 Michigan Ave, Dearborn',
+      /** Precise wording matters: invited to cook AT the James Beard House is not a James Beard Award. */
+      credentials: 'Star Chefs Award winner, invited chef at the James Beard House',
+    },
+    permissionConfirmed: tbd(
+      'chef_partner_permission',
+      'Have both businesses agreed in writing to be named on this site?'
+    ),
+  },
   /** Owner 2026-07-27: any and all. */
   dietary: 'Any dietary requirement. Tell us what you need and the menu is built to it.',
   /**

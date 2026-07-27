@@ -70,10 +70,35 @@ const detail: Record<string, { does: string; forWho: string }> = {
       )
     }
 
+    <h2>Who cooks it</h2>
+    <div class="partners">
+      <article>
+        <h3>{meals.chefs.menu.name}</h3>
+        <p class="small muted">{meals.chefs.menu.role}</p>
+        <p>
+          Chef <strong>{meals.chefs.menu.chef}</strong> — {meals.chefs.menu.credentials}.
+          {' '}<a href={meals.chefs.menu.url} rel="noopener noreferrer" target="_blank">{meals.chefs.menu.name}</a>,
+          {' '}{meals.chefs.menu.address}.
+        </p>
+      </article>
+      <article>
+        <h3>{meals.chefs.execution.name}</h3>
+        <p class="small muted">{meals.chefs.execution.role}</p>
+        <p>
+          {meals.chefs.execution.who}.
+          {' '}<a href={meals.chefs.execution.url} rel="noopener noreferrer" target="_blank">{meals.chefs.execution.name}</a>
+          {' '}is at {meals.chefs.execution.address} — <strong>{meals.chefs.execution.distance}</strong>.
+        </p>
+      </article>
+    </div>
+    <p class="measure">
+      That last number is why a hot meal in an agreed window is a real offer rather than a hope: the
+      kitchen cooking it is on the next block.
+    </p>
+
     <h2>The menu</h2>
     <p class="measure">
-      {meals.rotation} rotation, so week six does not taste like week one. Built with
-      {' '}<Fact value={meals.chefs} />.
+      {meals.rotation} rotation, so week six does not taste like week one.
     </p>
     <p class="measure">A sample week: <Fact value={meals.sampleMenu} />.</p>
     <p class="measure">Confirm a week by <Fact value={meals.orderBy} />.</p>
@@ -99,6 +124,10 @@ const detail: Record<string, { does: string; forWho: string }> = {
   .hero { padding-block: var(--s12); }
   .standfirst { font-size: 1.125rem; margin-top: var(--s4); }
   section.wrap { padding-block: var(--s12) var(--s8); }
+  .partners { display: grid; gap: var(--s6); margin-block: var(--s6); }
+  @media (min-width: 768px) { .partners { grid-template-columns: 1fr 1fr; } }
+  .partners article { border-left: 3px solid var(--sodium-deep); padding-left: var(--s4); }
+  .partners h3 { margin-bottom: var(--s1); }
   .stages { display: grid; gap: var(--s6); margin-block: var(--s8); }
   @media (min-width: 768px) { .stages { grid-template-columns: repeat(3, 1fr); } }
   .stage { border: 1px solid var(--limestone); padding: var(--s6); }
