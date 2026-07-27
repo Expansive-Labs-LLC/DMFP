@@ -213,7 +213,7 @@ export const services: Service[] = [
   {
     id: 'internet',
     name: 'Internet',
-    description: 'Included in the room rate.',
+    description: 'A business-tier connection rated 300 Mbps down. Included in the room rate.',
     included: true,
     status: 'launching',
     liveFrom: 'September 2026',
@@ -360,7 +360,21 @@ export const properties = [
         appliances: tbd('kitchen_appliances'),
         cookware: tbd('kitchen_cookware'),
       },
-      internet: { down: tbd('internet_down'), up: tbd('internet_up'), measuredAt: tbd('internet_measured_date') },
+      /**
+       * DESIGN-PLAN §6: the copy says "measured X down on DATE", never "high-speed".
+       * A plan rating is not a measurement, so the two are separate fields. The
+       * rated figure can ship now; the measured one cannot exist until service is
+       * live in a finished house.
+       */
+      internet: {
+        tier: 'Business',
+        /** INFERRED: given as "300MB/S", read as 300 Mbps (megabits). 300 MB/s would be 2.4 Gbps. */
+        ratedDown: '300 Mbps',
+        ratedUp: tbd('internet_rated_up'),
+        down: tbd('internet_down', 'Measured, once service is live'),
+        up: tbd('internet_up', 'Measured, once service is live'),
+        measuredAt: tbd('internet_measured_date'),
+      },
       entry: { floor: 'Street level', steps: tbd('entry_steps') },
       floorplan: tbd('floorplan_house'),
       rooms: [] as Array<{ id: string; name: string; caption: string; photo: Fact<string> }>,

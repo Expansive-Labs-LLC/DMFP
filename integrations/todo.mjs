@@ -58,6 +58,7 @@ const CONFIRMATIONS = [
   ['`services[laundry-service].price`', '**$40/week is market-derived, not yours.** Detroit wash-and-fold is $1.99–$2.25/lb; ~15–18 lb/week plus a folding premium. Confirm before launch — a published price is an offer.'],
   ['`services[cleaning].price`', '**$50/week is market-derived, not yours.** Detroit cleaning $25–40/hr; ~$210/week for the house across six residents. Confirm.'],
   ['`services[cleaning]` structure', 'Cleaning common areas is house-level. Charging per resident lets one pay while five do not. Should it be in the room rate instead?'],
+  ['`home.internet.ratedDown`', '"300MB/S" read as 300 Mbps (megabits). 300 MB/s would be 2.4 Gbps.'],
   ['Billing periods', 'Food, laundry and cleaning are weekly; parking and bin storage are monthly. With week-by-week rooms, is a monthly charge right?'],
   ['`home.terms.billingPeriod`', 'Weekly billing replaces the 30-day minimum. Confirm no minimum stay.'],
 ];

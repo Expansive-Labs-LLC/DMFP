@@ -35,8 +35,13 @@ import { property, home } from '../data/site.config';
 
     <h2>Internet</h2>
     <p class="measure">
-      Measured <Fact value={home.internet.down} /> down, <Fact value={home.internet.up} /> up, on
-      <Fact value={home.internet.measuredAt} />.
+      A {home.internet.tier.toLowerCase()}-tier connection rated {home.internet.ratedDown} down,
+      {' '}<Fact value={home.internet.ratedUp} /> up. That is the plan rating, not a measurement.
+    </p>
+    <p class="measure small">
+      Measured throughput: <Fact value={home.internet.down} /> down,
+      {' '}<Fact value={home.internet.up} /> up, on <Fact value={home.internet.measuredAt} />.
+      Speeds are measured in the finished house, not quoted from the contract.
     </p>
 
     <h2>Entry and access</h2>
