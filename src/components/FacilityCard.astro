@@ -35,6 +35,17 @@ const rows = [
       ))
     }
   </dl>
+  {
+    f.samples && (
+      <ul class="samples small">
+        {f.samples.map((sm: any) => (
+          <li>
+            <span class="mono">{sm.minutes} min</span> <span class="muted">— {sm.label}</span>
+          </li>
+        ))}
+      </ul>
+    )
+  }
   <RouteMap facilityName={f.name} destAddress={f.destAddress} apiKey={property.map.googleEmbedApiKey} />
 </article>
 
@@ -58,5 +69,7 @@ const rows = [
     .row { grid-template-columns: 11rem 1fr; align-items: baseline; gap: var(--s4); }
   }
   dt { color: var(--text-muted); }
+  .samples { list-style: none; padding: 0; margin: var(--s4) 0; }
+  .samples li { padding: var(--s1) 0; }
   dd { margin: 0; }
 </style>

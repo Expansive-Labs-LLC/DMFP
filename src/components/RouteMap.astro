@@ -5,16 +5,15 @@
  * DEVIATION from DESIGN-PLAN §4 (self-hosted MapLibre) and SPEC-DMFP-FE-0102
  * SEC-003 (no third-party scripts) — owner decision 2026-07-26.
  *
- * Two mitigations, because a Google frame is a third-party tracker on a housing site:
- *   1. CLICK TO LOAD. The iframe lives inside a closed <details>, so nothing is
- *      requested from Google until the visitor opens it. Native element, works with
- *      JavaScript disabled, keyboard-operable for free.
- *   2. NO KEY, NO FRAME. Without an API key the component renders a plain directions
- *      link instead. It never embeds a broken or unkeyed frame.
+ * Owner 2026-07-27: the map renders BY DEFAULT. This drops the click-to-load
+ * mitigation, so every visitor's IP reaches Google on page load whether or not they
+ * wanted a map. Two things still hold the line:
+ *   1. `loading="lazy"` — the frame is not fetched until it scrolls into view.
+ *   2. NO KEY, NO FRAME. Without a key the component renders a plain directions link
+ *      instead. It never embeds a broken or unkeyed frame.
  *
- * The destination is the facility's precise address once supplied; until then the
- * facility name, which Google resolves to the campus. A campus is not an entrance —
- * that is why destAddress still blocks launch.
+ * SEC-008 is now load-bearing rather than tidy: /privacy MUST disclose the IP
+ * sharing before launch, because the visitor no longer opts in by clicking.
  */
 import { isTbd } from '../lib/fact';
 import { property } from '../data/site.config';
@@ -44,11 +43,7 @@ const embedUrl = isTbd(apiKey)
 <div class="route">
   {
     embedUrl ? (
-      <details>
-        <summary>
-          Show the driving route to {facilityName}
-          <span class="small muted"> — loads a map from Google</span>
-        </summary>
+      <Fragment>
         <iframe
           src={embedUrl}
           title={`Driving route from ${a.street} to ${facilityName}`}
@@ -57,9 +52,10 @@ const embedUrl = isTbd(apiKey)
           allowfullscreen
         />
         <p class="small muted">
-          Map data © Google. Opening this map shares your IP address with Google.
+          Map data © Google. Loading this map shares your IP address with Google — see{' '}
+          <a href="/privacy">Privacy</a>.
         </p>
-      </details>
+      </Fragment>
     ) : (
       <p class="small">
         <a href={linkUrl} rel="noopener noreferrer" target="_blank">
@@ -69,18 +65,9 @@ const embedUrl = isTbd(apiKey)
       </p>
     )
   }
-  {
-    destIsApproximate && (
-      <p class="small approx">
-        Routed to the {facilityName} campus, not a specific entrance. Confirm your own route.
-      </p>
-    )
-  }
 </div>
 
 <style>
   .route { margin-block: var(--s4); }
-  summary { cursor: pointer; font-weight: 600; padding: var(--s2) 0; }
-  iframe { width: 100%; height: 420px; border: 1px solid var(--limestone-edge); display: block; margin-top: var(--s3); }
-  .approx { color: var(--text-muted); border-left: 3px solid var(--limestone-edge); padding-left: var(--s3); }
+  iframe { width: 100%; height: 420px; border: 1px solid var(--limestone-edge); display: block; }
 </style>

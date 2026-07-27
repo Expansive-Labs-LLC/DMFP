@@ -6,6 +6,8 @@
  * SPEC-DMFP-FE-0102 FR-002, CON-004.
  */
 
+import driveTimes from './drive-times.json';
+
 export type Status = 'live' | 'launching' | 'planned';
 
 /** A fact that is known, or an explicit placeholder. There is no third state. */
@@ -35,6 +37,7 @@ export interface Facility {
   driveTime: Fact<string>;
   parking: Fact<string>;
   transit: Fact<string>;
+  samples?: Array<{ label: string; minutes: number; meters: number }>;
 }
 
 export interface DayBandPreset {
@@ -755,17 +758,22 @@ export const properties = [
       platform: null as string | null,
     },
     commute: {
-      method: tbd('commute_method'),
-      measuredAt: tbd('commute_measured_at'),
+      /**
+       * Measured by scripts/drive-times.mjs, not typed in. Re-run
+       * `npm run measure:commute` to refresh; the date below comes from the run.
+       */
+      method: driveTimes.method,
+      measuredAt: driveTimes.measuredAt,
       facilities: [
         {
           id: 'dmc',
           name: 'Detroit Medical Center',
           nameConfirmed: false,
-          destAddress: tbd('facility_dmc_dest'),
+          destAddress: driveTimes.facilities.dmc.dest,
           coords: tbd('facility_dmc_coords'),
-          distance: tbd('facility_dmc_distance'),
-          driveTime: tbd('facility_dmc_drivetime'),
+          distance: driveTimes.facilities.dmc.distance,
+          driveTime: driveTimes.facilities.dmc.driveTime,
+          samples: driveTimes.facilities.dmc.samples,
           parking: tbd('facility_dmc_parking'),
           transit: tbd('facility_dmc_transit', 'Whether the QLINE reaches it, and from which stop'),
         },
@@ -773,10 +781,11 @@ export const properties = [
           id: 'hfh',
           name: 'Henry Ford Hospital',
           nameConfirmed: false,
-          destAddress: tbd('facility_hfh_dest'),
+          destAddress: driveTimes.facilities.hfh.dest,
           coords: tbd('facility_hfh_coords'),
-          distance: tbd('facility_hfh_distance'),
-          driveTime: tbd('facility_hfh_drivetime'),
+          distance: driveTimes.facilities.hfh.distance,
+          driveTime: driveTimes.facilities.hfh.driveTime,
+          samples: driveTimes.facilities.hfh.samples,
           parking: tbd('facility_hfh_parking'),
           transit: tbd('facility_hfh_transit', 'Whether the QLINE reaches it, and from which stop'),
         },

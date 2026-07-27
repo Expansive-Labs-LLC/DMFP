@@ -9,7 +9,6 @@
  */
 import Base from '../layouts/Base.astro';
 import Fact from '../components/Fact.astro';
-import FactTable from '../components/FactTable.astro';
 import FacilityCard from '../components/FacilityCard.astro';
 import { property, home } from '../data/site.config';
 const c = property.commute;
@@ -24,18 +23,10 @@ const t = property.transit;
     <h1 class="display-l">Distance to each facility.</h1>
 
     <p class="measure method">
-      Times measured <Fact value={c.measuredAt} /> using <Fact value={c.method} />. Traffic varies.
-      Confirm against your own route before you sign.
+      Measured {c.measuredAt} using {c.method} — not at midnight, when the road is empty. Traffic
+      varies; confirm against your own route before you sign.
     </p>
 
-    <h2>At a glance</h2>
-    <FactTable
-      caption={`From ${property.address.street}, ${property.address.locality}.`}
-      columns={['Facility', 'Distance', 'Typical drive', 'Parking there']}
-      rows={c.facilities.map((f) => ({ head: f.name, cells: [f.distance, f.driveTime, f.parking] }))}
-    />
-
-    <h2>Each facility</h2>
     {c.facilities.map((f) => <FacilityCard facility={f} />)}
     <p class="small muted">Not affiliated with either health system.</p>
 

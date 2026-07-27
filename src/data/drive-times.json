@@ -1,0 +1,40 @@
+{
+  "measuredAt": "2026-07-27",
+  "method": "Google Routes API, traffic-aware, sampled at weekday shift-change times",
+  "facilities": {
+    "dmc": {
+      "dest": "4201 St. Antoine St, Detroit, MI 48201",
+      "distance": "3.4 miles",
+      "samples": [
+        {
+          "label": "day shift, arriving 07:00",
+          "minutes": 9,
+          "meters": 5402
+        },
+        {
+          "label": "night shift, arriving 19:00",
+          "minutes": 8,
+          "meters": 5402
+        }
+      ],
+      "driveTime": "8–9 min"
+    },
+    "hfh": {
+      "dest": "2799 W Grand Blvd, Detroit, MI 48202",
+      "distance": "1.4 miles",
+      "samples": [
+        {
+          "label": "day shift, arriving 07:00",
+          "minutes": 6,
+          "meters": 2272
+        },
+        {
+          "label": "night shift, arriving 19:00",
+          "minutes": 6,
+          "meters": 2272
+        }
+      ],
+      "driveTime": "6 min"
+    }
+  }
+}

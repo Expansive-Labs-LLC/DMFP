@@ -17,7 +17,8 @@
     "check": "astro check",
     "check:facts": "node scripts/check-facts.mjs",
     "check:compliance": "node scripts/check-compliance.mjs",
-    "prepare": "node .husky/install.mjs"
+    "prepare": "node .husky/install.mjs",
+    "measure:commute": "node scripts/drive-times.mjs"
   },
   "type": "module",
   "dependencies": {
