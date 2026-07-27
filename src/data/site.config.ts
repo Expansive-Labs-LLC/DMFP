@@ -72,7 +72,6 @@ export const site = {
   },
   /** /whats-included §5 — being explicit about what you don't do is the credible part. */
   notIncluded: [
-    'Cleaning between stays is not a scheduled service.',
     'No on-site staff.',
     'Renters insurance is not provided.',
   ],
@@ -88,10 +87,62 @@ export const site = {
 } as const;
 
 export const services: Service[] = [
+  /**
+   * Owner 2026-07-26. These are the September offering, so they are 'launching'
+   * with a date rather than 'planned' — §13.4 requires the date label, and a dated
+   * future service is more honest than an empty page. They become 'live' when the
+   * first one actually runs.
+   */
   {
-    id: 'laundry',
+    id: 'food-gather',
+    name: 'Gather',
+    description: 'Groceries gathered and the fridge stocked for the week.',
+    included: false,
+    status: 'launching',
+    liveFrom: 'September 2026',
+    price: '$200/week',
+  },
+  {
+    id: 'food-prep',
+    name: 'Prep',
+    description: 'Groceries gathered and meals prepped for quick cooking.',
+    included: false,
+    status: 'launching',
+    liveFrom: 'September 2026',
+    price: '$350/week',
+  },
+  {
+    id: 'food-hot',
+    name: 'Hot window',
+    description: 'Hot meals delivered in a time window you agree in advance.',
+    included: false,
+    status: 'launching',
+    liveFrom: 'September 2026',
+    /** INFERRED: given as "$600" with no unit; read as per week to match the other two. */
+    price: '$600/week',
+  },
+  {
+    id: 'laundry-service',
+    name: 'Laundry service',
+    description: 'Washed, dried and folded. Tell us your folding preferences and we work to them.',
+    included: false,
+    status: 'launching',
+    liveFrom: 'September 2026',
+    price: tbd('laundry_service_price'),
+  },
+  {
+    id: 'cleaning',
+    name: 'Cleaning',
+    description: 'Three times a week.',
+    included: false,
+    status: 'launching',
+    liveFrom: 'September 2026',
+    price: tbd('cleaning_price', 'Or is cleaning included in the room rate?'),
+  },
+  {
+    id: 'laundry-inunit',
     name: 'In-unit laundry',
-    description: 'Washer and dryer inside the unit.',
+    description: 'Washer and dryer in the house, free to use.',
     included: true,
     status: 'live',
   },
@@ -99,54 +150,17 @@ export const services: Service[] = [
     id: 'parking',
     name: 'On-site parking',
     description: '4 spots on site. Street parking otherwise.',
-    /** Not included — it is a priced add-on, so `included` must be false. */
     included: false,
     status: 'live',
     price: '$200/month',
   },
-  /**
-   * Food packages — owner 2026-07-26, the priority service line.
-   *
-   * status: 'planned' means these render NOWHERE (§3.4). That is deliberate: none
-   * of them operate yet, and a priced package on a live page is an offer. Move to
-   * 'launching' with a date once there is a real start date, then 'live' when the
-   * first delivery actually happens.
-   */
-  {
-    id: 'food-fridge',
-    name: 'Fridge fill',
-    description: 'Groceries stocked before you arrive and topped up weekly.',
-    included: false,
-    status: 'planned',
-    price: '$200/week',
-    liveFrom: tbd('food_fridge_live_from'),
-  },
-  {
-    id: 'food-prepped',
-    name: 'Easy meals',
-    description: 'Meals prepped for quick cooking.',
-    included: false,
-    status: 'planned',
-    price: '$350/week',
-    liveFrom: tbd('food_prepped_live_from'),
-  },
-  {
-    id: 'food-hot',
-    name: 'Hot meals delivered',
-    description: 'Hot meals delivered in an agreed time window.',
-    included: false,
-    status: 'planned',
-    /** INFERRED: given as "$600" with no unit; read as per week to match the other two. Confirm. */
-    price: '$600/week',
-    liveFrom: tbd('food_hot_live_from'),
-  },
   {
     id: 'internet',
     name: 'Internet',
-    description: 'Included in rent.',
+    description: 'Included in the room rate.',
     included: true,
     status: 'launching',
-    liveFrom: tbd('internet_live_from'),
+    liveFrom: 'September 2026',
   },
 ];
 
@@ -181,12 +195,18 @@ export const properties = [
       laundry: 'in-unit' as const,
       entrance: 'private' as const,
       terms: {
-        minNights: 30,
+        /**
+         * Owner 2026-07-26: rooms let WEEK BY WEEK. This replaces the 30-day
+         * minimum and the monthly rate — a weekly serviced room is a different
+         * product from a monthly furnished lease, and the copy follows the terms.
+         */
+        billingPeriod: 'week' as const,
+        minWeeks: 1,
         typicalContractWeeks: 13,
         /** Let either way, depending on the enquiry — owner 2026-07-26. */
         letting: 'either' as const,
-        rateRoomMonthly: tbd('rate_room_monthly', 'Per bedroom, one of 6'),
-        rateHouseMonthly: tbd('rate_house_monthly', 'Whole 6-bedroom house, one party'),
+        rateRoomWeekly: tbd('rate_room_weekly', 'Per bedroom, one of 6, per week'),
+        rateHouseWeekly: tbd('rate_house_weekly', 'Whole 6-bedroom house, per week'),
         utilities: tbd('utilities_included'),
         deposit: 'No security deposit for short-term stays',
         minTerm: tbd('term_min'),
@@ -216,6 +236,39 @@ export const properties = [
         availableFrom: 'September 2026',
         exactDate: tbd('availability_exact_date'),
         bedsAvailable: tbd('beds_available', 'Of 6 — how many are free for September'),
+      },
+      /**
+       * Owner 2026-07-26: cameras provided, residents can view.
+       *
+       * MATERIAL DISCLOSURE. Surveillance of a shared home is a fact a person is
+       * entitled to know BEFORE they book, not on arrival — so it renders on the
+       * house page and in the terms, not buried.
+       *
+       * HARD LINE: cameras must never cover a bedroom, a bathroom, or any place a
+       * resident undresses. That is not a policy preference; recording a private
+       * place is a criminal matter in Michigan. `coverage` must state the exact
+       * locations before launch.
+       */
+      security: {
+        camerasProvided: true,
+        /**
+         * Owner 2026-07-26: 2 doorbell cameras + 2 Ubiquiti bullet cameras.
+         * All four are entrance/exterior devices — INFERRED, not stated. Confirm
+         * none is indoors before launch.
+         */
+        /** Owner 2026-07-26: Ubiquiti is OUTDOOR monitoring — confirmed, not inferred. */
+        devices: '2 doorbell cameras at the entrances and 2 Ubiquiti bullet cameras outdoors',
+        coverage: 'Entrances and the exterior of the building. There are no cameras inside the house.',
+        residentViewAccess: true,
+        neverCovered: 'Bedrooms and bathrooms are never covered.',
+        recordingRetention: tbd('camera_retention', 'How long footage is kept, and who can see it'),
+        /**
+         * Owner 2026-07-26: PDQ electronic locks on every door. In a six-bedroom
+         * shared house this is a real feature — each resident holds their own
+         * bedroom access and nothing changes hands at check-in or check-out.
+         */
+        locks: 'PDQ electronic locks on every door, including each bedroom',
+        keyHandover: false,
       },
       kitchen: {
         count: 2,

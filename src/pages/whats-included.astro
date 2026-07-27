@@ -1,7 +1,6 @@
 ---
 /** `/whats-included` — CONTENT-OUTLINE. Status-gated; a date is the price of appearing here. */
 import Base from '../layouts/Base.astro';
-import DayBand from '../components/DayBand.astro';
 import Fact from '../components/Fact.astro';
 import { site, services, serviceDisplay } from '../data/site.config';
 import { isTbd } from '../lib/fact';
@@ -15,8 +14,6 @@ const onRequest = shown.filter((s) => !s.included);
 <Base title="What the house handles" description="What is included in the rent, what is available on request, and what is not provided.">
   <section class="wrap stack">
     <h1 class="display-l">What the house handles.</h1>
-
-    <div class="on-ink band-wrap"><DayBand variant="compact" /></div>
 
     {shown.length === 0 ? (
       <p class="measure">
@@ -52,7 +49,6 @@ const onRequest = shown.filter((s) => !s.included);
 </Base>
 <style>
   section { padding-block: var(--s12) var(--s8); }
-  .band-wrap { padding: var(--s6); border-radius: 2px; }
   .stack-list { max-width: var(--measure); padding-left: var(--s6); }
   .stack-list li + li { margin-top: var(--s3); }
   .from { color: var(--sodium-deep); }

@@ -4,8 +4,7 @@
  * Every fact is a config path. Nothing here is a literal. (FR-002, CON-004)
  */
 import Base from '../layouts/Base.astro';
-import DayBand from '../components/DayBand.astro';
-import { site, property, home, services, serviceDisplay } from '../data/site.config';
+import { property, home, services, serviceDisplay } from '../data/site.config';
 import { isTbd } from '../lib/fact';
 import Fact from '../components/Fact.astro';
 
@@ -24,16 +23,24 @@ const avail = home.availability;
   <!-- 1. Day band hero -->
   <section class="hero on-ink">
     <div class="wrap">
-      <h1 class="display-xl">Built around a 12-hour shift.</h1>
+      <h1 class="display-xl">A furnished room, by the week.</h1>
       <p class="standfirst measure">
-        Furnished housing in Detroit's {property.neighborhood} area for clinicians on {
-          home.terms.minNights
-        }-day and longer assignments. The building's job is to give your off-hours back.
+        {home.bedrooms} bedrooms, {home.bathroomsFull} full bathrooms and {home.kitchens} kitchens in
+        Detroit's {property.neighborhood} area. Rooms are let week by week, with food, laundry and
+        cleaning available on top.
         <strong>
           Renovation is underway now and applications are open for {property.applications.forOccupancy}.
         </strong>
       </p>
-      <DayBand />
+      <ul class="offer">
+        {shownServices.map((s) => (
+          <li>
+            <span class="offer-name">{s.name}</span>
+            <span class="mono offer-price">{s.price ? <Fact value={s.price} /> : 'included'}</span>
+            {s.status === 'launching' && <span class="offer-from small"> from {s.liveFrom}</span>}
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 
@@ -85,10 +92,10 @@ const avail = home.availability;
         <p class="small">
           Renovation underway. First occupancy {avail.availableFrom}. Applications are open now.
         </p>
-        <p class="data mono rate"><Fact value={home.terms.rateRoomMonthly} /></p>
-        <p class="small muted">per bedroom, per month</p>
-        <p class="data mono rate"><Fact value={home.terms.rateHouseMonthly} /></p>
-        <p class="small muted">whole house, per month</p>
+        <p class="data mono rate"><Fact value={home.terms.rateRoomWeekly} /></p>
+        <p class="small muted">per bedroom, per week</p>
+        <p class="data mono rate"><Fact value={home.terms.rateHouseWeekly} /></p>
+        <p class="small muted">whole house, per week</p>
       </article>
     </div>
   </section>
@@ -99,12 +106,14 @@ const avail = home.availability;
       <h2>Who this is for</h2>
       <p>
         The house has {home.bedrooms} bedrooms, {home.bathroomsFull} full bathrooms and {home.kitchens}
-        kitchens. It is furnished, with in-unit laundry and its own entrance. It is set up for stays of {
-          home.terms.minNights
-        } days and longer, which usually means a {home.terms.typicalContractWeeks}-week contract. Two
-        kitchens means six people are not queuing for one stove before a shift. The layout assumes someone is asleep during the day and someone else is leaving
-        before dawn. The unit is being renovated now, and the first occupancy is {avail.availableFrom}. If
-        you are here for a weekend, this is not the right place.
+        kitchens. It is furnished, with laundry in the house and its own entrance. Rooms are let by the
+        week, from {home.terms.minWeeks} week — a clinical contract is usually {
+          home.terms.typicalContractWeeks
+        } weeks. Two kitchens and {home.bathroomsFull} full bathrooms means six people are not queuing for
+        one of each. Food, laundry and cleaning are available on top, so a week here does not have to
+        include a grocery run. The house is being renovated now, and the first occupancy is {
+          avail.availableFrom
+        }. If you need a night or a weekend, this is not the right place.
       </p>
     </div>
   </section>
@@ -127,6 +136,12 @@ const avail = home.availability;
   .hero {
     padding-block: var(--s12) var(--s16);
   }
+  .offer { list-style: none; padding: 0; margin: var(--s8) 0 0; max-width: 34rem; }
+  .offer li { display: flex; gap: var(--s3); align-items: baseline; padding: var(--s2) 0;
+              border-bottom: 1px solid color-mix(in srgb, var(--paper) 18%, transparent); }
+  .offer-name { flex: 1; font-weight: 600; }
+  .offer-price { color: var(--sodium); }
+  .offer-from { color: color-mix(in srgb, var(--paper) 70%, transparent); }
   .standfirst {
     font-size: 1.125rem;
     margin: var(--s6) 0 var(--s12);

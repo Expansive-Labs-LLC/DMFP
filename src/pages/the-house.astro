@@ -4,7 +4,6 @@ import Base from '../layouts/Base.astro';
 import Fact from '../components/Fact.astro';
 import ImageSlot from '../components/ImageSlot.astro';
 import { property, home } from '../data/site.config';
-const t = home.terms;
 ---
 <Base title="The house" description="A furnished six-bedroom house in Detroit's New Center area, currently being renovated for September 2026 occupancy.">
   <section class="wrap stack">
@@ -42,6 +41,16 @@ const t = home.terms;
 
     <h2>Entry and access</h2>
     <p class="measure">{home.entry.floor}. <Fact value={home.entry.steps} /> steps at the entry.</p>
+
+    <h2>Access and monitoring</h2>
+    <p class="measure">
+      {home.security.locks}. There are no keys to collect or hand back.
+    </p>
+    <p class="measure">
+      Internet is provided. {home.security.devices}. {home.security.coverage}
+      {' '}{home.security.neverCovered} Residents can view the cameras.
+      Footage retention: <Fact value={home.security.recordingRetention} />.
+    </p>
 
     <h2>Floorplan</h2>
     <ImageSlot value={home.floorplan} alt="Floorplan of the house." height={600} />

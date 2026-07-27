@@ -24,8 +24,8 @@ const BLOCKS_LAUNCH = new Set([
   'entity_legal_name',
   'contact_phone',
   'inquiry_email',
-  'rate_room_monthly',
-  'rate_house_monthly',
+  'rate_room_weekly',
+  'rate_house_weekly',
   'utilities_included',
   'deposit_amount',
   'term_min',
@@ -54,6 +54,8 @@ const CONFIRMATIONS = [
   ['`services[food-hot].price`', 'Given as "$600" with no unit; read as per week to match the other two.'],
   ['`commute.facilities[0].name`', '"Detroit Medical Center" — confirm this is what coordinators call it.'],
   ['`commute.facilities[1].name`', '"Henry Ford Hospital" — same.'],
+  ['`services[cleaning]`', 'Cleaning 3x/week — priced add-on, or included in the room rate?'],
+  ['`home.terms.billingPeriod`', 'Weekly billing replaces the 30-day minimum. Confirm no minimum stay.'],
 ];
 
 /**
@@ -122,11 +124,12 @@ export default function todoIntegration() {
 
         // FR-005 / AC-002 — always fatal, in every build mode.
         if (violations.length) {
-          logger.error('TBD token reached a machine-readable surface:');
+          logger.error('Content integrity check failed:');
           violations.forEach((v) => logger.error('  ' + v));
           throw new Error(
-            'A {{TBD:*}} token must never be serialized into JSON-LD, <meta>, or sitemap.xml. ' +
-              'Use machine()/compact() so the property is omitted instead.'
+            'Build blocked. A {{TBD:*}} token must never be serialized into JSON-LD, <meta>, or ' +
+              'sitemap.xml — use machine()/compact() so the property is omitted. A rendered ' +
+              '"undefined" means a config path no longer exists.'
           );
         }
 
