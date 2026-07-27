@@ -20,9 +20,9 @@ const a = home.availability;
     <div class="measure stack">
       <p><strong>What this form does.</strong> It sends an inquiry. It is not the application.</p>
       <ol class="steps">
-        <li>You send this inquiry.</li>
-        <li>We reply {site.response.commitment}.</li>
-        <li>We email you the application to complete. Process: <Fact value={ap.process} />.</li>
+        <li>{ap.process[0]}</li>
+        <li>{ap.process[1]}</li>
+        {ap.process.slice(2).map((step) => <li>{step}</li>)}
         <li>Application fee: <Fact value={ap.fee} />.</li>
       </ol>
       <p class="small">

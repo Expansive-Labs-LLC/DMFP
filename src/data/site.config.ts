@@ -343,17 +343,60 @@ export const properties = [
          * rate — "mix and match" is only credible if each option is priced.
          */
         letting: ['room', 'unit', 'house'] as const,
-        rateRoomWeekly: tbd('rate_room_weekly', 'One bedroom of 6, per week'),
-        rateUnitWeekly: tbd('rate_unit_weekly', 'One of the 2 units, per week'),
-        rateHouseWeekly: tbd('rate_house_weekly', 'The whole building, per week'),
+        /**
+         * MARKET-DERIVED ANCHORS 2026-07-27, not owner-set. Owner asked to set high
+         * and invite negotiation.
+         *
+         * Working: Detroit furnished 1BR asks $2,350–3,200/mo (vendor list price);
+         * Furnished Finder's platform average is $1,200–2,200/mo. A serviced private
+         * room sits below a private 1BR, so ~$1,840/mo = $425/week anchors at the top
+         * of defensible. Unit and house are priced under the sum of their rooms so
+         * the larger booking is the better deal: 3 rooms would be $1,275, the unit
+         * asks $1,200; 6 rooms would be $2,550, the house asks $2,300.
+         *
+         * A travel stipend for Detroit runs roughly $1,500–2,500/month, so $425/week
+         * is inside stipend but at the top — which is what an anchor should be.
+         * CONFIRM: these are live offers the release gate will not stop.
+         */
+        rateRoomWeekly: '$425/week',
+        rateUnitWeekly: '$1,200/week',
+        rateHouseWeekly: '$2,300/week',
+        /**
+         * FAIR HOUSING — read this before publishing a negotiable rate.
+         *
+         * Discretionary pricing is lawful and normal, but it is also the mechanism by
+         * which disparate treatment happens without anyone intending it: two
+         * applicants negotiate, one gets a better number, and the difference
+         * correlates with a protected characteristic. "They asked" is not a defence.
+         *
+         * What makes it defensible: a published rate everyone sees, a written list of
+         * what earns a reduction (length of stay, multiple rooms, agency volume,
+         * off-peak), applied the same way to everyone, and the reason recorded on
+         * every deal. That record is also what Phase 02's audit log is for.
+         */
+        negotiable: true,
+        negotiationBasis: tbd('negotiation_basis', 'Written list of what earns a reduction'),
         utilities: {
           included: tbd('utilities_included', 'What the rate covers'),
           /** Metering splits across the 2 units — the basis for separate leases. */
           splitByUnit: true,
         },
         deposit: 'No security deposit for short-term stays',
-        minTerm: tbd('term_min'),
-        maxTerm: tbd('term_max'),
+        /**
+         * RECOMMENDED 2026-07-27, owner asked for help. Not yet confirmed.
+         *
+         * Minimum 1 week matches the weekly product and the "not a weekend" line.
+         *
+         * Maximum 26 weeks is a deliberate ceiling, not a market figure. A long
+         * enough stay stops looking like lodging and starts looking like a tenancy,
+         * which brings landlord-tenant obligations this product is not built for —
+         * and it is the same question ADR-0002 raises about weekly rooms plus
+         * services. Two clinical contracts back to back fit inside 26 weeks; a year
+         * does not, and a year should be a different agreement. Counsel should set
+         * the real number.
+         */
+        minTerm: '1 week',
+        maxTerm: '26 weeks',
         paymentTerms: tbd('payment_terms'),
         leadTime: tbd('lead_time', 'Notice an agency needs to give'),
       },
@@ -515,7 +558,20 @@ export const properties = [
     applications: {
       open: true,
       forOccupancy: 'September 2026',
-      process: tbd('application_process', 'ADR-0001: manual path — the steps, in order'),
+      /**
+       * PROPOSED 2026-07-27, owner asked for help. Not yet confirmed.
+       *
+       * This is the LAUNCH path and it is manual by design (ADR-0001 option B).
+       * Phase 02 replaces steps 2–4 with automated intake; when it does, this
+       * becomes one config edit and `platform` stops being null.
+       */
+      process: [
+        'Send an inquiry through the site, or email or call.',
+        'We reply within one business day with what is free and what it costs.',
+        'We email you the application. It is completed off-site, not on this website.',
+        'Screening, against criteria published before anyone is scored.',
+        'Agreement signed and the first week paid. Door access is issued before you arrive.',
+      ],
       fee: tbd('application_fee'),
       screeningCriteria: tbd('screening_criteria'),
       /** ADR-0001 / SPEC-DMFP-FE-0207. `null` = manual path, which is the launch state. */
@@ -562,7 +618,20 @@ export const properties = [
        * or anyone can spend your quota. Until a key exists the component renders
        * plain directions links instead — no key, no iframe, no tracking.
        */
-      googleEmbedApiKey: tbd('google_maps_embed_api_key', 'Maps Embed API key, referrer-restricted'),
+      /**
+       * Read from the environment, never committed. The key ends up in the built
+       * HTML — unavoidable for an embed — but it does not belong in a public repo's
+       * source or history, where it outlives any rotation.
+       *
+       * Local: .env (gitignored). CI: an Actions *variable* named
+       * PUBLIC_GOOGLE_MAPS_EMBED_KEY — a variable, not a secret, since the value is
+       * public by nature. Same pattern RUNBOOK Part 2 sets for the form endpoint.
+       *
+       * Unset means no iframe at all, just a directions link. See RouteMap.astro.
+       */
+      googleEmbedApiKey:
+        import.meta.env.PUBLIC_GOOGLE_MAPS_EMBED_KEY ??
+        tbd('google_maps_embed_api_key', 'Set PUBLIC_GOOGLE_MAPS_EMBED_KEY'),
     },
     dayBand: {
       presets: {

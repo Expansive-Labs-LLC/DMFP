@@ -67,7 +67,7 @@ const telHref = digits ? `tel:+1${digits}` : undefined;
     </p>
 
     <h2>Application process</h2>
-    <p class="measure"><Fact value={ap.process} /></p>
+    <ol class="measure steps">{ap.process.map((step) => <li>{step}</li>)}</ol>
     <p class="measure">Fee: <Fact value={ap.fee} />.</p>
     <p class="measure">
       {ap.platform === null
@@ -91,6 +91,8 @@ const telHref = digits ? `tel:+1${digits}` : undefined;
 <style>
   section { padding-block: var(--s12) var(--s8); }
   .contact p, .availability p { margin: 0 0 var(--s2); }
+  .steps { padding-left: var(--s6); }
+  .steps li + li { margin-top: var(--s2); }
   .availability { border-left: 3px solid var(--signal); padding-left: var(--s4); }
   @media print {
     :global(.site-head), :global(.site-foot), .small a { display: none; }

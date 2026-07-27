@@ -98,6 +98,10 @@ const avail = home.availability;
         <p class="small muted">one of {home.divisible.units} units, per week</p>
         <p class="data mono rate"><Fact value={home.terms.rateHouseWeekly} /></p>
         <p class="small muted">whole building, per week</p>
+        {home.terms.negotiable && (
+          <p class="small negotiate">Those are asking rates. Longer stays, multiple rooms and agency
+          bookings are priced differently — ask.</p>
+        )}
       </article>
     </div>
   </section>
@@ -176,6 +180,7 @@ const avail = home.availability;
   .from {
     color: var(--sodium-deep);
   }
+  .negotiate { border-top: 1px solid var(--limestone); padding-top: var(--s2); margin-top: var(--s3); }
   ul.plain {
     list-style: none;
     padding: 0;

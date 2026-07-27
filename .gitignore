@@ -6,3 +6,6 @@ dist/
 .astro/
 TODO.md
 .DS_Store
+
+# Never commit — the key must not enter this public repo's history
+.env
