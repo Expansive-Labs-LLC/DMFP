@@ -745,7 +745,19 @@ export const properties = [
         ratedDown: '300 Mbps',
         ratedUp: '100 Mbps',
       },
-      entry: { floor: 'Street level', steps: tbd('entry_steps') },
+      /**
+       * Owner 2026-07-27. Neither door is step-free into the house: the front is 8
+       * steps up to the first floor, the back is level at the threshold but meets
+       * steps immediately inside. With every bedroom on the second or third floor
+       * and no lift, there is no step-free route to any room.
+       *
+       * Facts about the building. Never a requirement about the reader.
+       */
+      entry: {
+        front: 'Front door: 8 steps up to the first floor.',
+        back: 'Back door: level with the street, then steps immediately inside.',
+        stepFree: false,
+      },
       /**
        * Floorplans. Save each file under src/assets/ and set `image` to the
        * filename; the slot renders a placeholder until then.

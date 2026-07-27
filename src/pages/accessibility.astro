@@ -11,7 +11,6 @@
  * problem, and a warning about who "should" apply is exactly that.
  */
 import Base from '../layouts/Base.astro';
-import Fact from '../components/Fact.astro';
 import { site, home } from '../data/site.config';
 const updated = '27 July 2026';
 ---
@@ -29,7 +28,7 @@ const updated = '27 July 2026';
       <li>{home.entry.back}</li>
       <li>Every bedroom is on the second or third floor.</li>
       <li>The house is stairs only. There is no lift.</li>
-      <li>Flights from the entry to the third floor: <Fact value={home.terms.stairFlights} />.</li>
+      
     </ul>
     <p>
       We would rather you learn this here than on arrival. If you are weighing whether the building

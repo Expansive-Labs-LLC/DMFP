@@ -100,14 +100,14 @@ const detail: Record<string, { does: string; forWho: string }> = {
     <p class="measure">
       {meals.rotation} rotation, so week six does not taste like week one.
     </p>
-    <p class="measure">A sample week: <Fact value={meals.sampleMenu} />.</p>
-    <p class="measure">Confirm a week by <Fact value={meals.orderBy} />.</p>
+    {!isTbd(meals.sampleMenu) && <p class="measure">A sample week: <Fact value={meals.sampleMenu} />.</p>}
+    {!isTbd(meals.orderBy) && <p class="measure">Confirm a week by <Fact value={meals.orderBy} />.</p>}
 
     <h2>Dietary needs</h2>
     <p class="measure">{meals.dietary}</p>
     <p class="measure small">
-      Severe allergies: <Fact value={meals.allergyProtocol} /> Raise it before you book so we can tell
-      you plainly what we can and cannot guarantee in a shared kitchen.
+      Severe allergies: raise it before you book so we can tell you plainly what we can and cannot
+      guarantee in a shared kitchen.
     </p>
 
     <h2>If you would rather cook</h2>

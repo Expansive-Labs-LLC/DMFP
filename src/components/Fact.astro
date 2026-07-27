@@ -11,6 +11,17 @@
  */
 import { isTbd } from '../lib/fact';
 
+/**
+ * LAUNCH MODE. With PUBLIC_LAUNCH=1 an unknown fact renders as nothing at all
+ * instead of a loud token.
+ *
+ * This does not weaken §0. Omitting a fact we do not have is honest; inventing one
+ * is not. The token is a REVIEW aid — it exists so gaps are obvious while building
+ * — and shipping it to a visitor just looks broken. What stays true either way is
+ * that no placeholder is ever replaced by a guess.
+ */
+const LAUNCH = import.meta.env.PUBLIC_LAUNCH === '1';
+
 interface Props {
   value: unknown;
   /** Applied only when the fact is known. */
@@ -20,7 +31,7 @@ const { value, format } = Astro.props;
 ---
 
 {
-  isTbd(value) ? (
+  isTbd(value) && LAUNCH ? null : isTbd(value) ? (
     <span class="tbd" title={value.note ?? `Outstanding fact: ${value.token}`}>
       {`{{TBD:${value.token}}}`}
     </span>

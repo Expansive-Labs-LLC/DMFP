@@ -18,7 +18,8 @@
     "check:facts": "node scripts/check-facts.mjs",
     "check:compliance": "node scripts/check-compliance.mjs",
     "prepare": "node .husky/install.mjs",
-    "measure:commute": "node scripts/drive-times.mjs"
+    "measure:commute": "node scripts/drive-times.mjs",
+    "build:launch": "PUBLIC_LAUNCH=1 astro build"
   },
   "type": "module",
   "dependencies": {

@@ -13,6 +13,9 @@
 import { Image } from 'astro:assets';
 import { isTbd } from '../lib/fact';
 
+/** Same rule as <Fact />: in launch mode an unknown renders as nothing, not a token. */
+const LAUNCH = import.meta.env.PUBLIC_LAUNCH === '1';
+
 interface Props {
   /** Filename under src/assets/, or a Tbd. */
   value: unknown;
@@ -54,6 +57,7 @@ const tooSmall = img && img.width < MIN_WIDTH;
 const usable = img && !tooSmall;
 ---
 
+{(!LAUNCH || usable) && (
 <figure class="slot">
   {
     usable ? (
@@ -76,6 +80,7 @@ const usable = img && !tooSmall;
   }
   {caption && <figcaption class="small muted">{caption}</figcaption>}
 </figure>
+)}
 
 <style>
   .slot {

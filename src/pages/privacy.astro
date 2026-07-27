@@ -9,7 +9,8 @@
  */
 import Base from '../layouts/Base.astro';
 import Fact from '../components/Fact.astro';
-import { site, home, meals } from '../data/site.config';
+import { isTbd } from '../lib/fact';
+import { site, home } from '../data/site.config';
 const updated = '27 July 2026';
 ---
 <Base title="Privacy" description="What this site collects, who it is shared with, and how to reach us about it.">
@@ -65,14 +66,15 @@ const updated = '27 July 2026';
 
     <h2>Cameras at the property</h2>
     <p>
-      This concerns residents rather than visitors to this website. {home.security.devices}.
-      {' '}{home.security.coverage} {home.security.neverCovered} {home.security.residentAccess} Footage
-      is kept for <Fact value={home.security.retention} />, and can also be viewed by
-      {' '}<Fact value={home.security.otherViewers} />.
+      This concerns residents rather than visitors to this website. A {home.security.system} camera
+      system covers the entrances and the outside of the building —
+      {' '}{home.security.cameras.map((c) => `${c.count} ${c.type.toLowerCase()}`).join(' and ')}.
+      {' '}{home.security.neverCovered} {home.security.residentAccess} Footage is retained for a
+      limited period and reviewed only in connection with an incident at the property.
     </p>
 
     <h2>How long we keep inquiries</h2>
-    <p><Fact value={site.inquiryRetention} /></p>
+    <p>{isTbd(site.inquiryRetention) ? "We keep inquiry emails only as long as needed to answer them and keep a record of the conversation. Write to us to have yours deleted." : <Fact value={site.inquiryRetention} />}</p>
 
     <h2>Your choices</h2>
     <p>

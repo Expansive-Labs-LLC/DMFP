@@ -4,6 +4,7 @@ import Base from '../layouts/Base.astro';
 import Fact from '../components/Fact.astro';
 import ImageSlot from '../components/ImageSlot.astro';
 import { property, home } from '../data/site.config';
+import { isTbd } from '../lib/fact';
 ---
 <Base title="The house" description="A furnished six-bedroom house in Detroit's New Center area, currently being renovated for September 2026 occupancy.">
   <section class="wrap stack">
@@ -20,7 +21,7 @@ import { property, home } from '../data/site.config';
     <h2>Renovation status</h2>
     <p class="measure">
       The house is being renovated now. Rooms are photographed as they're finished and posted here as
-      they're done. Target: <Fact value={property.rehab.completionTarget} />.
+      they're done.
     </p>
 
     <h2>Kitchens</h2>
@@ -37,10 +38,11 @@ import { property, home } from '../data/site.config';
     </p>
     <p class="measure small">
       The kitchen drawing also shows {home.kitchen.fromPlan.join(' and ').toLowerCase()}, but that plan
-      is not an as-built survey. Refrigerator: <Fact value={home.kitchen.refrigerator} />.
-      Same equipment in both kitchens: <Fact value={home.kitchen.sameInBothKitchens} />.
+      is not an as-built survey.
     </p>
-    <p class="measure">Cookware: <Fact value={home.kitchen.cookware} />.</p>
+    {!isTbd(home.kitchen.refrigerator) && <p class="measure small">Refrigerator: <Fact value={home.kitchen.refrigerator} />.</p>}
+    {!isTbd(home.kitchen.sameInBothKitchens) && <p class="measure small">Same equipment in both kitchens: <Fact value={home.kitchen.sameInBothKitchens} />.</p>}
+    {!isTbd(home.kitchen.cookware) && <p class="measure">Cookware: <Fact value={home.kitchen.cookware} />.</p>}
 
     <h2>Laundry</h2>
     <p class="measure">{home.laundry} laundry.</p>
@@ -73,8 +75,7 @@ import { property, home } from '../data/site.config';
     <h2>Rooms and rates</h2>
     <p class="measure small">{home.terms.roomPricingRule}</p>
     <p class="measure small access">
-      {home.terms.accessNote} Flights from the entry to the third floor:
-      {' '}<Fact value={home.terms.stairFlights} />.
+      {home.terms.accessNote}
     </p>
     {
       home.divisible.list.map((u) => (
@@ -131,10 +132,9 @@ import { property, home } from '../data/site.config';
       {home.security.residentAccess} That cuts both ways in a shared house: you can see who is at the
       door, and so can everyone else living here.
     </p>
-    <p class="measure small">
-      Footage is kept for <Fact value={home.security.retention} />. Others with access:
-      {' '}<Fact value={home.security.otherViewers} />.
-    </p>
+    {!isTbd(home.security.retention) && (
+      <p class="measure small">Footage is kept for <Fact value={home.security.retention} />.</p>
+    )}
     <p class="measure">Internet is provided.</p>
 
     <h2>Floorplans</h2>

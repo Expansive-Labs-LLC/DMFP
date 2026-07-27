@@ -34,9 +34,13 @@ jobs:
       - name: Fact-lint
         run: node scripts/check-facts.mjs
 
-      # Emits TODO.md and fails if a {{TBD:*}} reached JSON-LD, <meta> or sitemap.
+      # PUBLIC_LAUNCH=1 renders unknown facts as nothing rather than a visible
+      # token. It never substitutes a guess — that distinction is the whole point.
       - name: Build
         run: npm run build
+        env:
+          PUBLIC_LAUNCH: '1'
+          PUBLIC_GOOGLE_MAPS_EMBED_KEY: ${{ vars.PUBLIC_GOOGLE_MAPS_EMBED_KEY }}
 
       # Ban list is parsed out of COMPLIANCE.md — one source of truth.
       - name: Compliance grep

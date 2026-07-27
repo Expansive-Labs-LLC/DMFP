@@ -80,15 +80,13 @@ const telHref = digits ? `tel:+1${digits}` : undefined;
     />
     <p class="measure small">
       {home.divisible.list[1].label} has no common space other than the kitchenette. The living room and
-      business center are in {home.divisible.list[0].label}; access for
-      {' '}{home.divisible.list[1].label} residents: <Fact value={home.divisible.sharedSpaces} />.
+      business center are in {home.divisible.list[0].label}.
     </p>
 
     <h2>Rooms</h2>
     <p class="measure small">{home.terms.roomPricingRule}</p>
     <p class="measure small">
-      {home.terms.accessNote} Flights to the third floor: <Fact value={home.terms.stairFlights} />.
-      Tell anyone you place which floor their room is on.
+      {home.terms.accessNote} Tell anyone you place which floor their room is on.
     </p>
     <FactTable
       columns={['Room', 'Unit', 'Floor', 'Size', 'Floor area', 'Per week']}

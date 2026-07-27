@@ -9,6 +9,7 @@
  */
 import Base from '../layouts/Base.astro';
 import Fact from '../components/Fact.astro';
+import { isTbd } from '../lib/fact';
 import FacilityCard from '../components/FacilityCard.astro';
 import { property, home } from '../data/site.config';
 const c = property.commute;
@@ -40,7 +41,7 @@ const t = property.transit;
       deciding whether to bring a car, that is the number to weigh against
       {' '}{home.parking.priceWeekly} parking.
     </p>
-    <p class="measure"><Fact value={t.other} /></p>
+    {!isTbd(t.other) && <p class="measure"><Fact value={t.other} /></p>}
 
     <h2>Parking at the house</h2>
     <p class="measure">
