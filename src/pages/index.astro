@@ -7,6 +7,7 @@ import Base from '../layouts/Base.astro';
 import { property, home, services, serviceDisplay } from '../data/site.config';
 import { isTbd } from '../lib/fact';
 import Fact from '../components/Fact.astro';
+import ImageSlot from '../components/ImageSlot.astro';
 
 const nearest = property.commute.facilities[0];
 const liveServices = services.filter((s) => s.status === 'live');
@@ -32,6 +33,14 @@ const avail = home.availability;
           Renovation is underway now and applications are open for {property.applications.forOccupancy}.
         </strong>
       </p>
+      <ImageSlot
+        value={property.photos.exteriorFront}
+        eager
+        alt={`The front of ${property.address.street}, seen from the street.`}
+        caption="The house as it stands today."
+        why="Save the photo to src/assets/ and set photos.exteriorFront."
+      />
+
       <ul class="offer">
         {shownServices.map((s) => (
           <li>
@@ -143,6 +152,7 @@ const avail = home.availability;
   .hero {
     padding-block: var(--s12) var(--s16);
   }
+  .hero :global(.slot) { margin-top: var(--s8); }
   .offer { list-style: none; padding: 0; margin: var(--s8) 0 0; max-width: 34rem; }
   .offer li { display: flex; gap: var(--s3); align-items: baseline; padding: var(--s2) 0;
               border-bottom: 1px solid color-mix(in srgb, var(--paper) 18%, transparent); }
