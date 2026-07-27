@@ -367,7 +367,17 @@ export const meals = {
    * relative, and the reader is pointed at the source to check it.
    */
   perDiem: {
-    claim: 'Every tier comes in under the federal per diem meal rate for Detroit.',
+    /**
+     * NARROWED 2026-07-27. This said "Every tier comes in under" and that was false.
+     * Detroit M&IE for FY2026 is $74/day — $518/week. Gather ($200) and Prep ($350)
+     * clear it; Hot window ($600 = $85.71/day) exceeds it by about 16%, and by more
+     * against the meals-only figure of $69/day once the $5 incidental is excluded.
+     *
+     * Copy narrowed to the two tiers that actually qualify, which needs no pricing
+     * decision. The alternative is to cut Hot window to $515/week and restore the
+     * blanket claim — that is a revenue decision and is the owner's to make.
+     */
+    claim: 'The Gather and Prep tiers come in under the federal per diem meal rate for Detroit.',
     source: 'GSA per diem, meals and incidental expenses',
     sourceUrl: 'https://www.gsa.gov/travel/plan-book/per-diem-rates',
     note: 'Rates are set per fiscal year — check the current figure before you rely on it.',
