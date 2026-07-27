@@ -36,10 +36,6 @@ import { isTbd } from '../lib/fact';
       <strong>{home.kitchen.water}.</strong> Filtered water from the tap and in the ice, not a jug in
       the fridge.
     </p>
-    <p class="measure small">
-      The kitchen drawing also shows {home.kitchen.fromPlan.join(' and ').toLowerCase()}, but that plan
-      is not an as-built survey.
-    </p>
     {!isTbd(home.kitchen.refrigerator) && <p class="measure small">Refrigerator: <Fact value={home.kitchen.refrigerator} />.</p>}
     {!isTbd(home.kitchen.sameInBothKitchens) && <p class="measure small">Same equipment in both kitchens: <Fact value={home.kitchen.sameInBothKitchens} />.</p>}
     {!isTbd(home.kitchen.cookware) && <p class="measure">Cookware: <Fact value={home.kitchen.cookware} />.</p>}
