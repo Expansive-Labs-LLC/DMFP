@@ -25,7 +25,8 @@ import { property, home } from '../data/site.config';
 
     <h2>Kitchens</h2>
     <p class="measure">
-      {home.kitchens} kitchens, so six people are not sharing one stove.
+      {home.kitchen.full} full kitchen and {home.kitchen.kitchenettes} kitchenette, one in each unit, so
+      six people are not sharing a single worktop. The appliances below are the full kitchen.
     </p>
     <ul class="appliances">
       {home.kitchen.appliances.map((a) => <li>{a}</li>)}

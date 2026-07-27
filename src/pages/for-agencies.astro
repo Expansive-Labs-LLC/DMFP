@@ -58,12 +58,22 @@ const telHref = digits ? `tel:+1${digits}` : undefined;
       Disclose this to anyone you place; it is a condition of the stay, not a perk.
     </p>
 
-    <h2>Splitting the building</h2>
+    <h2>The two units</h2>
     <p class="measure">
-      The building divides into {home.divisible.units} self-contained units, each with its own kitchen.
-      Utilities are split per unit, so each unit can carry its own leasing agreement rather than one
-      agreement with an internal cost-share. Bedrooms per unit: <Fact value={home.divisible.bedroomSplit} />.
-      Full baths per unit: <Fact value={home.divisible.bathroomSplit} />.
+      The building divides into {home.divisible.units} self-contained units with separately split
+      utilities, so each can carry its own leasing agreement rather than one agreement with an internal
+      cost-share. <strong>They are not equivalent</strong> — compare before you place anyone.
+    </p>
+    <FactTable
+      columns={['Unit', 'Bedrooms', 'Full baths', 'Kitchen', 'Other space']}
+      rows={home.divisible.list.map((u) => ({
+        head: u.label,
+        cells: [String(u.bedrooms), String(u.bathroomsFull), u.kitchen, u.spaces.join(', ')],
+      }))}
+    />
+    <p class="measure small">
+      The business center is in {home.divisible.list[1].label}. Access for
+      {' '}{home.divisible.list[0].label} residents: <Fact value={home.divisible.sharedSpaces} />.
     </p>
 
     <h2>Application process</h2>

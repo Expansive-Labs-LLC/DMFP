@@ -383,8 +383,39 @@ export const properties = [
       divisible: {
         units: 2,
         utilitiesSplittable: true,
-        bedroomSplit: tbd('unit_bedroom_split', 'How the 6 bedrooms divide across the 2 units'),
-        bathroomSplit: tbd('unit_bathroom_split', 'How the 3 full baths divide across the 2 units'),
+        /**
+         * Owner 2026-07-27. THE TWO UNITS ARE NOT EQUIVALENT and the site must not
+         * imply they are. Unit B has two baths, a full kitchen, a living room and
+         * the business center; Unit A has one bath, a kitchenette and a common area.
+         * Anyone letting a unit, or a room inside one, is buying materially
+         * different things.
+         */
+        list: [
+          {
+            id: 'a',
+            label: 'Unit A',
+            bedrooms: 3,
+            bathroomsFull: 1,
+            kitchen: 'Kitchenette',
+            kitchenContents: tbd('unit_a_kitchenette_contents', 'A kitchenette is not a kitchen — what is actually in it?'),
+            spaces: ['Common area'],
+          },
+          {
+            id: 'b',
+            label: 'Unit B',
+            bedrooms: 3,
+            bathroomsFull: 2,
+            kitchen: 'Full kitchen',
+            kitchenContents: 'Stove, microwave, air fryer, blender, reverse-osmosis water',
+            spaces: ['Living room', 'Business center'],
+          },
+        ],
+        /**
+         * The business center sits in Unit B. If the units let separately, does a
+         * Unit A resident still get access? Unanswered, and it changes what Unit A
+         * is worth.
+         */
+        sharedSpaces: tbd('shared_spaces_across_units', 'Business center is in Unit B — shared or not?'),
       },
       furnished: true,
       laundry: 'in-unit' as const,
@@ -419,8 +450,16 @@ export const properties = [
          * CONFIRM: these are live offers the release gate will not stop.
          */
         rateRoomWeekly: '$425/week',
-        rateUnitWeekly: '$1,200/week',
-        rateHouseWeekly: '$2,300/week',
+        /**
+         * Owner 2026-07-27: unit and whole-building lets are priced on inquiry.
+         * Coherent with the published room rate — a transparent number wins the
+         * individual clinician, a conversation wins the agency booking six beds.
+         *
+         * NOTE this was applied to the whole building too, which the owner specified
+         * only for units. Confirm.
+         */
+        rateUnitWeekly: 'On inquiry',
+        rateHouseWeekly: 'On inquiry',
         /**
          * FAIR HOUSING — read this before publishing a negotiable rate.
          *
@@ -458,8 +497,9 @@ export const properties = [
          */
         minTerm: '1 week',
         maxTerm: '26 weeks',
-        paymentTerms: tbd('payment_terms'),
-        leadTime: tbd('lead_time', 'Notice an agency needs to give'),
+        /** Owner 2026-07-27. */
+        paymentTerms: 'Net 15',
+        leadTime: '2 days',
       },
       /**
        * FAIR HOUSING — assistance animals are NOT pets. A service or assistance
@@ -524,7 +564,14 @@ export const properties = [
         keyHandover: false,
       },
       kitchen: {
+        /**
+         * One full kitchen (Unit B) and one kitchenette (Unit A). "2 kitchens" was
+         * accurate as a count and misleading as a claim — a kitchenette may not have
+         * a stove, and six people sharing one real kitchen is a different offer.
+         */
         count: 2,
+        full: 1,
+        kitchenettes: 1,
         /** Owner 2026-07-26. A furnished-rental deal-breaker, so it gets its own section. */
         appliances: ['Stove', 'Microwave', 'Air fryer', 'Blender'],
         /**
