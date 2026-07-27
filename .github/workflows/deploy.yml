@@ -1,0 +1,64 @@
+name: build-and-deploy
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      # A renamed config field renders as an empty string in Astro, not visible
+      # text, so the typechecker is the only thing that catches it.
+      - name: Typecheck
+        run: npx astro check
+
+      # Facts must come from src/data/site.config.ts, never a literal in markup.
+      - name: Fact-lint
+        run: node scripts/check-facts.mjs
+
+      # Emits TODO.md and fails if a {{TBD:*}} reached JSON-LD, <meta> or sitemap.
+      - name: Build
+        run: npm run build
+
+      # Ban list is parsed out of COMPLIANCE.md — one source of truth.
+      - name: Compliance grep
+        run: node scripts/check-compliance.mjs
+
+      - name: Link check
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --no-progress --require-https=false 'dist/**/*.html'
+          fail: true
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: verify
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

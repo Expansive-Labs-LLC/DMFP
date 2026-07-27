@@ -2,11 +2,15 @@
 /** `/for-agencies` — no marketing voice. Availability stated BEFORE terms. */
 import Base from '../layouts/Base.astro';
 import Fact from '../components/Fact.astro';
+import { machine } from '../lib/fact';
 import FactTable from '../components/FactTable.astro';
 import { site, property, home } from '../data/site.config';
 const t = home.terms;
 const a = home.availability;
 const ap = property.applications;
+/** Derive the dial string from config — never write a number twice. */
+const digits = machine(site.contact.phone)?.replace(/\D/g, '');
+const telHref = digits ? `tel:+1${digits}` : undefined;
 ---
 <Base title="For agencies" description="Terms, availability and application process for housing coordinators placing clinicians.">
   <section class="wrap stack">
@@ -15,7 +19,9 @@ const ap = property.applications;
     <div class="contact">
       <p><strong>{site.entity.legalName}</strong></p>
       <p>Contact: <Fact value={site.contact.name} /></p>
-      <p class="mono"><a href="tel:+17344892708">{site.contact.phone}</a></p>
+      <p class="mono">
+        {telHref ? <a href={telHref}>{site.contact.phone}</a> : <Fact value={site.contact.phone} />}
+      </p>
       <p><Fact value={site.contact.email} /></p>
     </div>
 
