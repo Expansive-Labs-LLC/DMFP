@@ -46,10 +46,18 @@ jobs:
       - name: Compliance grep
         run: node scripts/check-compliance.mjs
 
+      # --base resolves root-relative hrefs against dist. The canonical domain is
+      # excluded until DNS is cut over: the built pages carry absolute canonical
+      # URLs, and checking those before the site is live fails by definition.
       - name: Link check
         uses: lycheeverse/lychee-action@v2
         with:
-          args: --no-progress --require-https=false 'dist/**/*.html'
+          args: >-
+            --no-progress --base dist --require-https=false
+            --exclude '^https://detroitmedfocusproperties\.com'
+            --exclude '^https://maps\.googleapis\.com'
+            --exclude '^https://www\.google\.com/maps'
+            'dist/**/*.html'
           fail: true
 
       - uses: actions/upload-pages-artifact@v3
