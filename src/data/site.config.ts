@@ -173,8 +173,8 @@ export const services: Service[] = [
     id: 'business-center',
     name: 'Business center',
     description:
-      '3 desks with monitors and a printer. Somewhere to handle paperwork or a remote shift ' +
-      'that is not your bedroom.',
+      '3 desks, each with a monitor, keyboard and mouse on a single dongle — one cable from your ' +
+      'laptop. Plus a printer.',
     included: true,
     status: 'live',
   },
