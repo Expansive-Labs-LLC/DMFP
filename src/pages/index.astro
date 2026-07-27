@@ -93,9 +93,11 @@ const avail = home.availability;
           Renovation underway. First occupancy {avail.availableFrom}. Applications are open now.
         </p>
         <p class="data mono rate"><Fact value={home.terms.rateRoomWeekly} /></p>
-        <p class="small muted">per bedroom, per week</p>
+        <p class="small muted">one bedroom, per week</p>
+        <p class="data mono rate"><Fact value={home.terms.rateUnitWeekly} /></p>
+        <p class="small muted">one of {home.divisible.units} units, per week</p>
         <p class="data mono rate"><Fact value={home.terms.rateHouseWeekly} /></p>
-        <p class="small muted">whole house, per week</p>
+        <p class="small muted">whole building, per week</p>
       </article>
     </div>
   </section>
@@ -110,8 +112,10 @@ const avail = home.availability;
         week, from {home.terms.minWeeks} week — a clinical contract is usually {
           home.terms.typicalContractWeeks
         } weeks. Two kitchens and {home.bathroomsFull} full bathrooms means six people are not queuing for
-        one of each. Food, laundry and cleaning are available on top, so a week here does not have to
-        include a grocery run. The house is being renovated now, and the first occupancy is {
+        one of each. The building also divides into {home.divisible.units} self-contained units with
+        separately split utilities, so it can be taken a room at a time, a unit at a time, or whole.
+        Food, laundry and cleaning are available on top, so a week here does not have to include a
+        grocery run. The house is being renovated now, and the first occupancy is {
           avail.availableFrom
         }. If you need a night or a weekend, this is not the right place.
       </p>

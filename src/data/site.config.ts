@@ -128,7 +128,14 @@ export const services: Service[] = [
     included: false,
     status: 'launching',
     liveFrom: 'September 2026',
-    price: tbd('laundry_service_price'),
+    /**
+     * MARKET-DERIVED 2026-07-26, not owner-set. Detroit wash-and-fold runs
+     * $1.99–$2.25/lb (range $1.00–$2.50). A clinician's week is roughly 15–18 lb,
+     * so ~$34–40. Priced at the top of that band because folding-to-preference is
+     * a premium over standard wash-and-fold. CONFIRM — an unconfirmed price on a
+     * live page is still an offer.
+     */
+    price: '$40/week',
   },
   {
     id: 'cleaning',
@@ -137,7 +144,29 @@ export const services: Service[] = [
     included: false,
     status: 'launching',
     liveFrom: 'September 2026',
-    price: tbd('cleaning_price', 'Or is cleaning included in the room rate?'),
+    /**
+     * MARKET-DERIVED 2026-07-26, not owner-set. Detroit cleaning is $25–40/hr
+     * independent, flat visits averaging $179 (range $115–$251). Three visits a
+     * week of a six-bed house is maintenance of common areas, not three deep
+     * cleans: ~2h per visit at ~$35/hr is ~$70/visit, ~$210/week for the house,
+     * which is ~$35/resident across six. Priced at $50 to cover bedrooms too.
+     *
+     * STRUCTURAL QUESTION, unresolved: cleaning common areas is a house-level
+     * service. Charging it per resident means one person can pay while five do
+     * not, which does not describe anything coherent. It probably belongs in the
+     * room rate. Flagged in Confirmations.
+     */
+    price: '$50/week',
+  },
+  {
+    id: 'bin-storage',
+    name: 'Bin storage',
+    description: 'A bin held for you in a secured area.',
+    included: false,
+    status: 'launching',
+    liveFrom: 'September 2026',
+    /** Owner-set 2026-07-26. Note this is MONTHLY where the other services are weekly. */
+    price: '$60/month',
   },
   {
     id: 'laundry-inunit',
@@ -191,6 +220,21 @@ export const properties = [
       bedrooms: 6,
       bathroomsFull: 3,
       kitchens: 2,
+      /**
+       * Owner 2026-07-26: the building divides into 2 self-contained units — which
+       * is what the second kitchen is for. Utilities can be split per unit, and
+       * that split is precisely what makes separate leases possible rather than
+       * one lease with an internal cost-sharing arrangement.
+       *
+       * This does NOT reinstate the old published:false upper unit. Both units are
+       * offered; the building is simply lettable at three grains.
+       */
+      divisible: {
+        units: 2,
+        utilitiesSplittable: true,
+        bedroomSplit: tbd('unit_bedroom_split', 'How the 6 bedrooms divide across the 2 units'),
+        bathroomSplit: tbd('unit_bathroom_split', 'How the 3 full baths divide across the 2 units'),
+      },
       furnished: true,
       laundry: 'in-unit' as const,
       entrance: 'private' as const,
@@ -203,11 +247,19 @@ export const properties = [
         billingPeriod: 'week' as const,
         minWeeks: 1,
         typicalContractWeeks: 13,
-        /** Let either way, depending on the enquiry — owner 2026-07-26. */
-        letting: 'either' as const,
-        rateRoomWeekly: tbd('rate_room_weekly', 'Per bedroom, one of 6, per week'),
-        rateHouseWeekly: tbd('rate_house_weekly', 'Whole 6-bedroom house, per week'),
-        utilities: tbd('utilities_included'),
+        /**
+         * Three grains, owner 2026-07-26. Every one of them needs its own honest
+         * rate — "mix and match" is only credible if each option is priced.
+         */
+        letting: ['room', 'unit', 'house'] as const,
+        rateRoomWeekly: tbd('rate_room_weekly', 'One bedroom of 6, per week'),
+        rateUnitWeekly: tbd('rate_unit_weekly', 'One of the 2 units, per week'),
+        rateHouseWeekly: tbd('rate_house_weekly', 'The whole building, per week'),
+        utilities: {
+          included: tbd('utilities_included', 'What the rate covers'),
+          /** Metering splits across the 2 units — the basis for separate leases. */
+          splitByUnit: true,
+        },
         deposit: 'No security deposit for short-term stays',
         minTerm: tbd('term_min'),
         maxTerm: tbd('term_max'),

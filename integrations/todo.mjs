@@ -25,6 +25,7 @@ const BLOCKS_LAUNCH = new Set([
   'contact_phone',
   'inquiry_email',
   'rate_room_weekly',
+  'rate_unit_weekly',
   'rate_house_weekly',
   'utilities_included',
   'deposit_amount',
@@ -54,7 +55,10 @@ const CONFIRMATIONS = [
   ['`services[food-hot].price`', 'Given as "$600" with no unit; read as per week to match the other two.'],
   ['`commute.facilities[0].name`', '"Detroit Medical Center" — confirm this is what coordinators call it.'],
   ['`commute.facilities[1].name`', '"Henry Ford Hospital" — same.'],
-  ['`services[cleaning]`', 'Cleaning 3x/week — priced add-on, or included in the room rate?'],
+  ['`services[laundry-service].price`', '**$40/week is market-derived, not yours.** Detroit wash-and-fold is $1.99–$2.25/lb; ~15–18 lb/week plus a folding premium. Confirm before launch — a published price is an offer.'],
+  ['`services[cleaning].price`', '**$50/week is market-derived, not yours.** Detroit cleaning $25–40/hr; ~$210/week for the house across six residents. Confirm.'],
+  ['`services[cleaning]` structure', 'Cleaning common areas is house-level. Charging per resident lets one pay while five do not. Should it be in the room rate instead?'],
+  ['Billing periods', 'Food, laundry and cleaning are weekly; parking and bin storage are monthly. With week-by-week rooms, is a monthly charge right?'],
   ['`home.terms.billingPeriod`', 'Weekly billing replaces the 30-day minimum. Confirm no minimum stay.'],
 ];
 

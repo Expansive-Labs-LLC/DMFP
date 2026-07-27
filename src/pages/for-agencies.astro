@@ -34,14 +34,23 @@ const ap = property.applications;
       rows={[
         { head: 'Minimum contract', cells: [t.minTerm] },
         { head: 'Maximum contract', cells: [t.maxTerm] },
-        { head: 'Rate — per bedroom, per week', cells: [t.rateRoomWeekly] },
-        { head: 'Rate — whole house, per week', cells: [t.rateHouseWeekly] },
-        { head: 'In the monthly rate', cells: [t.utilities] },
+        { head: 'Rate — one bedroom, per week', cells: [t.rateRoomWeekly] },
+        { head: 'Rate — one unit, per week', cells: [t.rateUnitWeekly] },
+        { head: 'Rate — whole building, per week', cells: [t.rateHouseWeekly] },
+        { head: 'In the rate', cells: [t.utilities.included] },
         { head: 'Billed separately', cells: [home.parking] },
         { head: 'Deposit', cells: [t.deposit] },
         { head: 'Payment terms', cells: [t.paymentTerms] },
         { head: 'Lead time needed', cells: [t.leadTime] },
       ]} />
+
+    <h2>Splitting the building</h2>
+    <p class="measure">
+      The building divides into {home.divisible.units} self-contained units, each with its own kitchen.
+      Utilities are split per unit, so each unit can carry its own leasing agreement rather than one
+      agreement with an internal cost-share. Bedrooms per unit: <Fact value={home.divisible.bedroomSplit} />.
+      Full baths per unit: <Fact value={home.divisible.bathroomSplit} />.
+    </p>
 
     <h2>Application process</h2>
     <p class="measure"><Fact value={ap.process} /></p>
