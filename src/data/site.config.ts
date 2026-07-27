@@ -376,7 +376,36 @@ export const properties = [
         measuredAt: tbd('internet_measured_date'),
       },
       entry: { floor: 'Street level', steps: tbd('entry_steps') },
-      floorplan: tbd('floorplan_house'),
+      /**
+       * Floorplans. Save each file under src/assets/ and set `image` to the
+       * filename; the slot renders a placeholder until then.
+       *
+       * A PLAN IS NOT AN AS-BUILT. Rehab is in progress, so a drawing shows what is
+       * intended, not what exists. `asBuilt` says which, and the caption follows it —
+       * publishing a proposed layout as though it were installed is the same
+       * category of error as an unmeasured drive time.
+       */
+      floorplans: [
+        {
+          id: 'kitchen',
+          label: 'Kitchen',
+          image: tbd('floorplan_kitchen', 'Save as src/assets/floorplan-kitchen.png'),
+          asBuilt: false,
+          /** Read off the drawing, not measured on site. */
+          dimensions: '8\'4" along the counter run',
+          fixtures: '4-burner range (2\'4" × 2\'4"), dishwasher, sink',
+          whichKitchen: tbd('floorplan_kitchen_which', 'Which of the 2 kitchens is this?'),
+        },
+        {
+          id: 'house',
+          label: 'Whole house',
+          image: tbd('floorplan_house', 'Save as src/assets/floorplan-house.png'),
+          asBuilt: false,
+          dimensions: tbd('floorplan_house_dimensions'),
+          fixtures: tbd('floorplan_house_fixtures'),
+          whichKitchen: null,
+        },
+      ],
       rooms: [] as Array<{ id: string; name: string; caption: string; photo: Fact<string> }>,
     },
     /**

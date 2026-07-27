@@ -86,8 +86,35 @@ import { property, home } from '../data/site.config';
     </p>
     <p class="measure">Internet is provided.</p>
 
-    <h2>Floorplan</h2>
-    <ImageSlot value={home.floorplan} alt="Floorplan of the house." height={600} />
+    <h2>Floorplans</h2>
+    <p class="measure small muted">
+      Drawings show the intended layout. The house is being renovated, so treat these as planned rather
+      than installed until a plan is marked as-built.
+    </p>
+    {
+      home.floorplans.map((fp) => (
+        <div class="plan">
+          <h3>
+            {fp.label}
+            {!fp.asBuilt && <span class="planned"> planned</span>}
+          </h3>
+          <ImageSlot
+            value={fp.image}
+            alt={`${fp.label} floorplan for ${property.address.street}.`}
+            height={600}
+            caption={`${fp.label} — drawing, not an as-built survey.`}
+            why="Drawing not yet added to the site."
+          />
+          <dl class="plan-facts small">
+            <div><dt class="micro">Dimensions</dt><dd class="mono"><Fact value={fp.dimensions} /></dd></div>
+            <div><dt class="micro">Fixtures</dt><dd class="mono"><Fact value={fp.fixtures} /></dd></div>
+            {fp.whichKitchen !== null && (
+              <div><dt class="micro">Which kitchen</dt><dd class="mono"><Fact value={fp.whichKitchen} /></dd></div>
+            )}
+          </dl>
+        </div>
+      ))
+    }
 
     <h2>Room by room</h2>
     {home.rooms.length === 0
@@ -99,6 +126,17 @@ import { property, home } from '../data/site.config';
 </Base>
 <style>
   section { padding-block: var(--s12) var(--s8); }
+  .plan { margin-block: var(--s8); }
+  .plan h3 { margin-bottom: var(--s3); }
+  .planned { font-weight: 400; font-size: 0.8125rem; letter-spacing: 0.04em;
+             color: var(--paper); background: var(--brick); padding: 0.1em 0.5em;
+             border-radius: 2px; margin-left: var(--s2); }
+  .plan-facts { margin: var(--s4) 0 0; max-width: var(--measure); }
+  .plan-facts > div { display: grid; gap: var(--s1); padding: var(--s2) 0;
+                      border-bottom: 1px solid var(--limestone); }
+  @media (min-width: 480px) { .plan-facts > div { grid-template-columns: 10rem 1fr; gap: var(--s4); } }
+  .plan-facts dt { color: var(--text-muted); }
+  .plan-facts dd { margin: 0; }
   .cams { list-style: none; padding: 0; max-width: var(--measure); }
   .cams li { display: flex; gap: var(--s2); align-items: baseline; padding: var(--s2) 0;
              border-bottom: 1px solid var(--limestone); }

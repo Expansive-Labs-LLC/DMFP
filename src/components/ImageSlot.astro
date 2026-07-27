@@ -22,8 +22,18 @@ interface Props {
   height?: number;
   /** Only the single above-fold image should set this. */
   eager?: boolean;
+  /** Why the slot is empty. A photo and a drawing are missing for different reasons. */
+  why?: string;
 }
-const { value, alt, caption, width = 1200, height = 800, eager = false } = Astro.props;
+const {
+  value,
+  alt,
+  caption,
+  width = 1200,
+  height = 800,
+  eager = false,
+  why = 'Rooms are photographed as renovation finishes.',
+} = Astro.props;
 
 const assets = import.meta.glob<{ default: ImageMetadata }>('../assets/*.{jpg,jpeg,png,webp,avif}', {
   eager: true,
@@ -49,7 +59,7 @@ const missingFile = typeof value === 'string' && !img;
               ? `{{TBD:${(value as any).token}}}`
               : 'Photograph not taken yet'}
         </span>
-        <span class="why small">Rooms are photographed as renovation finishes.</span>
+        <span class="why small">{why}</span>
       </div>
     )
   }
