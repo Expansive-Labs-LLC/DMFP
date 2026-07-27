@@ -59,7 +59,7 @@ const CONFIRMATIONS = [
   ['`services[cleaning].price`', '**$50/week is market-derived, not yours.** Detroit cleaning $25–40/hr; ~$210/week for the house across six residents. Confirm.'],
   ['`services[cleaning]` structure', 'Cleaning common areas is house-level. Charging per resident lets one pay while five do not. Should it be in the room rate instead?'],
   ['`home.internet.ratedDown`', '"300MB/S" read as 300 Mbps (megabits). 300 MB/s would be 2.4 Gbps.'],
-  ['Billing periods', 'Food, laundry and cleaning are weekly; parking and bin storage are monthly. With week-by-week rooms, is a monthly charge right?'],
+  ['`services[bin-storage].price`', 'Parking moved to weekly on 2026-07-27, so the $60/month storage bin is now the only monthly charge. With week-by-week rooms, what does a 3-week stay pay?'],
   ['`home.terms.billingPeriod`', 'Weekly billing replaces the 30-day minimum. Confirm no minimum stay.'],
 ];
 

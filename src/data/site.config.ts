@@ -130,6 +130,21 @@ export const site = {
   },
 } as const;
 
+/**
+ * Parking, in one place. It was stated in two — the service entry and the house
+ * record — which is one edit away from a page quoting a stale price.
+ */
+export const parkingSpec = {
+  onSiteSpots: 4,
+  priceWeekly: '$50/week',
+  /** Owner 2026-07-27: 4 spots for 6 bedrooms, so a spot is not guaranteed. */
+  availability: 'subject to availability',
+  street: 'Street parking otherwise.',
+  /** Owner 2026-07-27. In Detroit this is the difference between a 6am shift and a shovel. */
+  winterService: 'The lot is cleared through the winter.',
+  winterTrigger: tbd('parking_winter_trigger', 'What triggers clearing and how quickly — snowfall depth, timing'),
+} as const;
+
 export const services: Service[] = [
   /**
    * Owner 2026-07-26. These are the September offering, so they are 'launching'
@@ -268,10 +283,12 @@ export const services: Service[] = [
   {
     id: 'parking',
     name: 'On-site parking',
-    description: '4 spots on site. Street parking otherwise.',
+    description:
+      `${parkingSpec.onSiteSpots} spots on site, ${parkingSpec.availability}. ` +
+      `${parkingSpec.street} ${parkingSpec.winterService}`,
     included: false,
     status: 'live',
-    price: '$200/month',
+    price: parkingSpec.priceWeekly,
   },
   {
     id: 'internet',
@@ -458,7 +475,7 @@ export const properties = [
           'to the petition, are never put to a resident vote, and are never charged a ' +
           'pet fee or deposit.',
       },
-      parking: '4 spots on site at $200/month. Street parking otherwise.',
+      parking: parkingSpec,
       smoking: tbd('smoking_policy'),
       quietHours: tbd('quiet_hours'),
       availability: {

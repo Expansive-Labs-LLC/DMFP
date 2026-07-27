@@ -44,7 +44,7 @@ const telHref = digits ? `tel:+1${digits}` : undefined;
         { head: 'Rate — one unit, per week', cells: [t.rateUnitWeekly] },
         { head: 'Rate — whole building, per week', cells: [t.rateHouseWeekly] },
         { head: 'In the rate', cells: [t.utilities.included] },
-        { head: 'Billed separately', cells: [home.parking] },
+        { head: 'Billed separately', cells: [`Parking ${home.parking.priceWeekly}, ${home.parking.availability}`] },
         { head: 'Deposit', cells: [t.deposit] },
         { head: 'Payment terms', cells: [t.paymentTerms] },
         { head: 'Lead time needed', cells: [t.leadTime] },

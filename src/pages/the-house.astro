@@ -45,7 +45,14 @@ import { property, home } from '../data/site.config';
     <p class="measure">{home.laundry} laundry.</p>
 
     <h2>Parking</h2>
-    <p class="measure">{home.parking} <a href="/commute">Distances to each facility →</a></p>
+    <p class="measure">
+      {home.parking.onSiteSpots} spots on site at {home.parking.priceWeekly},
+      {' '}{home.parking.availability}. {home.parking.street}
+    </p>
+    <p class="measure">
+      {home.parking.winterService} <Fact value={home.parking.winterTrigger} />
+      {' '}<a href="/commute">Distances to each facility →</a>
+    </p>
 
     <h2>Internet</h2>
     <p class="measure">

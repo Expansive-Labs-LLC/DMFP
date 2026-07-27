@@ -48,7 +48,10 @@ const t = property.transit;
     <p class="measure"><Fact value={t.other} /></p>
 
     <h2>Parking at the house</h2>
-    <p class="measure">{home.parking}</p>
+    <p class="measure">
+      {home.parking.onSiteSpots} spots at {home.parking.priceWeekly}, {home.parking.availability}.
+      {' '}{home.parking.street} {home.parking.winterService}
+    </p>
 
     <p class="small"><a href="/inquire">Ask about a specific route</a>.</p>
   </section>
