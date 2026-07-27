@@ -44,6 +44,14 @@ const ap = property.applications;
         { head: 'Lead time needed', cells: [t.leadTime] },
       ]} />
 
+    <h2>Access and monitoring</h2>
+    <p class="measure">
+      {home.security.locks}. A {home.security.system} camera system covers the entrances and exterior
+      — {home.security.cameras.map((c) => `${c.count}× ${c.type.toLowerCase()}`).join(', ')}.
+      {' '}{home.security.neverCovered} {home.security.residentAccess}
+      Disclose this to anyone you place; it is a condition of the stay, not a perk.
+    </p>
+
     <h2>Splitting the building</h2>
     <p class="measure">
       The building divides into {home.divisible.units} self-contained units, each with its own kitchen.

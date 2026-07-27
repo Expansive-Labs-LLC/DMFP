@@ -169,6 +169,15 @@ export const services: Service[] = [
     price: '$60/month',
   },
   {
+    id: 'security',
+    name: 'Cameras and keyless entry',
+    description:
+      'Ubiquiti cameras covering the entrances and exterior, and PDQ electronic locks on every door. ' +
+      'Residents get full monitoring access. No cameras inside.',
+    included: true,
+    status: 'live',
+  },
+  {
     id: 'laundry-inunit',
     name: 'In-unit laundry',
     description: 'Washer and dryer in the house, free to use.',
@@ -301,24 +310,30 @@ export const properties = [
        * place is a criminal matter in Michigan. `coverage` must state the exact
        * locations before launch.
        */
+      /**
+       * Owner 2026-07-26: Ubiquiti camera system, 2 doorbell + 2 bullet, residents
+       * get full monitoring access.
+       *
+       * MATERIAL DISCLOSURE, not a feature bullet. Surveillance of a shared home is
+       * something a person is entitled to know BEFORE they book, so it renders on
+       * the house page and in the agency terms.
+       *
+       * HARD LINE: no camera may cover a bedroom, a bathroom, or anywhere a person
+       * undresses. Recording a private place is a criminal matter in Michigan, not
+       * a policy preference. All four devices here are entrance/exterior.
+       */
       security: {
-        camerasProvided: true,
-        /**
-         * Owner 2026-07-26: 2 doorbell cameras + 2 Ubiquiti bullet cameras.
-         * All four are entrance/exterior devices — INFERRED, not stated. Confirm
-         * none is indoors before launch.
-         */
-        /** Owner 2026-07-26: Ubiquiti is OUTDOOR monitoring — confirmed, not inferred. */
-        devices: '2 doorbell cameras at the entrances and 2 Ubiquiti bullet cameras outdoors',
-        coverage: 'Entrances and the exterior of the building. There are no cameras inside the house.',
-        residentViewAccess: true,
-        neverCovered: 'Bedrooms and bathrooms are never covered.',
-        recordingRetention: tbd('camera_retention', 'How long footage is kept, and who can see it'),
-        /**
-         * Owner 2026-07-26: PDQ electronic locks on every door. In a six-bedroom
-         * shared house this is a real feature — each resident holds their own
-         * bedroom access and nothing changes hands at check-in or check-out.
-         */
+        system: 'Ubiquiti',
+        cameras: [
+          { type: 'Doorbell camera', count: 2, placement: 'One at each entrance' },
+          { type: 'Bullet camera', count: 2, placement: 'Outdoors, covering the exterior' },
+        ],
+        interiorCameras: false,
+        neverCovered: 'No camera covers a bedroom, a bathroom, or any interior space.',
+        /** Every resident sees live view and recordings — see the note on §residentAccess below. */
+        residentAccess: 'Full access to live view and recorded footage for every resident.',
+        retention: tbd('camera_retention', 'How long footage is kept'),
+        otherViewers: tbd('camera_other_viewers', 'Who besides residents can view — owner? manager?'),
         locks: 'PDQ electronic locks on every door, including each bedroom',
         keyHandover: false,
       },

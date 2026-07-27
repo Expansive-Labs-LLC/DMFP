@@ -42,15 +42,36 @@ import { property, home } from '../data/site.config';
     <h2>Entry and access</h2>
     <p class="measure">{home.entry.floor}. <Fact value={home.entry.steps} /> steps at the entry.</p>
 
-    <h2>Access and monitoring</h2>
+    <h2>Access</h2>
     <p class="measure">
-      {home.security.locks}. There are no keys to collect or hand back.
+      {home.security.locks}. There are no keys to collect or hand back, and access can be issued or
+      revoked per door without changing a lock.
     </p>
+
+    <h2>Monitoring</h2>
     <p class="measure">
-      Internet is provided. {home.security.devices}. {home.security.coverage}
-      {' '}{home.security.neverCovered} Residents can view the cameras.
-      Footage retention: <Fact value={home.security.recordingRetention} />.
+      A {home.security.system} camera system covers the entrances and the outside of the building.
+      Stated plainly because it is something you should know before you book, not on arrival.
     </p>
+    <ul class="cams">
+      {home.security.cameras.map((c) => (
+        <li>
+          <span class="mono cam-count">{c.count}×</span>
+          <span class="cam-type">{c.type}</span>
+          <span class="muted">— {c.placement}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="measure emphatic">{home.security.neverCovered}</p>
+    <p class="measure">
+      {home.security.residentAccess} That cuts both ways in a shared house: you can see who is at the
+      door, and so can everyone else living here.
+    </p>
+    <p class="measure small">
+      Footage is kept for <Fact value={home.security.retention} />. Others with access:
+      {' '}<Fact value={home.security.otherViewers} />.
+    </p>
+    <p class="measure">Internet is provided.</p>
 
     <h2>Floorplan</h2>
     <ImageSlot value={home.floorplan} alt="Floorplan of the house." height={600} />
@@ -65,6 +86,12 @@ import { property, home } from '../data/site.config';
 </Base>
 <style>
   section { padding-block: var(--s12) var(--s8); }
+  .cams { list-style: none; padding: 0; max-width: var(--measure); }
+  .cams li { display: flex; gap: var(--s2); align-items: baseline; padding: var(--s2) 0;
+             border-bottom: 1px solid var(--limestone); }
+  .cam-count { color: var(--sodium-deep); }
+  .cam-type { font-weight: 600; }
+  .emphatic { border-left: 3px solid var(--signal); padding-left: var(--s4); font-weight: 600; }
   .rooms { display: grid; gap: var(--s6); }
   @media (min-width: 768px) { .rooms { grid-template-columns: 1fr 1fr; } }
   .btn { display:inline-block; background:var(--ink); color:var(--paper); padding:var(--s3) var(--s8);
