@@ -1,0 +1,62 @@
+---
+/**
+ * One facility, in full. CONTENT-OUTLINE `/commute` — the most conservative page
+ * on the site: it renders the facility name and placeholder cells rather than
+ * inventing a distance. Every value here is a config path.
+ */
+import Fact from './Fact.astro';
+import RouteMap from './RouteMap.astro';
+import { property } from '../data/site.config';
+
+interface Props {
+  facility: any;
+}
+const { facility: f } = Astro.props;
+const rows = [
+  ['Distance', f.distance],
+  ['Typical drive', f.driveTime],
+  ['Parking there', f.parking],
+  ['Transit', f.transit],
+];
+---
+
+<article class="facility">
+  <h3>{f.name}</h3>
+  <p class="small muted addr">
+    <Fact value={f.destAddress} />
+  </p>
+  <dl class="facts">
+    {
+      rows.map(([label, value]) => (
+        <div class="row">
+          <dt class="micro">{label}</dt>
+          <dd class="mono"><Fact value={value} /></dd>
+        </div>
+      ))
+    }
+  </dl>
+  <RouteMap facilityName={f.name} destAddress={f.destAddress} apiKey={property.map.googleEmbedApiKey} />
+</article>
+
+<style>
+  .facility {
+    border: 1px solid var(--limestone);
+    padding: var(--s6);
+    margin-block: var(--s6);
+  }
+  h3 { font-family: var(--font-display); font-size: 1.25rem; }
+  .addr { margin: var(--s1) 0 var(--s4); }
+  .facts { margin: 0; display: grid; gap: 0; }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s1);
+    padding: var(--s3) 0;
+    border-bottom: 1px solid var(--limestone);
+  }
+  @media (min-width: 480px) {
+    .row { grid-template-columns: 11rem 1fr; align-items: baseline; gap: var(--s4); }
+  }
+  dt { color: var(--text-muted); }
+  dd { margin: 0; }
+</style>

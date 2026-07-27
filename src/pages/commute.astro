@@ -1,14 +1,25 @@
 ---
-/** `/commute` — the most conservative page on the site. Method note ABOVE the table. */
+/**
+ * `/commute` — the most conservative page on the site.
+ *
+ * CONTENT-OUTLINE: the method note goes ABOVE the table, not below it. A drive
+ * time with no stated method or date is a number the reader cannot judge, so the
+ * caveat leads rather than trails. Every measured value is a config path and
+ * renders as a placeholder until it is actually measured.
+ */
 import Base from '../layouts/Base.astro';
 import Fact from '../components/Fact.astro';
 import FactTable from '../components/FactTable.astro';
+import FacilityCard from '../components/FacilityCard.astro';
 import { property, home } from '../data/site.config';
-
-import RouteMap from '../components/RouteMap.astro';
 const c = property.commute;
+const t = property.transit;
 ---
-<Base title="Distance to each facility" description="Measured distance and typical drive time from the house to each facility.">
+
+<Base
+  title="Distance to each facility"
+  description="Measured distance, drive time and transit from the house to Detroit Medical Center and Henry Ford Hospital."
+>
   <section class="wrap stack">
     <h1 class="display-l">Distance to each facility.</h1>
 
@@ -17,33 +28,33 @@ const c = property.commute;
       Confirm against your own route before you sign.
     </p>
 
+    <h2>At a glance</h2>
     <FactTable
-      columns={['Facility', 'Distance', 'Typical drive', 'Parking']}
-      rows={c.facilities.map((f) => ({ head: f.name, cells: [f.distance, f.driveTime, f.parking] }))} />
+      caption={`From ${property.address.street}, ${property.address.locality}.`}
+      columns={['Facility', 'Distance', 'Typical drive', 'Parking there']}
+      rows={c.facilities.map((f) => ({ head: f.name, cells: [f.distance, f.driveTime, f.parking] }))}
+    />
 
-    <h2>Routes</h2>
-    <p class="measure small muted">
-      From {property.address.street}, {property.address.locality}. Not affiliated with either health
-      system.
+    <h2>Each facility</h2>
+    {c.facilities.map((f) => <FacilityCard facility={f} />)}
+    <p class="small muted">Not affiliated with either health system.</p>
+
+    <h2>Getting around without a car</h2>
+    <p class="measure">
+      The {t.qline.name} is <strong>{t.qline.distance}</strong> from the house.
+      {' '}{t.qline.description} Nearest stop: <Fact value={t.qline.nearestStop} />. Walk time:
+      {' '}<Fact value={t.qline.walkTime} />.
     </p>
-    {
-      c.facilities.map((f) => (
-        <RouteMap facilityName={f.name} destAddress={f.destAddress} apiKey={property.map.googleEmbedApiKey} />
-      ))
-    }
+    <p class="measure"><Fact value={t.other} /></p>
 
     <h2>Parking at the house</h2>
     <p class="measure">{home.parking}</p>
 
-    <h2>Transit</h2>
-    <p class="measure"><Fact value={property.transit} /></p>
-
     <p class="small"><a href="/inquire">Ask about a specific route</a>.</p>
   </section>
 </Base>
+
 <style>
   section { padding-block: var(--s12) var(--s8); }
   .method { border-left: 3px solid var(--limestone-edge); padding-left: var(--s4); }
-  .plain { list-style: none; padding: 0; max-width: var(--measure); }
-  .plain li + li { margin-top: var(--s1); }
 </style>

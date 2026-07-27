@@ -34,6 +34,7 @@ export interface Facility {
   distance: Fact<string>;
   driveTime: Fact<string>;
   parking: Fact<string>;
+  transit: Fact<string>;
 }
 
 export interface DayBandPreset {
@@ -347,7 +348,21 @@ export const properties = [
       floorplan: tbd('floorplan_house'),
       rooms: [] as Array<{ id: string; name: string; caption: string; photo: Fact<string> }>,
     },
-    transit: tbd('transit_notes', 'Factual only: measured distances, never characterisations (§9)'),
+    /**
+     * Factual only — §9 bans characterisations like "walking distance". A block
+     * count is a measurement the reader can judge; an adjective is not.
+     */
+    transit: {
+      qline: {
+        /** Owner 2026-07-26: "5 block walk to the Q line". Named QLINE — INFERRED brand spelling. */
+        name: 'QLINE',
+        description: 'Streetcar running along Woodward Avenue.',
+        distance: '5 blocks',
+        nearestStop: tbd('qline_nearest_stop'),
+        walkTime: tbd('qline_walk_time', 'Measured, not estimated'),
+      },
+      other: tbd('transit_other', 'Bus routes and anything else, factual only'),
+    },
     /**
      * §13.3 — no INTERIOR photos exist during rehab. An exterior shot of the building
      * as it stands today is a different thing and is allowed, provided it reflects
@@ -383,6 +398,7 @@ export const properties = [
           distance: tbd('facility_dmc_distance'),
           driveTime: tbd('facility_dmc_drivetime'),
           parking: tbd('facility_dmc_parking'),
+          transit: tbd('facility_dmc_transit', 'Whether the QLINE reaches it, and from which stop'),
         },
         {
           id: 'hfh',
@@ -393,6 +409,7 @@ export const properties = [
           distance: tbd('facility_hfh_distance'),
           driveTime: tbd('facility_hfh_drivetime'),
           parking: tbd('facility_hfh_parking'),
+          transit: tbd('facility_hfh_transit', 'Whether the QLINE reaches it, and from which stop'),
         },
       ] as Facility[],
     },
