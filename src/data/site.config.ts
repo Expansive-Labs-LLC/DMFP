@@ -400,20 +400,35 @@ export const properties = [
             kitchenContents: 'Stove, microwave, air fryer, blender, reverse-osmosis water',
             spaces: ['Living room', 'Business center'],
             /**
-             * PRICED BY AMENITY, NOT SIZE. No bedroom dimensions exist anywhere in
-             * this project, so a size ratio cannot be computed. This is the ratio
-             * that CAN be defended from known facts:
+             * Dimensions owner-supplied 2026-07-27. "Unit 1" and "Unit 2" mapped to
+             * A and B in order, which matches Unit 1 having the larger rooms —
+             * CONFIRM the mapping is right, because it moves every price.
              *
-             *   Unit A room — 0.67 full baths per person, full kitchen, living room,
-             *                 business center
-             *   Unit B room — 0.33 full baths per person, kitchenette, no common space
+             * PRICING RULE, published so it can be applied identically to everyone:
              *
-             * Half the bathroom share and no communal space anywhere. B is set at
-             * ~75% of A. Replace with a true square-footage ratio once
-             * roomDimensions is filled in.
+             *   rate = 50% of the unit base  +  50% scaled by room area / unit average
+             *
+             * Half of what a room costs is what every room gets regardless of size —
+             * a private lockable door, bathroom access, the kitchen, internet,
+             * cleaning, the cameras. The other half scales with the floor you
+             * personally occupy. Pure area scaling would have put Room 4 at 43% of
+             * Room 2 despite identical access to everything shared, which is not
+             * what a room is worth.
+             *
+             * The unit base carries the amenity gap: Unit A 0.67 baths per person
+             * with a full kitchen, living room and business center; Unit B 0.33
+             * baths, a kitchenette, no common space.
+             *
+             * Consequence worth knowing: Room 6 (132 sqft, Unit B) prices BELOW
+             * Room 1 (110 sqft, Unit A). Bigger room, lower price, because the unit
+             * around it is worth less. That is the rule working, not a mistake.
              */
-            roomRateWeekly: '$450/week',
-            roomDimensions: tbd('unit_a_room_sizes', 'Bedroom square footage — needed to price by size'),
+            roomRateWeekly: 'from $385/week',
+            rooms: [
+              { id: 'r1', label: 'Room 1', widthFt: 10.5, lengthFt: 10.5, rateWeekly: '$385/week' },
+              { id: 'r2', label: 'Room 2', widthFt: 13.5, lengthFt: 14.5, rateWeekly: '$510/week' },
+              { id: 'r3', label: 'Room 3', widthFt: 11.5, lengthFt: 13.5, rateWeekly: '$450/week' },
+            ],
           },
           {
             id: 'b',
@@ -429,8 +444,12 @@ export const properties = [
              */
             spaces: [],
             spacesNote: 'No common space other than the kitchenette.',
-            roomRateWeekly: '$340/week',
-            roomDimensions: tbd('unit_b_room_sizes', 'Bedroom square footage — needed to price by size'),
+            roomRateWeekly: 'from $290/week',
+            rooms: [
+              { id: 'r4', label: 'Room 4', widthFt: 9.5, lengthFt: 8.5, rateWeekly: '$290/week' },
+              { id: 'r5', label: 'Room 5', widthFt: 12, lengthFt: 10.5, rateWeekly: '$360/week' },
+              { id: 'r6', label: 'Room 6', widthFt: 11.5, lengthFt: 11.5, rateWeekly: '$370/week' },
+            ],
           },
         ],
         /**
@@ -485,7 +504,12 @@ export const properties = [
          * The rule here is the unit, published on the rate sheet, and it applies to
          * everyone. That is what keeps a negotiable rate defensible.
          */
-        rateRoomWeeklyFrom: '$340/week',
+        rateRoomWeeklyFrom: '$290/week',
+        /** Published so a differential can be shown to be a rule, not a judgement call. */
+        roomPricingRule:
+          'Half of each room rate is the same for every room — private lockable door, bathroom ' +
+          'access, kitchen, internet, cleaning, cameras. The other half scales with the room\'s floor ' +
+          'area against the average for its unit.',
         /**
          * Owner 2026-07-27: unit and whole-building lets are priced on inquiry.
          * Coherent with the published room rate — a transparent number wins the

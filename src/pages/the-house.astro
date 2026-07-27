@@ -69,6 +69,29 @@ import { property, home } from '../data/site.config';
     <h2>Entry and access</h2>
     <p class="measure">{home.entry.floor}. <Fact value={home.entry.steps} /> steps at the entry.</p>
 
+    <h2>Rooms and rates</h2>
+    <p class="measure small">{home.terms.roomPricingRule}</p>
+    {
+      home.divisible.list.map((u) => (
+        <div class="unit-block">
+          <h3>
+            {u.label} — {u.bathroomsFull} full {u.bathroomsFull === 1 ? 'bath' : 'baths'}, {u.kitchen}
+            {u.spaces.length ? `, ${u.spaces.join(', ').toLowerCase()}` : ', no other common space'}
+          </h3>
+          <ul class="rooms-list">
+            {u.rooms.map((r) => (
+              <li>
+                <span class="rm">{r.label}</span>
+                <span class="mono dim">{r.widthFt} × {r.lengthFt} ft</span>
+                <span class="mono area">{(r.widthFt * r.lengthFt).toFixed(0)} sq ft</span>
+                <span class="mono rate-cell">{r.rateWeekly}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+
     <h2>Business center</h2>
     <p class="measure">
       A dedicated room with 3 desks. Each has a monitor, keyboard and mouse on a single dongle, so one
@@ -148,6 +171,16 @@ import { property, home } from '../data/site.config';
 </Base>
 <style>
   section { padding-block: var(--s12) var(--s8); }
+  .unit-block { margin-block: var(--s6); }
+  .rooms-list { list-style: none; padding: 0; margin: var(--s3) 0 0; max-width: var(--measure); }
+  .rooms-list li { display: grid; grid-template-columns: 1fr auto; gap: var(--s1) var(--s4);
+                   padding: var(--s2) 0; border-bottom: 1px solid var(--limestone); }
+  @media (min-width: 560px) {
+    .rooms-list li { grid-template-columns: 6rem 1fr 6rem 6rem; align-items: baseline; }
+  }
+  .rm { font-weight: 600; }
+  .dim, .area { color: var(--text-muted); }
+  .rate-cell { color: var(--sodium-deep); font-weight: 600; text-align: right; }
   .appliances { list-style: none; padding: 0; margin: var(--s4) 0; max-width: var(--measure);
                 display: flex; flex-wrap: wrap; gap: var(--s2); }
   .appliances li { border: 1px solid var(--limestone-edge); padding: var(--s1) var(--s3);
