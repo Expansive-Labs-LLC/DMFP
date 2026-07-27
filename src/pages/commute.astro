@@ -1,0 +1,49 @@
+---
+/** `/commute` — the most conservative page on the site. Method note ABOVE the table. */
+import Base from '../layouts/Base.astro';
+import Fact from '../components/Fact.astro';
+import FactTable from '../components/FactTable.astro';
+import { property, home } from '../data/site.config';
+import { isTbd } from '../lib/fact';
+import RouteMap from '../components/RouteMap.astro';
+const c = property.commute;
+---
+<Base title="Distance to each facility" description="Measured distance and typical drive time from the house to each facility.">
+  <section class="wrap stack">
+    <h1 class="display-l">Distance to each facility.</h1>
+
+    <p class="measure method">
+      Times measured <Fact value={c.measuredAt} /> using <Fact value={c.method} />. Traffic varies.
+      Confirm against your own route before you sign.
+    </p>
+
+    <FactTable
+      columns={['Facility', 'Distance', 'Typical drive', 'Parking']}
+      rows={c.facilities.map((f) => ({ head: f.name, cells: [f.distance, f.driveTime, f.parking] }))} />
+
+    <h2>Routes</h2>
+    <p class="measure small muted">
+      From {property.address.street}, {property.address.locality}. Not affiliated with either health
+      system.
+    </p>
+    {
+      c.facilities.map((f) => (
+        <RouteMap facilityName={f.name} destAddress={f.destAddress} apiKey={property.map.googleEmbedApiKey} />
+      ))
+    }
+
+    <h2>Parking at the house</h2>
+    <p class="measure">{home.parking}</p>
+
+    <h2>Transit</h2>
+    <p class="measure"><Fact value={property.transit} /></p>
+
+    <p class="small"><a href="/inquire">Ask about a specific route</a>.</p>
+  </section>
+</Base>
+<style>
+  section { padding-block: var(--s12) var(--s8); }
+  .method { border-left: 3px solid var(--limestone-edge); padding-left: var(--s4); }
+  .plain { list-style: none; padding: 0; max-width: var(--measure); }
+  .plain li + li { margin-top: var(--s1); }
+</style>

@@ -1,0 +1,16 @@
+---
+/** P1 policy page. The text itself is a TBD — legal copy is not invented. */
+import Base from '../layouts/Base.astro';
+import Fact from '../components/Fact.astro';
+import { tbd } from '../data/site.config';
+---
+<Base title="Terms" description="Terms policy for detroitmedfocusproperties.com.">
+  <section class="wrap stack">
+    <h1 class="display-l">Terms</h1>
+    <p class="measure"><Fact value={tbd('terms_policy_text')} /></p>
+    <p class="measure small muted">
+      This page is a placeholder. The policy text has not been written and is not invented here.
+    </p>
+  </section>
+</Base>
+<style>section { padding-block: var(--s12) var(--s8); }</style>

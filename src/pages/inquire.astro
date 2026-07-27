@@ -1,0 +1,92 @@
+---
+/**
+ * `/inquire` — an inquiry that STARTS an application. It is not the application.
+ *
+ * ADR-0001: no rental-application field appears here. Occupant count is an
+ * occupancy question and is the only one of its kind. Nothing asks about age,
+ * DOB, marital status, family, household composition, income or employment.
+ * SPEC-DMFP-FE-0102 FR-009, CON-006.
+ */
+import Base from '../layouts/Base.astro';
+import Fact from '../components/Fact.astro';
+import { site, property, home } from '../data/site.config';
+const ap = property.applications;
+const a = home.availability;
+---
+<Base title={`Apply for ${a.availableFrom.split(' ')[0]}`} description="Send an inquiry about the house. We reply within one business day.">
+  <section class="wrap stack">
+    <h1 class="display-l">Apply for {a.availableFrom.split(' ')[0]}.</h1>
+
+    <div class="measure stack">
+      <p><strong>What this form does.</strong> It sends an inquiry. It is not the application.</p>
+      <ol class="steps">
+        <li>You send this inquiry.</li>
+        <li>We reply {site.response.commitment}.</li>
+        <li>We email you the application to complete. Process: <Fact value={ap.process} />.</li>
+        <li>Application fee: <Fact value={ap.fee} />.</li>
+      </ol>
+      <p class="small">
+        Prefer email? Write to <Fact value={site.contact.email} /> or call
+        <span class="mono">{site.contact.phone}</span>.
+      </p>
+    </div>
+
+    <form class="form stack" method="post" action={site.form.endpoint}>
+      <input type="hidden" name="formType" value="clinician" />
+
+      <p class="field"><label for="name">Your name</label><input id="name" name="name" required autocomplete="name" /></p>
+      <p class="field"><label for="email">Email</label><input id="email" name="email" type="email" required autocomplete="email" /></p>
+      <p class="field"><label for="phone">Phone <span class="opt">optional</span></label><input id="phone" name="phone" type="tel" autocomplete="tel" /></p>
+      <p class="field"><label for="role">Your role <span class="opt">optional</span></label><input id="role" name="role" /></p>
+      <p class="field"><label for="facility">Facility <span class="opt">optional</span></label><input id="facility" name="facility" /></p>
+      <p class="field"><label for="contractStart">Contract start</label><input id="contractStart" name="contractStart" type="date" required /></p>
+      <p class="field">
+        <label for="contractLength">Contract length</label>
+        <select id="contractLength" name="contractLength" required>
+          <option value="1">1 month</option><option value="2">2 months</option>
+          <option value="3" selected>3 months</option><option value="4plus">4+ months</option>
+        </select>
+      </p>
+      <p class="field"><label for="occupants">How many people will stay</label><input id="occupants" name="occupants" type="number" min="1" max="6" value="1" required /></p>
+      <p class="check"><input id="pet" name="pet" type="checkbox" value="true" /><label for="pet">Bringing a pet</label></p>
+      <p class="field"><label for="petDetails">Pet details <span class="opt">optional</span></label><input id="petDetails" name="petDetails" /></p>
+      <p class="small note">
+        {home.pets.assistanceAnimalCarveOut}
+      </p>
+      <p class="check"><input id="parkingNeeded" name="parkingNeeded" type="checkbox" value="true" /><label for="parkingNeeded">Need a parking spot</label></p>
+      <p class="field"><label for="message">Anything else <span class="opt">optional</span></label><textarea id="message" name="message" rows="4"></textarea></p>
+
+      <!-- Honeypot. Must stay empty; a filled value returns 200 and sends nothing. -->
+      <p class="hp" aria-hidden="true"><label for="company_website">Company website</label><input id="company_website" name="company_website" tabindex="-1" autocomplete="off" /></p>
+      <input type="hidden" name="renderedAt" value="0" />
+      <input type="hidden" name="submittedAt" value="0" />
+
+      <p><button type="submit" class="btn">Send inquiry</button></p>
+    </form>
+
+    <p class="small measure">
+      We collect only what is above, to answer your inquiry. Nothing here asks about age, income,
+      employment, or household make-up. See <a href="/privacy">Privacy</a>.
+    </p>
+  </section>
+</Base>
+<style>
+  section { padding-block: var(--s12) var(--s8); }
+  .steps { max-width: var(--measure); padding-left: var(--s6); }
+  .steps li + li { margin-top: var(--s2); }
+  .form { max-width: 34rem; margin-top: var(--s8); }
+  .field { display: flex; flex-direction: column; gap: var(--s1); margin: 0 0 var(--s4); }
+  .check { display: flex; align-items: center; gap: var(--s2); margin: 0 0 var(--s4); }
+  label { font-weight: 600; font-size: 0.8125rem; letter-spacing: 0.04em; }
+  .opt { font-weight: 400; letter-spacing: 0; color: var(--text-muted); }
+  input, select, textarea {
+    font: inherit; padding: var(--s2) var(--s3);
+    border: 1px solid var(--limestone-edge); background: var(--paper); color: var(--text); border-radius: 2px;
+  }
+  .check input { width: auto; }
+  .note { border-left: 3px solid var(--signal); padding-left: var(--s3); max-width: var(--measure); }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .btn { background: var(--ink); color: var(--paper); border: 0; padding: var(--s3) var(--s8);
+         font-weight: 600; border-radius: 2px; cursor: pointer; }
+  .btn:hover { background: var(--brick); }
+</style>

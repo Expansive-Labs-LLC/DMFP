@@ -1,0 +1,122 @@
+---
+import { site, property } from '../data/site.config';
+import { machine, compact } from '../lib/fact';
+import Fact from '../components/Fact.astro';
+import '../styles/tokens.css';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
+
+/**
+ * SPEC-DMFP-FE-0102 FR-005 / AC-002 — a Tbd is OMITTED from JSON-LD, never
+ * serialized as a token string. `machine()` returns undefined and `compact()`
+ * drops the key.
+ */
+const jsonLd = compact({
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: machine(site.entity.legalName) ?? site.brand,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: property.address.street,
+    addressLocality: property.address.locality,
+    addressRegion: property.address.region,
+    postalCode: property.address.postalCode,
+  },
+  email: machine(site.contact.email),
+  telephone: machine(site.contact.phone),
+});
+
+const nav = [
+  { href: '/the-house', label: 'The house' },
+  { href: '/whats-included', label: "What's included" },
+  { href: '/commute', label: 'Commute' },
+  { href: '/for-agencies', label: 'For agencies' },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-head">
+      <div class="wrap head-inner">
+        <a class="brand" href="/">{site.brand}</a>
+        <nav aria-label="Primary">
+          {nav.map((n) => <a href={n.href}>{n.label}</a>)}
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="site-foot on-ink">
+      <div class="wrap stack">
+        <p class="small">
+          <strong><Fact value={site.entity.legalName} /></strong><br />
+          {property.address.street}, {property.address.locality}, {property.address.region}{' '}
+          {property.address.postalCode}
+        </p>
+        <p class="small">
+          Inquiries: <Fact value={site.contact.email} /> · <Fact value={site.contact.phone} />
+        </p>
+        <!-- FR-010 — the EHO statement appears on every emitted page. -->
+        <p class="small eho">{site.legal.eho}</p>
+        <p class="small">
+          <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> ·
+          <a href="/accessibility">Accessibility</a>
+        </p>
+      </div>
+    </footer>
+
+    <style>
+      .site-head {
+        border-bottom: 1px solid var(--limestone);
+      }
+      .head-inner {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--s4);
+        align-items: baseline;
+        justify-content: space-between;
+        padding-block: var(--s4);
+      }
+      .brand {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 1.0625rem;
+        text-decoration: none;
+        color: var(--text);
+      }
+      nav {
+        display: flex;
+        gap: var(--s4);
+        flex-wrap: wrap;
+        font-size: 0.9375rem;
+      }
+      .site-foot {
+        margin-top: var(--s16);
+        padding-block: var(--s12);
+      }
+      .eho {
+        color: color-mix(in srgb, var(--paper) 72%, transparent);
+        max-width: var(--measure);
+      }
+    </style>
+  </body>
+</html>

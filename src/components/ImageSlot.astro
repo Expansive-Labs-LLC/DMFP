@@ -1,0 +1,96 @@
+---
+/**
+ * An image, or an honest placeholder.
+ *
+ * DESIGN-PLAN §13.3 / §6 — during rehab there are no interior photos. Every empty
+ * slot renders a neutral placeholder with a visible TODO badge. It NEVER renders
+ * stock photography of a finished apartment: that would be a lie about a unit that
+ * is currently a construction site. SPEC-DMFP-FE-0102 FR-012, CON-008.
+ *
+ * To fill a slot: save the file under src/assets/ and set the config value to its
+ * filename. The optimizer picks it up from there.
+ */
+import { Image } from 'astro:assets';
+import { isTbd } from '../lib/fact';
+
+interface Props {
+  /** Filename under src/assets/, or a Tbd. */
+  value: unknown;
+  alt: string;
+  caption?: string;
+  width?: number;
+  height?: number;
+  /** Only the single above-fold image should set this. */
+  eager?: boolean;
+}
+const { value, alt, caption, width = 1200, height = 800, eager = false } = Astro.props;
+
+const assets = import.meta.glob<{ default: ImageMetadata }>('../assets/*.{jpg,jpeg,png,webp,avif}', {
+  eager: true,
+});
+const key = typeof value === 'string' ? `../assets/${value}` : null;
+const img = key ? assets[key]?.default : undefined;
+
+/** A filename that is set but missing from disk is a mistake, not a placeholder. */
+const missingFile = typeof value === 'string' && !img;
+---
+
+<figure class="slot">
+  {
+    img ? (
+      <Image src={img} alt={alt} widths={[480, 800, 1200]} loading={eager ? 'eager' : 'lazy'} />
+    ) : (
+      <div class="placeholder" style={`aspect-ratio:${width}/${height}`} role="img" aria-label={alt}>
+        <span class="badge">TODO</span>
+        <span class="what">
+          {missingFile
+            ? `Missing file: src/assets/${value}`
+            : isTbd(value)
+              ? `{{TBD:${(value as any).token}}}`
+              : 'Photograph not taken yet'}
+        </span>
+        <span class="why small">Rooms are photographed as renovation finishes.</span>
+      </div>
+    )
+  }
+  {caption && <figcaption class="small muted">{caption}</figcaption>}
+</figure>
+
+<style>
+  .slot {
+    margin: 0;
+  }
+  .slot :global(img) {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s2);
+    text-align: center;
+    padding: var(--s6);
+    background: var(--paper-sunk);
+    border: 1px dashed var(--limestone-edge);
+    color: var(--text-muted);
+  }
+  .badge {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    background: var(--brick);
+    color: var(--paper);
+    padding: 0.1em 0.5em;
+    border-radius: 2px;
+  }
+  .what {
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+  }
+  figcaption {
+    margin-top: var(--s2);
+  }
+</style>

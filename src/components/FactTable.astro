@@ -1,0 +1,94 @@
+---
+/**
+ * A table of facts that stacks to definition-list rows below 768px.
+ * Mono, tabular figures. Any unknown cell renders its placeholder rather than
+ * an invented value — CONTENT-OUTLINE /commute §3.
+ */
+import Fact from './Fact.astro';
+
+interface Props {
+  caption?: string;
+  columns: string[];
+  rows: Array<{ head: string; cells: unknown[] }>;
+}
+const { caption, columns, rows } = Astro.props;
+---
+
+<table class="fact-table">
+  {caption && <caption class="small muted">{caption}</caption>}
+  <thead>
+    <tr>
+      {columns.map((c) => <th scope="col" class="micro">{c}</th>)}
+    </tr>
+  </thead>
+  <tbody>
+    {
+      rows.map((r) => (
+        <tr>
+          <th scope="row">{r.head}</th>
+          {r.cells.map((c, i) => (
+            <td class="mono" data-label={columns[i + 1]}>
+              <Fact value={c} />
+            </td>
+          ))}
+        </tr>
+      ))
+    }
+  </tbody>
+</table>
+
+<style>
+  .fact-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+  caption {
+    text-align: left;
+    padding-bottom: var(--s2);
+  }
+  th,
+  td {
+    padding: var(--s3) var(--s4) var(--s3) 0;
+    border-bottom: 1px solid var(--limestone);
+    vertical-align: top;
+  }
+  tbody th {
+    font-weight: 600;
+  }
+  tbody tr:nth-child(even) {
+    background: var(--paper-sunk);
+  }
+
+  @media (max-width: 767px) {
+    thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+    tr {
+      display: block;
+      border-bottom: 2px solid var(--limestone);
+      padding-block: var(--s3);
+    }
+    tbody tr:nth-child(even) {
+      background: none;
+    }
+    th,
+    td {
+      display: block;
+      border: 0;
+      padding: 0;
+    }
+    td::before {
+      content: attr(data-label) ': ';
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.8125rem;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+    }
+  }
+</style>

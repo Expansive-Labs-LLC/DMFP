@@ -1,0 +1,59 @@
+---
+/** `/whats-included` — CONTENT-OUTLINE. Status-gated; a date is the price of appearing here. */
+import Base from '../layouts/Base.astro';
+import DayBand from '../components/DayBand.astro';
+import Fact from '../components/Fact.astro';
+import { site, services, serviceDisplay } from '../data/site.config';
+import { isTbd } from '../lib/fact';
+
+const shown = services.filter(
+  (s) => s.status === 'live' || (serviceDisplay.showNonLive && s.status === 'launching')
+);
+const inRent = shown.filter((s) => s.included);
+const onRequest = shown.filter((s) => !s.included);
+---
+<Base title="What the house handles" description="What is included in the rent, what is available on request, and what is not provided.">
+  <section class="wrap stack">
+    <h1 class="display-l">What the house handles.</h1>
+
+    <div class="on-ink band-wrap"><DayBand variant="compact" /></div>
+
+    {shown.length === 0 ? (
+      <p class="measure">
+        The service list isn't published yet. <a href="/inquire">Ask what's available</a>.
+      </p>
+    ) : (
+      <>
+        <h2>Included in rent</h2>
+        {inRent.length === 0 ? <p class="muted">Nothing is confirmed yet.</p> : (
+          <ul class="stack-list">{inRent.map((s) => (
+            <li>
+              <strong>{s.name}</strong> — {s.description}
+              {s.status === 'launching' && <span class="from"> {isTbd(s.liveFrom) ? <Fact value={s.liveFrom} /> : `from ${s.liveFrom}`}</span>}
+            </li>
+          ))}</ul>
+        )}
+
+        <h2>Available on request</h2>
+        {onRequest.length === 0 ? <p class="muted">Nothing is confirmed yet.</p> : (
+          <ul class="stack-list">{onRequest.map((s) => (
+            <li>
+              <strong>{s.name}</strong> — {s.description} <span class="mono">{s.price ? <Fact value={s.price} /> : null}</span>
+              {s.status === 'launching' && <span class="from"> {isTbd(s.liveFrom) ? <Fact value={s.liveFrom} /> : `from ${s.liveFrom}`}</span>}
+            </li>
+          ))}</ul>
+        )}
+      </>
+    )}
+
+    <h2>Not included</h2>
+    <ul class="stack-list">{site.notIncluded.map((n) => <li>{n}</li>)}</ul>
+  </section>
+</Base>
+<style>
+  section { padding-block: var(--s12) var(--s8); }
+  .band-wrap { padding: var(--s6); border-radius: 2px; }
+  .stack-list { max-width: var(--measure); padding-left: var(--s6); }
+  .stack-list li + li { margin-top: var(--s3); }
+  .from { color: var(--sodium-deep); }
+</style>

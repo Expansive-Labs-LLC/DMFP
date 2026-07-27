@@ -1,0 +1,8 @@
+# Specs library — separate PRIVATE repo. This repo is public; never track it here.
+specs/
+
+node_modules/
+dist/
+.astro/
+TODO.md
+.DS_Store

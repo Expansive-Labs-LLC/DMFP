@@ -1,0 +1,336 @@
+---
+/**
+ * DESIGN-PLAN §3 — the signature element.
+ *
+ * §3.2 is the load-bearing decision: two radio inputs drive everything through
+ * `:checked ~` sibling selectors. Both presets work fully with JavaScript disabled,
+ * and the toggle is keyboard-operable for free via native radio semantics — no
+ * hand-rolled role/aria-pressed to get wrong. SPEC-DMFP-FE-0102 FR-011, AC-007.
+ *
+ * §3.1: each preset re-origins its axis so the shift and sleep blocks are each
+ * contiguous in both states. Both presets happen to land on identical relative
+ * geometry; what moves is the daylight wash. That is the argument the band makes —
+ * on nights, sleep sits underneath the daylight columns.
+ */
+import { property, services, serviceDisplay } from '../data/site.config';
+import { isTbd } from '../lib/fact';
+import Fact from './Fact.astro';
+
+interface Props {
+  variant?: 'full' | 'compact';
+}
+const { variant = 'full' }: Props = Astro.props;
+
+const { presets, markers } = property.dayBand;
+const DAY = 1440;
+
+const toMin = (hhmm: string): number => {
+  const [h, m] = hhmm.split(':').map(Number);
+  return h * 60 + m;
+};
+/** Minutes from the preset's axis origin, wrapping across midnight. */
+const rel = (t: string, origin: string): number => (toMin(t) - toMin(origin) + DAY) % DAY;
+const pct = (min: number): number => (min / DAY) * 100;
+
+/** A window may wrap the axis end, so it can yield two segments. */
+function segments(start: string, end: string, origin: string) {
+  const a = rel(start, origin);
+  const b = rel(end, origin);
+  return a <= b
+    ? [{ x: pct(a), w: pct(b - a) }]
+    : [
+        { x: pct(a), w: pct(DAY - a) },
+        { x: 0, w: pct(b) },
+      ];
+}
+
+/** Daylight is an absolute-clock fact, so it lands differently on each axis. */
+const DAYLIGHT = { start: '06:00', end: '20:00' };
+
+const build = (key: 'days' | 'nights') => {
+  const p = presets[key];
+  return {
+    key,
+    origin: p.origin,
+    shift: segments(p.shift.start, p.shift.end, p.origin),
+    sleep: segments(p.sleep.start, p.sleep.end, p.origin),
+    wash: segments(DAYLIGHT.start, DAYLIGHT.end, p.origin),
+    hours: Array.from({ length: 9 }, (_, i) => {
+      const min = (toMin(p.origin) + i * 180) % DAY;
+      return { x: pct(i * 180), label: String(Math.floor(min / 60)).padStart(2, '0') };
+    }),
+    shiftLabel: `${p.shift.start}–${p.shift.end}`,
+    sleepLabel: `${p.sleep.start}–${p.sleep.end}`,
+  };
+};
+
+const views = { days: build('days'), nights: build('nights') };
+
+/**
+ * §3.4 — a marker renders only if its service resolves live, or launching when
+ * showNonLive is on (badged with its date). It cannot claim a service that isn't there.
+ */
+const visibleMarkers = markers
+  .map((m) => {
+    const svc = services.find((s) => s.id === m.serviceId);
+    if (!svc) return null;
+    const ok = svc.status === 'live' || (serviceDisplay.showNonLive && svc.status === 'launching');
+    if (!ok) return null;
+    return { ...m, service: svc };
+  })
+  .filter((m): m is NonNullable<typeof m> => m !== null);
+
+const markerPos = (at: string, key: 'days' | 'nights') => pct(rel(at, presets[key].origin));
+const uid = 'band';
+---
+
+<figure class="band-fig" data-variant={variant}>
+  <fieldset class="toggle">
+    <legend class="micro">Shift pattern</legend>
+    <input type="radio" name={`${uid}-shift`} id={`${uid}-days`} value="days" checked />
+    <label for={`${uid}-days`}>Days</label>
+    <input type="radio" name={`${uid}-shift`} id={`${uid}-nights`} value="nights" />
+    <label for={`${uid}-nights`}>Nights</label>
+  </fieldset>
+
+  <div class="band" role="img" aria-labelledby={`${uid}-caption`}>
+    {
+      (['days', 'nights'] as const).map((k) => {
+        const v = views[k];
+        return (
+          <div class={`view view-${k}`}>
+            <svg class="axis" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              {v.wash.map((s) => (
+                <rect class="wash" x={s.x} y="0" width={s.w} height="100" />
+              ))}
+              <rect class="track track-upper" x="0" y="14" width="100" height="26" />
+              {v.shift.map((s) => (
+                <rect class="blk blk-shift" x={s.x} y="14" width={s.w} height="26" />
+              ))}
+              {v.sleep.map((s) => (
+                <rect class="blk blk-sleep" x={s.x} y="14" width={s.w} height="26" />
+              ))}
+              {variant === 'full' && <rect class="track track-lower" x="0" y="56" width="100" height="16" />}
+              {variant === 'full' &&
+                visibleMarkers.map((m) => (
+                  <circle class="dot" cx={markerPos(m.at, k)} cy="64" r="3.2" />
+                ))}
+            </svg>
+
+            <div class="hours mono" aria-hidden="true">
+              {v.hours.map((h) => (
+                <span style={`left:${h.x}%`}>{h.label}</span>
+              ))}
+            </div>
+
+            {variant === 'full' && (
+              <p class="blocks-legend small">
+                <span class="key key-shift" /> On shift <span class="mono">{v.shiftLabel}</span>
+                <span class="key key-sleep" /> Asleep <span class="mono">{v.sleepLabel}</span>
+              </p>
+            )}
+          </div>
+        );
+      })
+    }
+  </div>
+
+  {
+    variant === 'full' && (
+      <ol class="markers small">
+        {visibleMarkers.length === 0 ? (
+          <li class="empty">Service schedule not yet published.</li>
+        ) : (
+          visibleMarkers.map((m, i) => (
+            <li id={`${uid}-m${i}`}>
+              <span class="mono">{m.at}</span> {m.label}
+              {/* §13.4 — a launching service carries a MANDATORY date label. */}
+              {m.service.status === 'launching' && (
+                <span class="launching">
+                  {' '}
+                  {isTbd(m.service.liveFrom) ? (
+                    <Fact value={m.service.liveFrom} />
+                  ) : (
+                    `from ${m.service.liveFrom}`
+                  )}
+                </span>
+              )}
+            </li>
+          ))
+        )}
+      </ol>
+    )
+  }
+
+  <figcaption id={`${uid}-caption`} class="small muted">
+    Illustrative shift schedule. Not a claim about this property's services.
+  </figcaption>
+</figure>
+
+<style>
+  .band-fig {
+    margin: 0;
+  }
+
+  .toggle {
+    border: 0;
+    padding: 0;
+    margin: 0 0 var(--s4);
+    display: flex;
+    align-items: center;
+    gap: var(--s2);
+    flex-wrap: wrap;
+  }
+  .toggle legend {
+    float: left;
+    width: 100%;
+    margin-bottom: var(--s2);
+  }
+  /* Inputs stay in the DOM and keep native semantics; the label is the visible control. */
+  .toggle input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+  .toggle label {
+    padding: var(--s2) var(--s4);
+    border: 1px solid var(--limestone-edge);
+    cursor: pointer;
+    font-size: 0.9375rem;
+    transition: background 120ms ease;
+  }
+  .toggle label:first-of-type {
+    border-radius: 2px 0 0 2px;
+  }
+  .toggle label:last-of-type {
+    border-radius: 0 2px 2px 0;
+    border-left: 0;
+  }
+  .toggle input:checked + label {
+    background: var(--sodium);
+    color: var(--ink);
+    border-color: var(--sodium);
+    font-weight: 600;
+  }
+  .toggle input:focus-visible + label {
+    outline: 2px solid var(--sodium);
+    outline-offset: 2px;
+  }
+
+  .band {
+    position: relative;
+  }
+  .view {
+    display: none;
+  }
+  /* §3.2 — the entire mechanic, no JavaScript involved. */
+  .toggle:has(input[value='days']:checked) ~ .band .view-days {
+    display: block;
+  }
+  .toggle:has(input[value='nights']:checked) ~ .band .view-nights {
+    display: block;
+  }
+
+  .axis {
+    width: 100%;
+    height: 132px;
+    display: block;
+  }
+  [data-variant='compact'] .axis {
+    height: 66px;
+  }
+
+  .wash {
+    fill: color-mix(in srgb, var(--paper) 9%, transparent);
+  }
+  [data-variant='compact'] .wash {
+    fill: none;
+  }
+  .track {
+    fill: color-mix(in srgb, var(--paper) 7%, transparent);
+  }
+  .blk-shift {
+    fill: var(--sodium);
+    transition: x 240ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .blk-sleep {
+    fill: color-mix(in srgb, var(--paper) 26%, transparent);
+    transition: x 240ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .dot {
+    fill: var(--signal-bright);
+  }
+
+  .hours {
+    position: relative;
+    height: 1.4em;
+    color: var(--paper);
+    opacity: 0.65;
+    font-size: 0.75rem;
+  }
+  .hours span {
+    position: absolute;
+    transform: translateX(-50%);
+  }
+  /* §3.1 — every 3 hours at 360px, every 2 at ≥768px. Thin the labels on small screens. */
+  .hours span:nth-child(even) {
+    display: none;
+  }
+  @media (min-width: 768px) {
+    .hours span:nth-child(even) {
+      display: inline;
+    }
+  }
+
+  .blocks-legend {
+    display: flex;
+    align-items: center;
+    gap: var(--s2);
+    flex-wrap: wrap;
+    margin: var(--s3) 0 0;
+    color: var(--paper);
+  }
+  .key {
+    width: 0.85em;
+    height: 0.85em;
+    display: inline-block;
+    border-radius: 2px;
+  }
+  .key-shift {
+    background: var(--sodium);
+  }
+  .key-sleep {
+    background: color-mix(in srgb, var(--paper) 40%, transparent);
+  }
+
+  .markers {
+    margin: var(--s4) 0 0;
+    padding-left: var(--s6);
+    color: var(--paper);
+  }
+  .markers .empty {
+    list-style: none;
+    margin-left: calc(var(--s6) * -1);
+    opacity: 0.75;
+  }
+  .launching {
+    color: var(--sodium);
+  }
+  /* §3.3 — at ≥768px markers are pins on the track, but the list stays in the DOM
+     so screen-reader and print output remain complete. */
+  @media (min-width: 768px) {
+    .markers:not(:has(.empty)) {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+  }
+
+  figcaption {
+    margin-top: var(--s4);
+    color: color-mix(in srgb, var(--paper) 70%, transparent);
+  }
+</style>

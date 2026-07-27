@@ -1,0 +1,30 @@
+---
+/**
+ * Renders a fact, or a loud placeholder if it is not known yet.
+ *
+ * DESIGN-PLAN §0 — an unknown fact must be visible on the page, not quietly
+ * absent, so the pre-launch site is honest and the gap is reviewable.
+ * SPEC-DMFP-FE-0102 FR-003, AC-001.
+ *
+ * For machine-readable surfaces use machine()/compact() instead — a token in
+ * JSON-LD is a malformed claim rather than an absent one (FR-005).
+ */
+import { isTbd } from '../lib/fact';
+
+interface Props {
+  value: unknown;
+  /** Applied only when the fact is known. */
+  format?: (v: any) => string;
+}
+const { value, format } = Astro.props;
+---
+
+{
+  isTbd(value) ? (
+    <span class="tbd" title={value.note ?? `Outstanding fact: ${value.token}`}>
+      {`{{TBD:${value.token}}}`}
+    </span>
+  ) : (
+    <Fragment>{format ? format(value) : String(value)}</Fragment>
+  )
+}

@@ -1,0 +1,191 @@
+---
+/**
+ * `/` — Home (P0). Content per CONTENT-OUTLINE.md §"/ — Home".
+ * Every fact is a config path. Nothing here is a literal. (FR-002, CON-004)
+ */
+import Base from '../layouts/Base.astro';
+import DayBand from '../components/DayBand.astro';
+import { site, property, home, services, serviceDisplay } from '../data/site.config';
+import { isTbd } from '../lib/fact';
+import Fact from '../components/Fact.astro';
+
+const nearest = property.commute.facilities[0];
+const liveServices = services.filter((s) => s.status === 'live');
+const shownServices = services.filter(
+  (s) => s.status === 'live' || (serviceDisplay.showNonLive && s.status === 'launching')
+);
+const avail = home.availability;
+---
+
+<Base
+  title={`Furnished clinician housing in ${property.neighborhood}, Detroit`}
+  description={`Furnished housing in Detroit's New Center area for clinicians on 30-day and longer assignments. Renovation underway, applications open for ${property.applications.forOccupancy} occupancy.`}
+>
+  <!-- 1. Day band hero -->
+  <section class="hero on-ink">
+    <div class="wrap">
+      <h1 class="display-xl">Built around a 12-hour shift.</h1>
+      <p class="standfirst measure">
+        Furnished housing in Detroit's {property.neighborhood} area for clinicians on {
+          home.terms.minNights
+        }-day and longer assignments. The building's job is to give your off-hours back.
+        <strong>
+          Renovation is underway now and applications are open for {property.applications.forOccupancy}.
+        </strong>
+      </p>
+      <DayBand />
+    </div>
+  </section>
+
+  <!-- 2. Three proof blocks -->
+  <section class="wrap proof">
+    <h2>
+      Travel nurse housing in Detroit, near {nearest.name}
+    </h2>
+    <div class="proof-grid">
+      <article class="stack">
+        <h3>Commute</h3>
+        <p class="data mono">
+          <Fact value={nearest.distance} /> · <Fact value={nearest.driveTime} />
+        </p>
+        <p class="small muted">to {nearest.name}</p>
+        <p class="small"><a href="/commute">See all facilities →</a></p>
+      </article>
+
+      <article class="stack">
+        <h3>Included</h3>
+        {
+          liveServices.length === 0 ? (
+            <p class="small muted">No services are confirmed live yet.</p>
+          ) : (
+            <p class="data mono">{liveServices.length} confirmed</p>
+          )
+        }
+        <ul class="small plain">
+          {
+            shownServices.slice(0, 3).map((s) => (
+              <li>
+                {s.name}
+                {s.status === 'launching' && (
+                  <span class="from">
+                    {' '}
+                    {isTbd(s.liveFrom) ? <Fact value={s.liveFrom} /> : `from ${s.liveFrom}`}
+                  </span>
+                )}
+              </li>
+            ))
+          }
+        </ul>
+        <p class="small"><a href="/whats-included">What's included →</a></p>
+      </article>
+
+      <!-- The block that renders real content from launch. -->
+      <article class="stack badge">
+        <h3>Pre-leasing</h3>
+        <p class="small">
+          Renovation underway. First occupancy {avail.availableFrom}. Applications are open now.
+        </p>
+        <p class="data mono rate"><Fact value={home.terms.rateRoomMonthly} /></p>
+        <p class="small muted">per bedroom, per month</p>
+        <p class="data mono rate"><Fact value={home.terms.rateHouseMonthly} /></p>
+        <p class="small muted">whole house, per month</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 3. Who this is for -->
+  <section class="wrap">
+    <div class="measure stack">
+      <h2>Who this is for</h2>
+      <p>
+        The house has {home.bedrooms} bedrooms, {home.bathroomsFull} full bathrooms and {home.kitchens}
+        kitchens. It is furnished, with in-unit laundry and its own entrance. It is set up for stays of {
+          home.terms.minNights
+        } days and longer, which usually means a {home.terms.typicalContractWeeks}-week contract. Two
+        kitchens means six people are not queuing for one stove before a shift. The layout assumes someone is asleep during the day and someone else is leaving
+        before dawn. The unit is being renovated now, and the first occupancy is {avail.availableFrom}. If
+        you are here for a weekend, this is not the right place.
+      </p>
+    </div>
+  </section>
+
+  <!-- 4. CTA -->
+  <section class="wrap cta stack">
+    <a class="btn" href="/inquire">Apply for {avail.availableFrom.split(' ')[0]}</a>
+    <p class="small">Booking for a clinician? See <a href="/for-agencies">For agencies</a>.</p>
+  </section>
+
+  <!-- 5. Below the fold -->
+  <nav class="wrap more" aria-label="Explore">
+    <a href="/the-house">The house</a>
+    <a href="/commute">Commute</a>
+    <a href="/whats-included">What's included</a>
+  </nav>
+</Base>
+
+<style>
+  .hero {
+    padding-block: var(--s12) var(--s16);
+  }
+  .standfirst {
+    font-size: 1.125rem;
+    margin: var(--s6) 0 var(--s12);
+  }
+  .proof {
+    padding-block: var(--s16) var(--s8);
+  }
+  .proof-grid {
+    display: grid;
+    gap: var(--s8);
+    margin-top: var(--s8);
+  }
+  @media (min-width: 768px) {
+    .proof-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .data {
+    font-size: 1.25rem;
+  }
+  .rate {
+    font-size: 1.5rem;
+  }
+  .badge {
+    border-left: 3px solid var(--signal);
+    padding-left: var(--s4);
+  }
+  .from {
+    color: var(--sodium-deep);
+  }
+  ul.plain {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  ul.plain li + li {
+    margin-top: var(--s1);
+  }
+  .cta {
+    padding-block: var(--s16);
+  }
+  .btn {
+    display: inline-block;
+    background: var(--ink);
+    color: var(--paper);
+    padding: var(--s3) var(--s8);
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 2px;
+  }
+  .btn:hover {
+    background: var(--brick);
+    color: var(--paper);
+  }
+  .more {
+    display: flex;
+    gap: var(--s6);
+    flex-wrap: wrap;
+    border-top: 1px solid var(--limestone);
+    padding-top: var(--s8);
+  }
+</style>

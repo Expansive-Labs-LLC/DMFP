@@ -1,0 +1,64 @@
+---
+/** `/the-house` — CONTENT-OUTLINE. Inverted for pre-leasing (§13.3): facts lead, photos slot in. */
+import Base from '../layouts/Base.astro';
+import Fact from '../components/Fact.astro';
+import ImageSlot from '../components/ImageSlot.astro';
+import { property, home } from '../data/site.config';
+const t = home.terms;
+---
+<Base title="The house" description="A furnished six-bedroom house in Detroit's New Center area, currently being renovated for September 2026 occupancy.">
+  <section class="wrap stack">
+    <h1 class="display-l">The house.</h1>
+    <p class="measure">
+      {home.bedrooms} bedrooms, {home.bathroomsFull} full bathrooms, {home.kitchens} kitchens.
+      Furnished, {home.laundry} laundry, {home.entrance} entrance.
+    </p>
+
+    <ImageSlot value={property.photos.exteriorFront} eager
+      alt={`The front of ${property.address.street}, seen from the street.`}
+      caption="The building as it stands today." />
+
+    <h2>Renovation status</h2>
+    <p class="measure">
+      The house is being renovated now. Rooms are photographed as they're finished and posted here as
+      they're done. Target: <Fact value={property.rehab.completionTarget} />.
+    </p>
+
+    <h2>Kitchen</h2>
+    <p class="measure">Two kitchens. Appliances: <Fact value={home.kitchen.appliances} />.</p>
+    <p class="measure">Cookware: <Fact value={home.kitchen.cookware} />.</p>
+
+    <h2>Laundry</h2>
+    <p class="measure">{home.laundry} laundry.</p>
+
+    <h2>Parking</h2>
+    <p class="measure">{home.parking} <a href="/commute">Distances to each facility →</a></p>
+
+    <h2>Internet</h2>
+    <p class="measure">
+      Measured <Fact value={home.internet.down} /> down, <Fact value={home.internet.up} /> up, on
+      <Fact value={home.internet.measuredAt} />.
+    </p>
+
+    <h2>Entry and access</h2>
+    <p class="measure">{home.entry.floor}. <Fact value={home.entry.steps} /> steps at the entry.</p>
+
+    <h2>Floorplan</h2>
+    <ImageSlot value={home.floorplan} alt="Floorplan of the house." height={600} />
+
+    <h2>Room by room</h2>
+    {home.rooms.length === 0
+      ? <p class="measure muted">No rooms have been photographed yet. They are posted as renovation finishes.</p>
+      : <div class="rooms">{home.rooms.map((r) => <ImageSlot value={r.photo} alt={r.caption} caption={r.caption} />)}</div>}
+
+    <p><a class="btn" href="/inquire">Apply for {home.availability.availableFrom.split(' ')[0]}</a></p>
+  </section>
+</Base>
+<style>
+  section { padding-block: var(--s12) var(--s8); }
+  .rooms { display: grid; gap: var(--s6); }
+  @media (min-width: 768px) { .rooms { grid-template-columns: 1fr 1fr; } }
+  .btn { display:inline-block; background:var(--ink); color:var(--paper); padding:var(--s3) var(--s8);
+         text-decoration:none; font-weight:600; border-radius:2px; }
+  .btn:hover { background: var(--brick); color: var(--paper); }
+</style>

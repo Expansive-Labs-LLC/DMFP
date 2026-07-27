@@ -1,0 +1,86 @@
+---
+/**
+ * Driving route from the house to a facility, via Google Maps.
+ *
+ * DEVIATION from DESIGN-PLAN §4 (self-hosted MapLibre) and SPEC-DMFP-FE-0102
+ * SEC-003 (no third-party scripts) — owner decision 2026-07-26.
+ *
+ * Two mitigations, because a Google frame is a third-party tracker on a housing site:
+ *   1. CLICK TO LOAD. The iframe lives inside a closed <details>, so nothing is
+ *      requested from Google until the visitor opens it. Native element, works with
+ *      JavaScript disabled, keyboard-operable for free.
+ *   2. NO KEY, NO FRAME. Without an API key the component renders a plain directions
+ *      link instead. It never embeds a broken or unkeyed frame.
+ *
+ * The destination is the facility's precise address once supplied; until then the
+ * facility name, which Google resolves to the campus. A campus is not an entrance —
+ * that is why destAddress still blocks launch.
+ */
+import { isTbd } from '../lib/fact';
+import { property } from '../data/site.config';
+
+interface Props {
+  facilityName: string;
+  destAddress: unknown;
+  apiKey: unknown;
+}
+const { facilityName, destAddress, apiKey } = Astro.props;
+
+const a = property.address;
+const origin = `${a.street}, ${a.locality}, ${a.region} ${a.postalCode}`;
+const destination = isTbd(destAddress)
+  ? `${facilityName}, ${a.locality}, ${a.region}`
+  : String(destAddress);
+const destIsApproximate = isTbd(destAddress);
+
+const q = encodeURIComponent;
+/** Official URL scheme — no key, no frame, nothing loads until clicked. */
+const linkUrl = `https://www.google.com/maps/dir/?api=1&origin=${q(origin)}&destination=${q(destination)}&travelmode=driving`;
+const embedUrl = isTbd(apiKey)
+  ? null
+  : `https://www.google.com/maps/embed/v1/directions?key=${q(String(apiKey))}&origin=${q(origin)}&destination=${q(destination)}&mode=driving`;
+---
+
+<div class="route">
+  {
+    embedUrl ? (
+      <details>
+        <summary>
+          Show the driving route to {facilityName}
+          <span class="small muted"> — loads a map from Google</span>
+        </summary>
+        <iframe
+          src={embedUrl}
+          title={`Driving route from ${a.street} to ${facilityName}`}
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+        />
+        <p class="small muted">
+          Map data © Google. Opening this map shares your IP address with Google.
+        </p>
+      </details>
+    ) : (
+      <p class="small">
+        <a href={linkUrl} rel="noopener noreferrer" target="_blank">
+          Driving directions to {facilityName} →
+        </a>
+        <span class="muted"> opens Google Maps</span>
+      </p>
+    )
+  }
+  {
+    destIsApproximate && (
+      <p class="small approx">
+        Routed to the {facilityName} campus, not a specific entrance. Confirm your own route.
+      </p>
+    )
+  }
+</div>
+
+<style>
+  .route { margin-block: var(--s4); }
+  summary { cursor: pointer; font-weight: 600; padding: var(--s2) 0; }
+  iframe { width: 100%; height: 420px; border: 1px solid var(--limestone-edge); display: block; margin-top: var(--s3); }
+  .approx { color: var(--text-muted); border-left: 3px solid var(--limestone-edge); padding-left: var(--s3); }
+</style>

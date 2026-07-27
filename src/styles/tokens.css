@@ -1,0 +1,49 @@
+/**
+ * DESIGN-PLAN §1 — two families, on-ink and on-paper.
+ *
+ * Every value here was contrast-audited. --sodium is 1.94:1 on paper and MUST NOT
+ * be used for text, borders, or focus rings on a paper surface. Use --sodium-deep.
+ *
+ * No hex values outside this file. check-facts.mjs greps components for #rrggbb.
+ */
+:root {
+  /* surfaces */
+  --ink: #14182a;
+  --paper: #edeae3;
+  --paper-sunk: #e4e0d7; /* decorative only */
+
+  /* text on paper */
+  --text: #14182a; /* 15.0:1 */
+  --text-muted: #4a4f63; /* 6.7:1 */
+
+  /* accents — on-ink family */
+  --sodium: #e39b3c; /* 7.8:1 on ink. NEVER on paper. */
+  --signal-bright: #3b7a6e; /* graphic only, never body text */
+
+  /* accents — on-paper family */
+  --sodium-deep: #99570f; /* 4.7:1 on paper */
+  --brick: #8c4a3a; /* 5.5:1 — hover/active only */
+  --signal: #2e6157; /* 5.9:1 both directions */
+
+  /* structure */
+  --limestone: #c9c4b8; /* decorative dividers only */
+  --limestone-edge: #85806f; /* 3.3:1 — input borders, control outlines */
+
+  /* type — self-hosted subsets are an outstanding asset, see TODO.md */
+  --font-display: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* spacing — 4px base */
+  --s1: 0.25rem;
+  --s2: 0.5rem;
+  --s3: 0.75rem;
+  --s4: 1rem;
+  --s6: 1.5rem;
+  --s8: 2rem;
+  --s12: 3rem;
+  --s16: 4rem;
+
+  --measure: 62ch;
+  --page-max: 72rem;
+}

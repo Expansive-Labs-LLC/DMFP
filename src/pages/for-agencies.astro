@@ -1,0 +1,76 @@
+---
+/** `/for-agencies` — no marketing voice. Availability stated BEFORE terms. */
+import Base from '../layouts/Base.astro';
+import Fact from '../components/Fact.astro';
+import FactTable from '../components/FactTable.astro';
+import { site, property, home } from '../data/site.config';
+const t = home.terms;
+const a = home.availability;
+const ap = property.applications;
+---
+<Base title="For agencies" description="Terms, availability and application process for housing coordinators placing clinicians.">
+  <section class="wrap stack">
+    <h1 class="display-l">For agencies</h1>
+
+    <div class="contact">
+      <p><strong>{site.entity.legalName}</strong></p>
+      <p>Contact: <Fact value={site.contact.name} /></p>
+      <p class="mono"><a href="tel:+17344892708">{site.contact.phone}</a></p>
+      <p><Fact value={site.contact.email} /></p>
+    </div>
+
+    <div class="availability">
+      <h2>Availability</h2>
+      <p class="measure">
+        Renovation is in progress. <strong>No beds are available before {a.availableFrom}.</strong>
+        Bedrooms: {home.bedrooms}, with {home.bathroomsFull} full baths and {home.kitchens} kitchens. Beds free from {a.availableFrom}: <Fact value={a.bedsAvailable} />.
+        Applications are {ap.open ? 'open now' : 'not open'} for {ap.forOccupancy} occupancy.
+      </p>
+    </div>
+
+    <h2>Terms</h2>
+    <FactTable
+      columns={['Item', 'Value']}
+      rows={[
+        { head: 'Minimum contract', cells: [t.minTerm] },
+        { head: 'Maximum contract', cells: [t.maxTerm] },
+        { head: 'Rate — per bedroom', cells: [t.rateRoomMonthly] },
+        { head: 'Rate — whole house', cells: [t.rateHouseMonthly] },
+        { head: 'In the monthly rate', cells: [t.utilities] },
+        { head: 'Billed separately', cells: [home.parking] },
+        { head: 'Deposit', cells: [t.deposit] },
+        { head: 'Payment terms', cells: [t.paymentTerms] },
+        { head: 'Lead time needed', cells: [t.leadTime] },
+      ]} />
+
+    <h2>Application process</h2>
+    <p class="measure"><Fact value={ap.process} /></p>
+    <p class="measure">Fee: <Fact value={ap.fee} />.</p>
+    <p class="measure">
+      {ap.platform === null
+        ? 'The application itself is completed off-site; we send it by email after an inquiry.'
+        : `The application is completed at ${ap.platform}.`}
+    </p>
+
+    <h2>Documents</h2>
+    <p class="measure">
+      W-9 and certificate of insurance on request. Turnaround: <Fact value={site.documents.turnaround} />.
+    </p>
+
+    <h2>Capacity</h2>
+    <p class="measure">
+      One property, {home.bedrooms} bedrooms. That is the ceiling today.
+    </p>
+
+    <p class="small"><a href="/inquire">Send a placement inquiry</a>.</p>
+  </section>
+</Base>
+<style>
+  section { padding-block: var(--s12) var(--s8); }
+  .contact p, .availability p { margin: 0 0 var(--s2); }
+  .availability { border-left: 3px solid var(--signal); padding-left: var(--s4); }
+  @media print {
+    :global(.site-head), :global(.site-foot), .small a { display: none; }
+    :global(table) { break-inside: avoid; }
+  }
+</style>
