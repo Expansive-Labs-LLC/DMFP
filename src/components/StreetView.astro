@@ -1,0 +1,59 @@
+---
+/**
+ * Google Street View Static image of the property.
+ *
+ * HOTLINKED ON PURPOSE. Google Maps Platform terms do not permit downloading and
+ * self-hosting Street View imagery, so the browser requests it from Google. The
+ * Google watermark burned into the image carries the attribution.
+ *
+ * Consequences, both real:
+ *   - Another third-party request, now on whatever page this appears. /privacy
+ *     has to say so.
+ *   - The imagery has a capture date and it is NOT today. This component always
+ *     renders that date. An old photo presented as current is the same failure as
+ *     an unmeasured drive time.
+ */
+import { property } from '../data/site.config';
+import { isTbd } from '../lib/fact';
+
+interface Props {
+  capturedLabel: string;
+  note?: string;
+  width?: number;
+  height?: number;
+  eager?: boolean;
+}
+const { capturedLabel, note, width = 1200, height = 750, eager = false } = Astro.props;
+
+const key = property.map.googleEmbedApiKey;
+const a = property.address;
+const location = `${a.street}, ${a.locality}, ${a.region} ${a.postalCode}`;
+const src = isTbd(key)
+  ? null
+  : `https://maps.googleapis.com/maps/api/streetview?size=${width}x${height}` +
+    `&location=${encodeURIComponent(location)}&fov=80&pitch=10&key=${key}`;
+---
+
+{
+  src && (
+    <figure class="sv">
+      <img
+        src={src}
+        width={width}
+        height={height}
+        alt={`Street View of ${a.street}, ${a.locality}, looking at the front of the house.`}
+        loading={eager ? 'eager' : 'lazy'}
+        decoding="async"
+      />
+      <figcaption class="small muted">
+        Google Street View, imagery captured {capturedLabel}. {note}
+      </figcaption>
+    </figure>
+  )
+}
+
+<style>
+  .sv { margin: 0; }
+  .sv img { width: 100%; height: auto; display: block; border: 1px solid var(--limestone-edge); }
+  figcaption { margin-top: var(--s2); }
+</style>

@@ -418,8 +418,8 @@ export const properties = [
       region: 'MI',
       postalCode: '48202',
     },
-    /** §4.5 — geocoded at build time, never typed from memory. */
-    coords: tbd('property_coords'),
+    /** §4.5 — from the Street View metadata endpoint 2026-07-27, not typed from memory. */
+    coords: { lat: 42.3803125, lon: -83.0831845 },
     /**
      * Owner 2026-07-26: the offering is the WHOLE HOME — 6 bedrooms, 3 full baths,
      * 2 kitchens. The earlier lower-unit / upper-unit split is superseded.
@@ -806,6 +806,15 @@ export const properties = [
      */
     photos: {
       exteriorFront: 'exterior-front.jpg',
+      /**
+       * Street View fallback while there is no current photo. Metadata says the
+       * imagery is July 2022 — four years old and BEFORE the renovation: the deck
+       * is bare and the lot is overgrown in it. It undersells the house, which is
+       * the safer direction to be wrong in, but it is still not the house as it
+       * stands. Replace it the moment a real photo exists.
+       */
+      streetViewCaptured: 'July 2022',
+      streetViewNote: 'Taken before the current renovation.',
     },
     rehab: {
       status: 'in_progress' as const,
