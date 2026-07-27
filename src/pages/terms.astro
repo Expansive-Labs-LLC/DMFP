@@ -1,16 +1,77 @@
 ---
-/** P1 policy page. The text itself is a TBD — legal copy is not invented. */
+/**
+ * `/terms` — DRAFT for attorney review.
+ *
+ * The load-bearing point is the first one: nothing here is an offer. The site
+ * publishes six room rates, a fee, an SLA and a 2027 product commitment, and none
+ * of those should bind before an agreement is signed.
+ */
 import Base from '../layouts/Base.astro';
-import Fact from '../components/Fact.astro';
-import { tbd } from '../data/site.config';
+import { site, property, home } from '../data/site.config';
+const updated = '27 July 2026';
 ---
-<Base title="Terms" description="Terms policy for detroitmedfocusproperties.com.">
-  <section class="wrap stack">
+<Base title="Terms" description="Terms of use for this website, and what the information on it does and does not commit us to.">
+  <section class="wrap stack measure">
     <h1 class="display-l">Terms</h1>
-    <p class="measure"><Fact value={tbd('terms_policy_text')} /></p>
-    <p class="measure small muted">
-      This page is a placeholder. The policy text has not been written and is not invented here.
+    <p class="draft"><strong>Draft, pending legal review.</strong> Last updated {updated}.</p>
+
+    <h2>This site is information, not an offer</h2>
+    <p>
+      Rates, availability, services and dates on this site are published in good faith and can change.
+      Nothing here is an offer to lease, and nothing binds either of us until there is a signed
+      agreement. Submitting the inquiry form does not reserve a room.
     </p>
+
+    <h2>Pre-leasing</h2>
+    <p>
+      The house is being renovated. Occupancy is targeted for {property.applications.forOccupancy} and no
+      specific day is committed until we say so in writing. Services shown with a future date are not
+      running yet — the date is when we expect them to start, not a guarantee.
+    </p>
+
+    <h2>An inquiry is not an application</h2>
+    <p>
+      The form on this site starts a conversation. The rental application is a separate document,
+      completed off-site, and it is that process — not this website — that decides whether a room is
+      offered.
+    </p>
+
+    <h2>Rates</h2>
+    <p>
+      Room rates follow the published rule: {home.terms.roomPricingRule} Unit and whole-building rates
+      are quoted on inquiry. Rates can be adjusted for length of stay, multiple rooms and agency
+      bookings; any adjustment follows criteria applied the same way to everyone.
+    </p>
+
+    <h2>Fair housing</h2>
+    <p>{site.legal.eho}</p>
+
+    <h2>No affiliation with health systems</h2>
+    <p>
+      We name nearby hospitals as landmarks and measure travel times to them. We are not affiliated
+      with, endorsed by, or in partnership with any health system, and nothing here should be read to
+      suggest otherwise.
+    </p>
+
+    <h2>Accuracy</h2>
+    <p>
+      Distances and travel times are measured, and the method and date are stated where they appear.
+      Traffic and circumstances vary — confirm anything you intend to rely on. Where a fact is not yet
+      known, this site shows a visible placeholder rather than an estimate.
+    </p>
+
+    <h2>Third-party content</h2>
+    <p>
+      The commute page embeds a map from Google, subject to Google's own terms. We link to other
+      businesses; we do not control their sites.
+    </p>
+
+    <h2>Contact</h2>
+    <p>{site.contact.name} · {site.contact.email} · {site.contact.phone}</p>
   </section>
 </Base>
-<style>section { padding-block: var(--s12) var(--s8); }</style>
+<style>
+  section { padding-block: var(--s12) var(--s8); }
+  .draft { border-left: 3px solid var(--brick); padding-left: var(--s4); }
+  h2 { margin-top: var(--s8); }
+</style>

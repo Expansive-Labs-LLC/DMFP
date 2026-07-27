@@ -43,17 +43,28 @@ const img = key ? assets[key]?.default : undefined;
 
 /** A filename that is set but missing from disk is a mistake, not a placeholder. */
 const missingFile = typeof value === 'string' && !img;
+
+/**
+ * An image too small for its slot is also a mistake. A 150px thumbnail stretched
+ * across a hero looks worse than an honest placeholder and tanks the CLS budget,
+ * and it is the kind of thing that ships because the slot stopped saying TODO.
+ */
+const MIN_WIDTH = eager ? 1200 : 600;
+const tooSmall = img && img.width < MIN_WIDTH;
+const usable = img && !tooSmall;
 ---
 
 <figure class="slot">
   {
-    img ? (
+    usable ? (
       <Image src={img} alt={alt} widths={[480, 800, 1200]} loading={eager ? 'eager' : 'lazy'} />
     ) : (
       <div class="placeholder" style={`aspect-ratio:${width}/${height}`} role="img" aria-label={alt}>
         <span class="badge">TODO</span>
         <span class="what">
-          {missingFile
+          {tooSmall
+            ? `Too small: ${img!.width}x${img!.height}px, needs ${MIN_WIDTH}px wide`
+            : missingFile
             ? `Missing file: src/assets/${value}`
             : isTbd(value)
               ? `{{TBD:${(value as any).token}}}`

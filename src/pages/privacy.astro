@@ -1,16 +1,100 @@
 ---
-/** P1 policy page. The text itself is a TBD — legal copy is not invented. */
+/**
+ * `/privacy` — DRAFT for attorney review.
+ *
+ * Written from what the site actually does, not from a template: the inquiry
+ * form's real field list, the Google Maps embed that loads on /commute, SES and
+ * Google Workspace, and the camera system. SEC-008 requires the Maps disclosure
+ * before launch, because the map loads without the visitor opting in.
+ */
 import Base from '../layouts/Base.astro';
 import Fact from '../components/Fact.astro';
-import { tbd } from '../data/site.config';
+import { site, home, meals } from '../data/site.config';
+const updated = '27 July 2026';
 ---
-<Base title="Privacy" description="Privacy policy for detroitmedfocusproperties.com.">
-  <section class="wrap stack">
+<Base title="Privacy" description="What this site collects, who it is shared with, and how to reach us about it.">
+  <section class="wrap stack measure">
     <h1 class="display-l">Privacy</h1>
-    <p class="measure"><Fact value={tbd('privacy_policy_text')} /></p>
-    <p class="measure small muted">
-      This page is a placeholder. The policy text has not been written and is not invented here.
+    <p class="draft"><strong>Draft, pending legal review.</strong> Last updated {updated}.</p>
+
+    <h2>The short version</h2>
+    <p>
+      This site has no accounts, no logins and no advertising. It collects what you type into the
+      inquiry form and nothing else. Loading the map page shares your IP address with Google.
     </p>
+
+    <h2>What the inquiry form collects</h2>
+    <p>
+      Your name, email address, and optionally your phone number, role and facility. Your intended
+      contract start and length, how many people will stay, whether you are bringing a pet or need
+      parking, and anything you write in the message box.
+    </p>
+    <p>
+      We use it to answer your inquiry. It is sent to {site.contact.email} and is not sold, rented or
+      shared for marketing.
+    </p>
+
+    <h2>What it deliberately does not collect</h2>
+    <p>
+      Nothing on this site asks your age, date of birth, marital status, household make-up, income,
+      employment history, or immigration or citizenship status. There is no rental application on this
+      website — the application is handled separately, and screening information belongs there, not here.
+    </p>
+
+    <h2>Who else sees data, and when</h2>
+    <ul>
+      <li>
+        <strong>Google.</strong> The commute page embeds Google Maps. Loading that page sends your IP
+        address and browser details to Google under their own privacy policy. This happens without you
+        clicking anything.
+      </li>
+      <li>
+        <strong>Amazon Web Services.</strong> The inquiry form posts to our own endpoint on AWS, which
+        emails us the contents. Server logs record the request time, the origin and the requesting IP
+        address. They do not record what you typed.
+      </li>
+      <li><strong>Google Workspace.</strong> Our email runs on it, so inquiries land there.</li>
+      <li><strong>GitHub.</strong> Hosts these pages and may log requests.</li>
+    </ul>
+
+    <h2>Cookies and analytics</h2>
+    <p>
+      This site sets no cookies of its own and runs no analytics. The embedded Google map may set its
+      own cookies once it loads.
+    </p>
+
+    <h2>Cameras at the property</h2>
+    <p>
+      This concerns residents rather than visitors to this website. {home.security.devices}.
+      {' '}{home.security.coverage} {home.security.neverCovered} {home.security.residentAccess} Footage
+      is kept for <Fact value={home.security.retention} />, and can also be viewed by
+      {' '}<Fact value={home.security.otherViewers} />.
+    </p>
+
+    <h2>How long we keep inquiries</h2>
+    <p><Fact value={site.inquiryRetention} /></p>
+
+    <h2>Your choices</h2>
+    <p>
+      Write to {site.contact.email} to ask what we hold about you, to correct it, or to have it deleted.
+      We will respond {site.response.commitment}. You can also simply email or call instead of using the
+      form.
+    </p>
+
+    <h2>Children</h2>
+    <p>This site is not directed at children and we do not knowingly collect their information.</p>
+
+    <h2>Changes</h2>
+    <p>If this policy changes, the date at the top changes with it.</p>
+
+    <h2>Contact</h2>
+    <p>{site.contact.name} · {site.contact.email} · {site.contact.phone}</p>
   </section>
 </Base>
-<style>section { padding-block: var(--s12) var(--s8); }</style>
+<style>
+  section { padding-block: var(--s12) var(--s8); }
+  .draft { border-left: 3px solid var(--brick); padding-left: var(--s4); }
+  h2 { margin-top: var(--s8); }
+  ul { padding-left: var(--s6); }
+  li + li { margin-top: var(--s2); }
+</style>

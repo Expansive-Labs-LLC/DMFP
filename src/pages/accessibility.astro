@@ -1,16 +1,82 @@
 ---
-/** P1 policy page. The text itself is a TBD — legal copy is not invented. */
+/**
+ * `/accessibility` — DRAFT for attorney review.
+ *
+ * Two halves, and the second is the one that matters: this website, and the
+ * building. The building is not step-free anywhere, and saying so plainly is both
+ * required and more useful than a statement of commitment.
+ *
+ * Describes the building. Never the reader. COMPLIANCE.md bans "must be able to"
+ * and "able bodied" — a capability requirement in a housing advert is a disability
+ * problem, and a warning about who "should" apply is exactly that.
+ */
 import Base from '../layouts/Base.astro';
 import Fact from '../components/Fact.astro';
-import { tbd } from '../data/site.config';
+import { site, home } from '../data/site.config';
+const updated = '27 July 2026';
 ---
-<Base title="Accessibility" description="Accessibility policy for detroitmedfocusproperties.com.">
-  <section class="wrap stack">
+<Base title="Accessibility" description="How accessible this website is, and how accessible the building is.">
+  <section class="wrap stack measure">
     <h1 class="display-l">Accessibility</h1>
-    <p class="measure"><Fact value={tbd('accessibility_policy_text')} /></p>
-    <p class="measure small muted">
-      This page is a placeholder. The policy text has not been written and is not invented here.
+    <p class="draft"><strong>Draft, pending legal review.</strong> Last updated {updated}.</p>
+
+    <h2>The building</h2>
+    <p class="hard">
+      <strong>There is no step-free route into this house, or to any bedroom.</strong>
+    </p>
+    <ul>
+      <li>{home.entry.front}</li>
+      <li>{home.entry.back}</li>
+      <li>Every bedroom is on the second or third floor.</li>
+      <li>The house is stairs only. There is no lift.</li>
+      <li>Flights from the entry to the third floor: <Fact value={home.terms.stairFlights} />.</li>
+    </ul>
+    <p>
+      We would rather you learn this here than on arrival. If you are weighing whether the building
+      works for you, call {site.contact.phone} and ask — we will describe it honestly and in detail
+      rather than guess on your behalf.
+    </p>
+
+    <h2>Reasonable accommodations</h2>
+    <p>
+      If a disability means you need something different — a change to a rule, a practice, or a
+      physical feature — ask. Requests are considered on their facts and are not put to a vote of other
+      residents.
+    </p>
+    <p>
+      <strong>Service animals and assistance animals are not pets.</strong>
+      {' '}{home.pets.assistanceAnimalCarveOut}
+    </p>
+    <p>Requests go to {site.contact.name} at {site.contact.email} or {site.contact.phone}.</p>
+
+    <h2>This website</h2>
+    <p>We aim to meet WCAG 2.1 Level AA. What is deliberately true of this site today:</p>
+    <ul>
+      <li>Every page works with JavaScript turned off.</li>
+      <li>Every interactive control is reachable and operable by keyboard, with a visible focus ring.</li>
+      <li>Text contrast was audited against the background it actually sits on, not assumed.</li>
+      <li>Images carry real alternative text describing what they show.</li>
+      <li>Content is structured with real headings, lists and tables rather than styled text.</li>
+    </ul>
+    <p>
+      Known gaps: the embedded map on the commute page is a third-party Google frame we do not control,
+      so the distances and drive times are given as text above it and the page does not depend on the
+      map.
+    </p>
+
+    <h2>Telling us something is wrong</h2>
+    <p>
+      If any part of this site or this building is difficult to use, tell us at {site.contact.email} or
+      {site.contact.phone}. Say what you were trying to do and what happened. We will reply
+      {' '}{site.response.commitment}.
     </p>
   </section>
 </Base>
-<style>section { padding-block: var(--s12) var(--s8); }</style>
+<style>
+  section { padding-block: var(--s12) var(--s8); }
+  .draft { border-left: 3px solid var(--brick); padding-left: var(--s4); }
+  .hard { border-left: 3px solid var(--signal); padding-left: var(--s4); font-size: 1.125rem; }
+  h2 { margin-top: var(--s8); }
+  ul { padding-left: var(--s6); }
+  li + li { margin-top: var(--s2); }
+</style>

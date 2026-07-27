@@ -57,17 +57,18 @@ import { property, home } from '../data/site.config';
 
     <h2>Internet</h2>
     <p class="measure">
-      A {home.internet.tier.toLowerCase()}-tier connection rated {home.internet.ratedDown} down,
-      {' '}<Fact value={home.internet.ratedUp} /> up. That is the plan rating, not a measurement.
-    </p>
-    <p class="measure small">
-      Measured throughput: <Fact value={home.internet.down} /> down,
-      {' '}<Fact value={home.internet.up} /> up, on <Fact value={home.internet.measuredAt} />.
-      Speeds are measured in the finished house, not quoted from the contract.
+      A {home.internet.tier.toLowerCase()}-tier connection rated {home.internet.ratedDown} down and
+      {' '}{home.internet.ratedUp} up. That is the plan rating.
     </p>
 
+
     <h2>Entry and access</h2>
-    <p class="measure">{home.entry.floor}. <Fact value={home.entry.steps} /> steps at the entry.</p>
+    <p class="measure">{home.entry.front}</p>
+    <p class="measure">{home.entry.back}</p>
+    <p class="measure small">
+      There is no step-free route into the house or to any bedroom. See
+      {' '}<a href="/accessibility">Accessibility</a>.
+    </p>
 
     <h2>Rooms and rates</h2>
     <p class="measure small">{home.terms.roomPricingRule}</p>

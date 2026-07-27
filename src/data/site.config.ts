@@ -122,6 +122,8 @@ export const site = {
     'No on-site staff.',
     'Renters insurance is not provided.',
   ],
+  /** How long inquiry emails are kept. A retention claim needs a real number. */
+  inquiryRetention: tbd('inquiry_retention', 'How long inquiry emails are kept before deletion'),
   documents: {
     /** /for-agencies §5 */
     /** Owner 2026-07-27. An SLA, not an aspiration — a coordinator will hold you to it. */
@@ -731,14 +733,17 @@ export const properties = [
        * rated figure can ship now; the measured one cannot exist until service is
        * live in a finished house.
        */
+      /**
+       * Owner 2026-07-27: dropped the measured-throughput section as bloat. The
+       * rated figures are what a resident is buying and what the contract says; a
+       * second set of numbers measured on one afternoon in one room added length
+       * without adding trust.
+       */
       internet: {
         tier: 'Business',
-        /** INFERRED: given as "300MB/S", read as 300 Mbps (megabits). 300 MB/s would be 2.4 Gbps. */
+        /** INFERRED: "300MB/S" read as 300 Mbps. 300 MB/s would be 2.4 Gbps. */
         ratedDown: '300 Mbps',
-        ratedUp: tbd('internet_rated_up'),
-        down: tbd('internet_down', 'Measured, once service is live'),
-        up: tbd('internet_up', 'Measured, once service is live'),
-        measuredAt: tbd('internet_measured_date'),
+        ratedUp: '100 Mbps',
       },
       entry: { floor: 'Street level', steps: tbd('entry_steps') },
       /**
@@ -800,7 +805,7 @@ export const properties = [
      * current state. Drop the file at src/assets/<name> and set the value here.
      */
     photos: {
-      exteriorFront: tbd('photo_exterior_front', 'Save as src/assets/exterior-front.jpg'),
+      exteriorFront: 'exterior-front.jpg',
     },
     rehab: {
       status: 'in_progress' as const,
