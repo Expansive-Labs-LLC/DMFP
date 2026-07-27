@@ -53,7 +53,7 @@ jobs:
         uses: lycheeverse/lychee-action@v2
         with:
           args: >-
-            --no-progress --base dist --require-https=false
+            --no-progress --root-dir "$GITHUB_WORKSPACE/dist" --require-https=false
             --exclude '^https://detroitmedfocusproperties\.com'
             --exclude '^https://maps\.googleapis\.com'
             --exclude '^https://www\.google\.com/maps'
