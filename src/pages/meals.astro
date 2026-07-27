@@ -16,6 +16,22 @@ const stages = ['food-gather', 'food-prep', 'food-hot']
   .filter((s): s is NonNullable<typeof s> => Boolean(s))
   .filter((s) => s.status === 'live' || (serviceDisplay.showNonLive && s.status === 'launching'));
 
+/**
+ * NAMING GATE — site.config `meals.chefs.permissionConfirmed`.
+ *
+ * Naming a business as a partner is a claim about THEIR business, and leaning on a
+ * decorated chef's record to sell housing is a use of their name they are entitled to
+ * approve first. The config has said `permissionConfirmed` gates this since the names
+ * were added; it did not — this page rendered both unconditionally and shipped them
+ * live. This is the gate the comment was describing.
+ *
+ * While the token is unresolved the section still runs, unnamed: the substance a reader
+ * is choosing on is that a chef designs the rotation and a kitchen on the next block
+ * cooks it, and neither of those facts needs either business identified. Resolve the
+ * token to a written agreement and the named version returns with no other edit.
+ */
+const namesCleared = !isTbd(meals.chefs.permissionConfirmed);
+
 const detail: Record<string, { does: string; forWho: string }> = {
   'food-gather': {
     does: 'We shop and the fridge is stocked when you get in. You cook.',
@@ -77,26 +93,50 @@ const detail: Record<string, { does: string; forWho: string }> = {
     }
 
     <h2>Who cooks it</h2>
-    <div class="partners">
-      <article>
-        <h3>{meals.chefs.menu.name}</h3>
-        <p class="small muted">{meals.chefs.menu.role}</p>
-        <p>
-          Chef <strong>{meals.chefs.menu.chef}</strong> — {meals.chefs.menu.credentials}.
-          {' '}<a href={meals.chefs.menu.url} rel="noopener noreferrer" target="_blank">{meals.chefs.menu.name}</a>,
-          {' '}{meals.chefs.menu.address}.
-        </p>
-      </article>
-      <article>
-        <h3>{meals.chefs.execution.name}</h3>
-        <p class="small muted">{meals.chefs.execution.role}</p>
-        <p>
-          {meals.chefs.execution.who}.
-          {' '}<a href={meals.chefs.execution.url} rel="noopener noreferrer" target="_blank">{meals.chefs.execution.name}</a>
-          {' '}is at {meals.chefs.execution.address} — <strong>{meals.chefs.execution.distance}</strong>.
-        </p>
-      </article>
-    </div>
+    {
+      namesCleared ? (
+        <div class="partners">
+          <article>
+            <h3>{meals.chefs.menu.name}</h3>
+            <p class="small muted">{meals.chefs.menu.role}</p>
+            <p>
+              Chef <strong>{meals.chefs.menu.chef}</strong> — {meals.chefs.menu.credentials}.
+              {' '}<a href={meals.chefs.menu.url} rel="noopener noreferrer" target="_blank">{meals.chefs.menu.name}</a>,
+              {' '}{meals.chefs.menu.address}.
+            </p>
+          </article>
+          <article>
+            <h3>{meals.chefs.execution.name}</h3>
+            <p class="small muted">{meals.chefs.execution.role}</p>
+            <p>
+              {meals.chefs.execution.who}.
+              {' '}<a href={meals.chefs.execution.url} rel="noopener noreferrer" target="_blank">{meals.chefs.execution.name}</a>
+              {' '}is at {meals.chefs.execution.address} — <strong>{meals.chefs.execution.distance}</strong>.
+            </p>
+          </article>
+        </div>
+      ) : (
+        <div class="partners">
+          <article>
+            <h3>The menu</h3>
+            <p class="small muted">{meals.chefs.menu.role}</p>
+            <p>
+              Designed by a Detroit chef, not a caterer — built to rotate, to hold and reheat well,
+              and to come in under the per diem. We will name the kitchens here once both have
+              agreed to be named.
+            </p>
+          </article>
+          <article>
+            <h3>The cooking</h3>
+            <p class="small muted">{meals.chefs.execution.role}</p>
+            <p>
+              A family-run Detroit kitchen with decades in restaurants behind it,
+              {' '}<strong>{meals.chefs.execution.distance}</strong>.
+            </p>
+          </article>
+        </div>
+      )
+    }
     <p class="measure">
       That last number is why a hot meal in an agreed window is a real offer rather than a hope: the
       kitchen cooking it is on the next block.

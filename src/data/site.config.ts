@@ -381,7 +381,17 @@ export const meals = {
    * BEFORE PUBLISHING: get written agreement from both. Naming a business as a
    * partner is a claim about THEIR business, and trading on a decorated chef's
    * record to sell housing is exactly the thing they would want to approve the
-   * wording of. `permissionConfirmed` gates it.
+   * wording of.
+   *
+   * `permissionConfirmed` gates it — and as of 2026-07-27 that is true in code, not
+   * just in this comment. It said "gates it" from the day the names were added while
+   * /meals rendered both unconditionally, so the names were live on the public site
+   * for the whole period the gate was assumed to be holding. meals.astro now checks
+   * the token and falls back to an unnamed version of the same section.
+   *
+   * These values stay here on purpose. They are verified and correct; what is missing
+   * is permission, not accuracy. Resolve the token to the agreed wording and the named
+   * version returns with no other edit.
    */
   chefs: {
     execution: {
