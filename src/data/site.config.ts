@@ -35,7 +35,7 @@ export interface Facility {
   coords: Fact<{ lat: number; lon: number }>;
   distance: Fact<string>;
   driveTime: Fact<string>;
-  parking: Fact<string>;
+  /** Parking AT the facility is the employer's business, not ours. Deliberately absent. */
   transit: Fact<string>;
   samples?: Array<{ label: string; minutes: number; meters: number }>;
 }
@@ -798,7 +798,6 @@ export const properties = [
           distance: driveTimes.facilities.dmc.distance,
           driveTime: driveTimes.facilities.dmc.driveTime,
           samples: driveTimes.facilities.dmc.samples,
-          parking: tbd('facility_dmc_parking'),
           transit: driveTimes.facilities.dmc.transit ?? tbd('facility_dmc_transit'),
         },
         {
@@ -810,7 +809,6 @@ export const properties = [
           distance: driveTimes.facilities.hfh.distance,
           driveTime: driveTimes.facilities.hfh.driveTime,
           samples: driveTimes.facilities.hfh.samples,
-          parking: tbd('facility_hfh_parking'),
           transit: driveTimes.facilities.hfh.transit ?? tbd('facility_hfh_transit'),
         },
       ] as Facility[],
