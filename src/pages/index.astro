@@ -39,15 +39,6 @@ const avail = home.availability;
         note={property.photos.streetViewNote}
       />
 
-      <ul class="offer">
-        {shownServices.map((s) => (
-          <li>
-            <span class="offer-name">{s.name}</span>
-            <span class="mono offer-price">{s.price ? <Fact value={s.price} /> : 'included'}</span>
-            {s.status === 'launching' && <span class="offer-from small"> from {s.liveFrom}</span>}
-          </li>
-        ))}
-      </ul>
     </div>
   </section>
 
@@ -144,12 +135,6 @@ const avail = home.availability;
     padding-block: var(--s12) var(--s16);
   }
   .hero :global(.sv) { margin-top: var(--s8); }
-  .offer { list-style: none; padding: 0; margin: var(--s8) 0 0; max-width: 34rem; }
-  .offer li { display: flex; gap: var(--s3); align-items: baseline; padding: var(--s2) 0;
-              border-bottom: 1px solid color-mix(in srgb, var(--paper) 18%, transparent); }
-  .offer-name { flex: 1; font-weight: 600; }
-  .offer-price { color: var(--sodium); }
-  .offer-from { color: color-mix(in srgb, var(--paper) 70%, transparent); }
   .standfirst {
     font-size: 1.125rem;
     margin: var(--s6) 0 var(--s12);

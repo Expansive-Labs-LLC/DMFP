@@ -35,7 +35,7 @@ const onRequest = shown.filter((s) => !s.included);
         {onRequest.length === 0 ? <p class="muted">Nothing is confirmed yet.</p> : (
           <ul class="stack-list">{onRequest.map((s) => (
             <li>
-              <strong>{s.name}</strong> — {s.description} <span class="mono">{s.price ? <Fact value={s.price} /> : null}</span>
+              <strong>{s.name}</strong> — {s.description} <span class="mono">{s.price ? <Fact value={s.price} /> : 'Price on inquiry'}</span>
               {s.status === 'launching' && <span class="from"> {isTbd(s.liveFrom) ? <Fact value={s.liveFrom} /> : `from ${s.liveFrom}`}</span>}
             </li>
           ))}</ul>
