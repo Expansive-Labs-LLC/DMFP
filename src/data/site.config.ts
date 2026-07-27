@@ -46,6 +46,28 @@ export interface DayBandPreset {
 
 export const site = {
   brand: 'Detroit Med Focus Properties',
+  /**
+   * Two domains, owner 2026-07-27. Both observed on the same stack: Route 53
+   * nameservers, Google Workspace MX (`1 smtp.google.com`), and their own
+   * google-site-verification TXT. detmfprop.com was registered with Amazon
+   * Registrar on 2026-07-25 and has no A record yet.
+   *
+   * `detroitmedfocusproperties.com` stays canonical because everything already
+   * points at it: the Pages CNAME, the contact API's allowedOrigins, and the GitHub
+   * domain verification in RUNBOOK Part 4.
+   *
+   * GitHub Pages serves ONE custom domain per repo, so the alias cannot also serve
+   * the site — it has to 301. Both zones are in Route 53, so the RedirectStack
+   * already in the infrastructure repo (used for zackclevelandphotography.com) does
+   * this without new infrastructure.
+   *
+   * Anything other than a redirect splits SEO across two domains and breaks form
+   * posts, because CORS is pinned to the canonical origin.
+   */
+  domains: {
+    canonical: 'detroitmedfocusproperties.com',
+    aliases: ['detmfprop.com'],
+  },
   entity: {
     /**
      * Owner-supplied 2026-07-26. NOTE: given as a trading name, not a registered

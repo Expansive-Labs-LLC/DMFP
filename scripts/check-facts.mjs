@@ -47,13 +47,16 @@ const failures = [];
  */
 {
   const cfg = readFileSync('src/data/site.config.ts', 'utf8');
-  const site = cfg.match(/site:\s*'https:\/\/([^']+)'/)?.[1]
-    ?? readFileSync('astro.config.mjs', 'utf8').match(/site:\s*'https:\/\/([^']+)'/)?.[1];
+  const canonical = cfg.match(/canonical:\s*'([^']+)'/)?.[1];
+  const aliases = [...(cfg.match(/aliases:\s*\[([^\]]*)\]/)?.[1] ?? '').matchAll(/'([^']+)'/g)].map(
+    (m) => m[1]
+  );
+  const allowed = [canonical, ...aliases].filter(Boolean);
   for (const m of cfg.matchAll(/'([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})'/g)) {
     const domain = m[1].split('@')[1];
-    if (site && domain !== site) {
+    if (allowed.length && !allowed.includes(domain)) {
       failures.push(
-        `src/data/site.config.ts: "${m[1]}" is not on ${site} — check for a typo in the domain`
+        `src/data/site.config.ts: "${m[1]}" is on neither ${allowed.join(' nor ')} — typo in the domain?`
       );
     }
   }
