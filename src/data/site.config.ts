@@ -161,13 +161,30 @@ export const services: Service[] = [
   },
   {
     id: 'bin-storage',
-    name: 'Bin storage',
-    description: 'A bin held for you in a secured area.',
+    name: 'Storage bin',
+    description: 'A personal storage bin held for you in a secured area. Not your rubbish bin.',
     included: false,
     status: 'launching',
     liveFrom: 'September 2026',
     /** Owner-set 2026-07-26. Note this is MONTHLY where the other services are weekly. */
     price: '$60/month',
+  },
+  {
+    id: 'business-center',
+    name: 'Business center',
+    description:
+      '3 desks with monitors and a printer. Somewhere to handle paperwork or a remote shift ' +
+      'that is not your bedroom.',
+    included: true,
+    status: 'live',
+  },
+  {
+    id: 'bins-out',
+    name: 'Bins put out',
+    description: 'Garbage and recycling taken to the curb for you on collection day.',
+    included: true,
+    status: 'launching',
+    liveFrom: 'September 2026',
   },
   {
     id: 'security',
