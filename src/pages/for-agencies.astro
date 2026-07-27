@@ -4,11 +4,12 @@ import Base from '../layouts/Base.astro';
 import Fact from '../components/Fact.astro';
 import { machine } from '../lib/fact';
 import FactTable from '../components/FactTable.astro';
-import { site, property, home } from '../data/site.config';
+import { site, property, home, services } from '../data/site.config';
 const t = home.terms;
 const a = home.availability;
 const ap = property.applications;
 /** Derive the dial string from config — never write a number twice. */
+const partnerPortal = services.find((sv) => sv.id === 'partner-portal');
 const digits = machine(site.contact.phone)?.replace(/\D/g, '');
 const telHref = digits ? `tel:+1${digits}` : undefined;
 ---
@@ -29,7 +30,7 @@ const telHref = digits ? `tel:+1${digits}` : undefined;
       <h2>Availability</h2>
       <p class="measure">
         Renovation is in progress. <strong>No beds are available before {a.availableFrom}.</strong>
-        Bedrooms: {home.bedrooms}, with {home.bathroomsFull} full baths and {home.kitchens} kitchens. Beds free from {a.availableFrom}: <Fact value={a.bedsAvailable} />.
+        Bedrooms: {home.bedrooms}, with {home.bathroomsFull} full baths and {home.kitchens} kitchens.
         Applications are {ap.open ? 'open now' : 'not open'} for {ap.forOccupancy} occupancy.
       </p>
     </div>
@@ -117,6 +118,15 @@ const telHref = digits ? `tel:+1${digits}` : undefined;
     <h2>Documents</h2>
     <p class="measure">
       W-9 and certificate of insurance on request. Turnaround: <Fact value={site.documents.turnaround} />.
+    </p>
+
+    <h2>Partner portal — 2027</h2>
+    <p class="measure">
+      {partnerPortal?.description} Approved partners will register themselves rather than waiting on us.
+    </p>
+    <p class="measure small">
+      Not built yet, and dated deliberately: <strong>coming in {partnerPortal?.liveFrom}</strong>. Until
+      then, placements go through the process above and door access is issued by us before arrival.
     </p>
 
     <h2>Capacity</h2>

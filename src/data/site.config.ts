@@ -105,7 +105,7 @@ export const site = {
     email: 'info@detroitmedfocusproperties.com',
     phone: '(734) 489-2708',
     /** /for-agencies leads with a named human, not a form. */
-    name: tbd('contact_name'),
+    name: 'Derek DeJonghe',
   },
   response: {
     /** A public commitment — the inbox has to be able to keep it. */
@@ -251,14 +251,24 @@ export const services: Service[] = [
    * appear, and an ADR before it can be built — see DMFP-specs ADR-INDEX.
    */
   {
-    id: 'org-portal',
-    name: 'Organization portal',
+    id: 'partner-portal',
+    name: 'Partner portal',
     description:
-      'A web application for verified organizations to manage bookings, door access and locks ' +
-      'for the people they place.',
+      'Self-service registration for approved housing partners, then manage bookings, door access ' +
+      'and locks for the people you place.',
     included: false,
-    status: 'planned',
-    liveFrom: tbd('org_portal_live_from', 'A date is the price of appearing on the site'),
+    /**
+     * Owner 2026-07-27: announced as coming in 2027. Moves from 'planned' (renders
+     * nowhere) to 'launching' with a date, which is the rule — a date is the price
+     * of appearing on the site.
+     *
+     * It still does not exist and is not authorized to be built: ADR-0003 covers
+     * org accounts, partner verification and programmatic door access, and has not
+     * been written. Announcing it is fine; a coordinator asking for a login in
+     * 2027 is a promise with a deadline attached.
+     */
+    status: 'launching',
+    liveFrom: '2027',
   },
   {
     id: 'grill',
@@ -624,7 +634,6 @@ export const properties = [
         status: 'pre_leasing' as const,
         availableFrom: 'September 2026',
         exactDate: tbd('availability_exact_date'),
-        bedsAvailable: tbd('beds_available', 'Of 6 — how many are free for September'),
       },
       /**
        * Owner 2026-07-26: cameras provided, residents can view.
