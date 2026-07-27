@@ -395,27 +395,35 @@ export const properties = [
             id: 'a',
             label: 'Unit A',
             bedrooms: 3,
-            bathroomsFull: 1,
-            kitchen: 'Kitchenette',
-            kitchenContents: tbd('unit_a_kitchenette_contents', 'A kitchenette is not a kitchen — what is actually in it?'),
-            spaces: ['Common area'],
-          },
-          {
-            id: 'b',
-            label: 'Unit B',
-            bedrooms: 3,
             bathroomsFull: 2,
             kitchen: 'Full kitchen',
             kitchenContents: 'Stove, microwave, air fryer, blender, reverse-osmosis water',
             spaces: ['Living room', 'Business center'],
           },
+          {
+            id: 'b',
+            label: 'Unit B',
+            bedrooms: 3,
+            bathroomsFull: 1,
+            kitchen: 'Kitchenette',
+            kitchenContents: tbd('unit_b_kitchenette_contents', 'A kitchenette is not a kitchen — what is in it?'),
+            /**
+             * Owner 2026-07-27: no common space beyond the kitchenette. Recorded as
+             * an explicit "none" rather than an empty list, because a blank cell
+             * reads as unknown and this is known.
+             */
+            spaces: [],
+            spacesNote: 'No common space other than the kitchenette.',
+          },
         ],
         /**
-         * The business center sits in Unit B. If the units let separately, does a
-         * Unit A resident still get access? Unanswered, and it changes what Unit A
-         * is worth.
+         * The business center sits in Unit A. If the units let separately, does a
+         * Unit B resident get access? Unanswered — and it matters more now that
+         * Unit B is confirmed to have no common space at all. Without access, three
+         * people share one bathroom, a kitchenette, and nowhere to sit that is not
+         * a bedroom.
          */
-        sharedSpaces: tbd('shared_spaces_across_units', 'Business center is in Unit B — shared or not?'),
+        sharedSpaces: tbd('shared_spaces_across_units', 'Business center and living room are in Unit A — shared or not?'),
       },
       furnished: true,
       laundry: 'in-unit' as const,

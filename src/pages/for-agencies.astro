@@ -68,12 +68,18 @@ const telHref = digits ? `tel:+1${digits}` : undefined;
       columns={['Unit', 'Bedrooms', 'Full baths', 'Kitchen', 'Other space']}
       rows={home.divisible.list.map((u) => ({
         head: u.label,
-        cells: [String(u.bedrooms), String(u.bathroomsFull), u.kitchen, u.spaces.join(', ')],
+        cells: [
+          String(u.bedrooms),
+          String(u.bathroomsFull),
+          u.kitchen,
+          u.spaces.length ? u.spaces.join(', ') : 'None',
+        ],
       }))}
     />
     <p class="measure small">
-      The business center is in {home.divisible.list[1].label}. Access for
-      {' '}{home.divisible.list[0].label} residents: <Fact value={home.divisible.sharedSpaces} />.
+      {home.divisible.list[1].label} has no common space other than the kitchenette. The living room and
+      business center are in {home.divisible.list[0].label}; access for
+      {' '}{home.divisible.list[1].label} residents: <Fact value={home.divisible.sharedSpaces} />.
     </p>
 
     <h2>Application process</h2>
