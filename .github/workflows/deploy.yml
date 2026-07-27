@@ -55,6 +55,7 @@ jobs:
           args: >-
             --no-progress --root-dir "$GITHUB_WORKSPACE/dist" --require-https=false
             --exclude '^https://detroitmedfocusproperties\.com'
+            --exclude '^https://contact-us-api\.detroitmedfocusproperties\.com'
             --exclude '^https://maps\.googleapis\.com'
             --exclude '^https://www\.google\.com/maps'
             'dist/**/*.html'
