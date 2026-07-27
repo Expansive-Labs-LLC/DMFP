@@ -72,8 +72,14 @@ import { isTbd } from '../lib/fact';
       {' '}<a href="/accessibility">Accessibility</a>.
     </p>
 
-    <h2>Rooms and rates</h2>
+    <h2 id="rooms">Rooms and rates</h2>
     <p class="measure small">{home.terms.roomPricingRule}</p>
+    {home.terms.negotiable && (
+      <p class="measure small">
+        Those are asking rates. Longer stays, multiple rooms and agency bookings are priced
+        differently — ask. Unit and whole-building rates are quoted on inquiry.
+      </p>
+    )}
     <p class="measure small access">
       {home.terms.accessNote}
     </p>

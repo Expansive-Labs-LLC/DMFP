@@ -100,15 +100,8 @@ const avail = home.availability;
           Renovation underway. First occupancy {avail.availableFrom}. Applications are open now.
         </p>
         <p class="data mono rate">from <Fact value={home.terms.rateRoomWeeklyFrom} /></p>
-        <p class="small muted">one bedroom, per week — {home.divisible.list.map((u) => `${u.label} ${u.roomRateWeekly}`).join(', ')}</p>
-        <p class="data mono rate"><Fact value={home.terms.rateUnitWeekly} /></p>
-        <p class="small muted">one of {home.divisible.units} units, per week</p>
-        <p class="data mono rate"><Fact value={home.terms.rateHouseWeekly} /></p>
-        <p class="small muted">whole building, per week</p>
-        {home.terms.negotiable && (
-          <p class="small negotiate">Those are asking rates. Longer stays, multiple rooms and agency
-          bookings are priced differently — ask.</p>
-        )}
+        <p class="small muted">per bedroom, per week</p>
+        <p class="small"><a href="/the-house#rooms">All six rooms and rates →</a></p>
       </article>
     </div>
   </section>
@@ -187,7 +180,6 @@ const avail = home.availability;
   .from {
     color: var(--sodium-deep);
   }
-  .negotiate { border-top: 1px solid var(--limestone); padding-top: var(--s2); margin-top: var(--s3); }
   ul.plain {
     list-style: none;
     padding: 0;
