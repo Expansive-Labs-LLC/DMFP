@@ -169,6 +169,26 @@ export const services: Service[] = [
     /** Owner-set 2026-07-26. Note this is MONTHLY where the other services are weekly. */
     price: '$60/month',
   },
+  /**
+   * Owner 2026-07-27: a custom web application for verified organizations to manage
+   * bookings, locks and access.
+   *
+   * status 'planned' — renders NOWHERE (§3.4), deliberately. This does not exist:
+   * Phase 02 is unbuilt and this is beyond what ADR-0001 or ADR-0002 authorize.
+   * Advertising an agency portal to a coordinator who then asks for a login is a
+   * promise made on the coordinator's behalf. It needs a real date before it can
+   * appear, and an ADR before it can be built — see DMFP-specs ADR-INDEX.
+   */
+  {
+    id: 'org-portal',
+    name: 'Organization portal',
+    description:
+      'A web application for verified organizations to manage bookings, door access and locks ' +
+      'for the people they place.',
+    included: false,
+    status: 'planned',
+    liveFrom: tbd('org_portal_live_from', 'A date is the price of appearing on the site'),
+  },
   {
     id: 'business-center',
     name: 'Business center',
