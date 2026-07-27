@@ -223,7 +223,16 @@ export const services: Service[] = [
   {
     id: 'bin-storage',
     name: 'Storage bin',
-    description: 'A personal storage bin held for you in a secured area. Not your rubbish bin.',
+    /**
+     * Owner 2026-07-27: "secured storage for your items between stays". That is a
+     * returning-contractor feature, not a locker — someone finishing a 13-week
+     * assignment who expects another one leaves their things rather than shipping
+     * them home twice.
+     *
+     * It also settles the billing question: monthly is right precisely BECAUSE the
+     * bin is used when you are not renting a room by the week.
+     */
+    description: 'Secured storage for your items between stays.',
     included: false,
     status: 'launching',
     liveFrom: 'September 2026',
@@ -717,8 +726,14 @@ export const properties = [
         name: 'QLINE',
         description: 'Streetcar running along Woodward Avenue.',
         distance: '5 blocks',
-        nearestStop: tbd('qline_nearest_stop'),
-        walkTime: tbd('qline_walk_time', 'Measured, not estimated'),
+        /**
+         * Owner said "5 blocks". Measured, it is 0.84 miles and 19 minutes on foot —
+         * a real walk, not a hop. Both are stated: the block count is what a local
+         * would say, the minutes are what someone deciding whether to bring a car
+         * actually needs.
+         */
+        nearestStop: driveTimes.transit.qline.stop,
+        walkTime: `${driveTimes.transit.qline.walkMinutes} min (${driveTimes.transit.qline.walkMiles} miles), measured`,
       },
       other: tbd('transit_other', 'Bus routes and anything else, factual only'),
     },
@@ -775,7 +790,7 @@ export const properties = [
           driveTime: driveTimes.facilities.dmc.driveTime,
           samples: driveTimes.facilities.dmc.samples,
           parking: tbd('facility_dmc_parking'),
-          transit: tbd('facility_dmc_transit', 'Whether the QLINE reaches it, and from which stop'),
+          transit: driveTimes.facilities.dmc.transit ?? tbd('facility_dmc_transit'),
         },
         {
           id: 'hfh',
@@ -787,7 +802,7 @@ export const properties = [
           driveTime: driveTimes.facilities.hfh.driveTime,
           samples: driveTimes.facilities.hfh.samples,
           parking: tbd('facility_hfh_parking'),
-          transit: tbd('facility_hfh_transit', 'Whether the QLINE reaches it, and from which stop'),
+          transit: driveTimes.facilities.hfh.transit ?? tbd('facility_hfh_transit'),
         },
       ] as Facility[],
     },

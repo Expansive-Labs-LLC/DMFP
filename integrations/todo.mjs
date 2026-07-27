@@ -59,7 +59,6 @@ const CONFIRMATIONS = [
   ['`services[cleaning].price`', '**$50/week is market-derived, not yours.** Detroit cleaning $25–40/hr; ~$210/week for the house across six residents. Confirm.'],
   ['`services[cleaning]` structure', 'Cleaning common areas is house-level. Charging per resident lets one pay while five do not. Should it be in the room rate instead?'],
   ['`home.internet.ratedDown`', '"300MB/S" read as 300 Mbps (megabits). 300 MB/s would be 2.4 Gbps.'],
-  ['`services[bin-storage].price`', 'Parking moved to weekly on 2026-07-27, so the $60/month storage bin is now the only monthly charge. With week-by-week rooms, what does a 3-week stay pay?'],
   ['`home.terms.billingPeriod`', 'Weekly billing replaces the 30-day minimum. Confirm no minimum stay.'],
 ];
 
@@ -117,6 +116,12 @@ export default function todoIntegration() {
           for (const m of html.matchAll(TOKEN)) {
             if (!byToken.has(m[1])) byToken.set(m[1], new Set());
             byToken.get(m[1]).add(page);
+          }
+
+          // A Fact rendered directly instead of through <Fact /> stringifies to
+          // "[object Object]". Unlike undefined, this one IS detectable — so catch it.
+          if (html.includes('[object Object]')) {
+            violations.push(`${page}: rendered "[object Object]" — a value needs <Fact /> or show()`);
           }
 
           if (f.endsWith('sitemap.xml') && TOKEN.test(html)) {

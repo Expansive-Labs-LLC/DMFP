@@ -48,7 +48,7 @@ const SAMPLES = [
   { label: 'night shift, arriving 19:00', departureTime: nextWeekdayAt(18.5) },
 ];
 
-async function route(dest, departureTime) {
+async function route(dest, departureTime, travelMode = 'DRIVE') {
   const res = await fetch('https://routes.googleapis.com/directions/v2:computeRoutes', {
     method: 'POST',
     headers: {
@@ -59,9 +59,11 @@ async function route(dest, departureTime) {
     body: JSON.stringify({
       origin: { address: ORIGIN },
       destination: { address: dest },
-      travelMode: 'DRIVE',
-      routingPreference: 'TRAFFIC_AWARE_OPTIMAL',
-      departureTime,
+      travelMode,
+      // routingPreference is only valid for DRIVE
+      ...(travelMode === 'DRIVE'
+        ? { routingPreference: 'TRAFFIC_AWARE_OPTIMAL', departureTime }
+        : {}),
     }),
   });
   if (!res.ok) throw new Error(`${res.status} ${await res.text()}`);
@@ -70,7 +72,14 @@ async function route(dest, departureTime) {
   return { seconds: Number(String(r.duration).replace('s', '')), meters: r.distanceMeters };
 }
 
-const out = { measuredAt: new Date().toISOString().slice(0, 10), method: '', facilities: {} };
+const QLINE_STOP = 'Penske Tech Center, 7520 Woodward Ave, Detroit, MI 48202';
+
+const out = {
+  measuredAt: new Date().toISOString().slice(0, 10),
+  method: '',
+  facilities: {},
+  transit: {},
+};
 out.method =
   'Google Routes API, traffic-aware, sampled at weekday shift-change times';
 
@@ -91,7 +100,28 @@ for (const f of FACILITIES) {
         ? `${samples[0].minutes} min`
         : `${Math.min(...samples.map((s) => s.minutes))}–${Math.max(...samples.map((s) => s.minutes))} min`,
   };
-  console.log(`  ${f.id}: ${out.facilities[f.id].distance}, ${out.facilities[f.id].driveTime}`);
+  // Transit, so a reader can weigh a car against the QLINE rather than guess.
+  try {
+    const t = await route(f.dest, undefined, 'TRANSIT');
+    out.facilities[f.id].transit = `${Math.round(t.seconds / 60)} min by transit`;
+  } catch {
+    out.facilities[f.id].transit = null;
+  }
+  console.log(
+    `  ${f.id}: ${out.facilities[f.id].distance}, ${out.facilities[f.id].driveTime}` +
+      `, ${out.facilities[f.id].transit ?? 'transit unavailable'}`
+  );
+}
+
+// Walk to the nearest QLINE stop. A block count sounds close; minutes are the truth.
+{
+  const w = await route(QLINE_STOP, undefined, 'WALK');
+  out.transit.qline = {
+    stop: QLINE_STOP,
+    walkMinutes: Math.round(w.seconds / 60),
+    walkMiles: (w.meters / 1609.34).toFixed(2),
+  };
+  console.log(`  qline: ${out.transit.qline.walkMinutes} min walk, ${out.transit.qline.walkMiles} miles`);
 }
 
 writeFileSync('src/data/drive-times.json', JSON.stringify(out, null, 2) + '\n');

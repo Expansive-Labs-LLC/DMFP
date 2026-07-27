@@ -32,9 +32,13 @@ const t = property.transit;
 
     <h2>Getting around without a car</h2>
     <p class="measure">
-      The {t.qline.name} is <strong>{t.qline.distance}</strong> from the house.
-      {' '}{t.qline.description} Nearest stop: <Fact value={t.qline.nearestStop} />. Walk time:
-      {' '}<Fact value={t.qline.walkTime} />.
+      {t.qline.description} The nearest stop is <strong>{t.qline.nearestStop}</strong> —
+      {' '}{t.qline.distance} from the house, <strong>{t.qline.walkTime}</strong>.
+    </p>
+    <p class="measure small">
+      Both facilities are reachable by transit, and both take about four times the drive. If you are
+      deciding whether to bring a car, that is the number to weigh against
+      {' '}{home.parking.priceWeekly} parking.
     </p>
     <p class="measure"><Fact value={t.other} /></p>
 

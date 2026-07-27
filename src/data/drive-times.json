@@ -17,7 +17,8 @@
           "meters": 5402
         }
       ],
-      "driveTime": "8–9 min"
+      "driveTime": "8–9 min",
+      "transit": "26 min by transit"
     },
     "hfh": {
       "dest": "2799 W Grand Blvd, Detroit, MI 48202",
@@ -34,7 +35,15 @@
           "meters": 2272
         }
       ],
-      "driveTime": "6 min"
+      "driveTime": "6 min",
+      "transit": "26 min by transit"
+    }
+  },
+  "transit": {
+    "qline": {
+      "stop": "Penske Tech Center, 7520 Woodward Ave, Detroit, MI 48202",
+      "walkMinutes": 19,
+      "walkMiles": "0.84"
     }
   }
 }
