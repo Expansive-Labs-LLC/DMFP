@@ -124,7 +124,8 @@ export const site = {
   ],
   documents: {
     /** /for-agencies §5 */
-    turnaround: tbd('docs_turnaround', 'Turnaround for W-9 and certificate of insurance'),
+    /** Owner 2026-07-27. An SLA, not an aspiration — a coordinator will hold you to it. */
+    turnaround: 'Within 8 business hours',
   },
   analytics: { enabled: false },
   form: {
@@ -787,7 +788,12 @@ export const properties = [
         'Screening, against criteria published before anyone is scored.',
         'Agreement signed and the first week paid. Door access is issued before you arrive.',
       ],
-      fee: tbd('application_fee'),
+      /**
+       * Owner 2026-07-27. Low enough to read as covering cost rather than as a
+       * revenue line, which is the right posture for a housing application fee —
+       * and it keeps well clear of anywhere a cap might bite.
+       */
+      fee: '$15',
       screeningCriteria: tbd('screening_criteria'),
       /** ADR-0001 / SPEC-DMFP-FE-0207. `null` = manual path, which is the launch state. */
       platform: null as string | null,
