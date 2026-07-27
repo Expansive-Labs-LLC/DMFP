@@ -56,7 +56,28 @@ export const site = {
     legalName: 'Detroit Med Focus Properties',
   },
   contact: {
-    email: tbd('inquiry_email', 'info@ was inferred from house convention, never confirmed'),
+    /**
+     * STILL UNCONFIRMED and now known to be broken. Owner sent a test on 2026-07-27
+     * and it did not arrive.
+     *
+     * DNS as of 2026-07-27: MX is `1 smtp.google.com` — Google Workspace, correctly
+     * configured — and a google-site-verification TXT is present. So mail is being
+     * routed to Google. The likely fault is therefore not DNS but the mailbox: no
+     * user or alias for this address in the Workspace tenant, so Google refuses it.
+     *
+     * This is the single most important thing on the site. Every page carries this
+     * address and the whole build exists to put a lead in an inbox. A site that
+     * collects inquiries into a black hole is worse than no site.
+     *
+     * The address is set so the site can render, but DELIVERY IS STILL UNPROVEN.
+     * Launch gate: send a test from an outside account and confirm it arrives.
+     *
+     * Owner supplied this as "info@detroitmedfocuspropertties.com" — doubled t.
+     * Corrected to the real domain. check-facts.mjs now fails the build if the
+     * contact address does not sit on the canonical domain, because a typo here is
+     * invisible on the page and costs every lead.
+     */
+    email: 'info@detroitmedfocusproperties.com',
     phone: '(734) 489-2708',
     /** /for-agencies leads with a named human, not a form. */
     name: tbd('contact_name'),
@@ -377,7 +398,8 @@ export const properties = [
         negotiable: true,
         negotiationBasis: tbd('negotiation_basis', 'Written list of what earns a reduction'),
         utilities: {
-          included: tbd('utilities_included', 'What the rate covers'),
+          /** Owner 2026-07-27. Internet is listed separately as a service. */
+          included: 'Power, gas, water and sewage',
           /** Metering splits across the 2 units — the basis for separate leases. */
           splitByUnit: true,
         },

@@ -39,6 +39,26 @@ function walk(dir, out = []) {
 }
 
 const failures = [];
+
+/**
+ * The contact address must sit on the canonical domain. A typo'd domain renders
+ * perfectly, passes every other check, and silently loses every lead — so it is
+ * worth a rule of its own rather than trusting proofreading.
+ */
+{
+  const cfg = readFileSync('src/data/site.config.ts', 'utf8');
+  const site = cfg.match(/site:\s*'https:\/\/([^']+)'/)?.[1]
+    ?? readFileSync('astro.config.mjs', 'utf8').match(/site:\s*'https:\/\/([^']+)'/)?.[1];
+  for (const m of cfg.matchAll(/'([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})'/g)) {
+    const domain = m[1].split('@')[1];
+    if (site && domain !== site) {
+      failures.push(
+        `src/data/site.config.ts: "${m[1]}" is not on ${site} — check for a typo in the domain`
+      );
+    }
+  }
+}
+
 for (const f of walk(ROOT)) {
   const lines = readFileSync(f, 'utf8').split('\n');
   let inComment = false;
