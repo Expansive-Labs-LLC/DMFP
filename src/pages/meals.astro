@@ -46,6 +46,12 @@ const detail: Record<string, { does: string; forWho: string }> = {
   <section class="wrap stack">
     <h2>Three stages</h2>
     <p class="measure">Pick the one that matches how much you want to do. Change it week to week.</p>
+    <p class="measure perdiem">
+      <strong>{meals.perDiem.claim}</strong> If you are on a stipend, that is the number your
+      coordinator reimburses against —
+      {' '}<a href={meals.perDiem.sourceUrl} rel="noopener noreferrer" target="_blank">{meals.perDiem.source}</a>.
+      {' '}{meals.perDiem.note}
+    </p>
 
     {
       stages.length === 0 ? (
@@ -124,6 +130,7 @@ const detail: Record<string, { does: string; forWho: string }> = {
   .hero { padding-block: var(--s12); }
   .standfirst { font-size: 1.125rem; margin-top: var(--s4); }
   section.wrap { padding-block: var(--s12) var(--s8); }
+  .perdiem { border-left: 3px solid var(--signal); padding-left: var(--s4); }
   .partners { display: grid; gap: var(--s6); margin-block: var(--s6); }
   @media (min-width: 768px) { .partners { grid-template-columns: 1fr 1fr; } }
   .partners article { border-left: 3px solid var(--sodium-deep); padding-left: var(--s4); }

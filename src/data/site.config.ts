@@ -357,6 +357,21 @@ export const meals = {
   standfirstAlt:
     'This custom built rotating weekly meal menu is the ticket to keeping you operating at peak ' +
     'performance, lives depend on it.',
+  /**
+   * Owner 2026-07-27: every tier lands under the GSA per diem M&IE rate for Detroit.
+   * That is the number an agency reimburses against, so it is the number that
+   * decides whether a coordinator can approve the spend — it belongs on the page.
+   *
+   * The rate itself is NOT stated here: GSA publishes it per fiscal year and it
+   * changes, so a figure hardcoded today is wrong next October. The claim is
+   * relative, and the reader is pointed at the source to check it.
+   */
+  perDiem: {
+    claim: 'Every tier comes in under the federal per diem meal rate for Detroit.',
+    source: 'GSA per diem, meals and incidental expenses',
+    sourceUrl: 'https://www.gsa.gov/travel/plan-book/per-diem-rates',
+    note: 'Rates are set per fiscal year — check the current figure before you rely on it.',
+  },
   rotation: 'Weekly',
   custom: true,
   /**
