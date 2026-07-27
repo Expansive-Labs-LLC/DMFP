@@ -1,0 +1,107 @@
+---
+/**
+ * `/meals` — the food programme, broken out of /whats-included.
+ *
+ * The three stages are the offering, so they get room to be explained rather than
+ * three lines in a list. Status-gated like everything else: a stage renders only
+ * if it is live, or launching WITH a date (§3.4, §13.4).
+ */
+import Base from '../layouts/Base.astro';
+import Fact from '../components/Fact.astro';
+import { meals, services, serviceDisplay, home } from '../data/site.config';
+import { isTbd } from '../lib/fact';
+
+const stages = ['food-gather', 'food-prep', 'food-hot']
+  .map((id) => services.find((s) => s.id === id))
+  .filter((s): s is NonNullable<typeof s> => Boolean(s))
+  .filter((s) => s.status === 'live' || (serviceDisplay.showNonLive && s.status === 'launching'));
+
+const detail: Record<string, { does: string; forWho: string }> = {
+  'food-gather': {
+    does: 'We shop and the fridge is stocked when you get in. You cook.',
+    forWho: 'You like cooking. You do not like the grocery run after a shift.',
+  },
+  'food-prep': {
+    does: 'Everything above, plus meals prepped so cooking is minutes, not an evening.',
+    forWho: 'You want to cook something, not everything.',
+  },
+  'food-hot': {
+    does: 'Hot meals delivered in a window you agree in advance.',
+    forWho: 'You want to walk in and eat.',
+  },
+};
+---
+
+<Base
+  title="Meals"
+  description="A rotating weekly menu built with Detroit chefs, in three stages: groceries gathered, meals prepped, or hot meals delivered."
+>
+  <section class="hero on-ink">
+    <div class="wrap">
+      <h1 class="display-l">{meals.headline}</h1>
+      <p class="standfirst measure">{meals.standfirst}</p>
+    </div>
+  </section>
+
+  <section class="wrap stack">
+    <h2>Three stages</h2>
+    <p class="measure">Pick the one that matches how much you want to do. Change it week to week.</p>
+
+    {
+      stages.length === 0 ? (
+        <p class="measure">The meal programme is not published yet. <a href="/inquire">Ask about it</a>.</p>
+      ) : (
+        <div class="stages">
+          {stages.map((s, i) => (
+            <article class="stage">
+              <p class="micro">Stage {i + 1}</p>
+              <h3>{s.name}</h3>
+              <p class="price mono">{s.price ? <Fact value={s.price} /> : null}</p>
+              {s.status === 'launching' && (
+                <p class="from small">
+                  {isTbd(s.liveFrom) ? <Fact value={s.liveFrom} /> : `from ${s.liveFrom}`}
+                </p>
+              )}
+              <p>{detail[s.id]?.does}</p>
+              <p class="small muted">{detail[s.id]?.forWho}</p>
+            </article>
+          ))}
+        </div>
+      )
+    }
+
+    <h2>The menu</h2>
+    <p class="measure">
+      {meals.rotation} rotation, so week six does not taste like week one. Built with
+      {' '}<Fact value={meals.chefs} />.
+    </p>
+    <p class="measure">A sample week: <Fact value={meals.sampleMenu} />.</p>
+    <p class="measure">Confirm a week by <Fact value={meals.orderBy} />.</p>
+
+    <h2>Dietary needs</h2>
+    <p class="measure"><Fact value={meals.dietary} /></p>
+
+    <h2>If you would rather cook</h2>
+    <p class="measure">
+      The house has {home.kitchens} kitchens with a stove, microwave, air fryer and blender, and
+      reverse-osmosis water on tap. No meal plan is required.
+    </p>
+
+    <p><a class="btn" href="/inquire">Ask about meals</a></p>
+  </section>
+</Base>
+
+<style>
+  .hero { padding-block: var(--s12); }
+  .standfirst { font-size: 1.125rem; margin-top: var(--s4); }
+  section.wrap { padding-block: var(--s12) var(--s8); }
+  .stages { display: grid; gap: var(--s6); margin-block: var(--s8); }
+  @media (min-width: 768px) { .stages { grid-template-columns: repeat(3, 1fr); } }
+  .stage { border: 1px solid var(--limestone); padding: var(--s6); }
+  .stage h3 { margin: var(--s1) 0; }
+  .price { font-size: 1.5rem; color: var(--sodium-deep); }
+  .from { color: var(--text-muted); margin-top: 0; }
+  .btn { display: inline-block; background: var(--ink); color: var(--paper); padding: var(--s3) var(--s8);
+         text-decoration: none; font-weight: 600; border-radius: 2px; }
+  .btn:hover { background: var(--brick); color: var(--paper); }
+</style>

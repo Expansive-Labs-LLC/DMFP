@@ -243,6 +243,39 @@ export const services: Service[] = [
 /** DESIGN-PLAN §13.4 — during pre-leasing, `launching` renders WITH a mandatory date label. */
 export const serviceDisplay = { showNonLive: true } as const;
 
+/**
+ * Meal programme. Copy lives here so it is one edit, not a hunt through markup.
+ *
+ * VOICE NOTE (DESIGN-PLAN §7: plain, specific, unhurried): the owner's draft ran
+ * "keeping you operating at peak performance, lives depend on it". That is a
+ * health-and-performance claim requiring substantiation, and it leans on the
+ * clinician's duty to patients to sell a meal plan. `headlineAlt` preserves it
+ * verbatim if you want it; `headline` is the version that survives the site's own
+ * evidentiary standard. Swap which one the page reads.
+ */
+export const meals = {
+  headline: 'You are new to Detroit. We are not.',
+  standfirst:
+    'The weekly menu is built with chefs who cook in this city, and it rotates, so week six does not ' +
+    'taste like week one. After a twelve-hour shift the last thing you should have to decide is dinner.',
+  /** Owner's draft, kept verbatim. See the voice note above before using it. */
+  headlineAlt: "You're new here, we've spent years rubbing elbows with the top chefs in Detroit.",
+  standfirstAlt:
+    'This custom built rotating weekly meal menu is the ticket to keeping you operating at peak ' +
+    'performance, lives depend on it.',
+  rotation: 'Weekly',
+  custom: true,
+  /**
+   * The chef relationship is the strongest claim on this page and the only
+   * unverifiable one. Name them and it becomes a credential; leave it vague and it
+   * is the one sentence on the site a reader cannot check.
+   */
+  chefs: tbd('chef_partners', 'Which chefs, and what the relationship actually is'),
+  dietary: tbd('dietary_accommodations', 'Allergies, halal, kosher, vegetarian — what can be handled'),
+  sampleMenu: tbd('sample_menu', 'One real week, so the menu is not an abstraction'),
+  orderBy: tbd('meal_order_deadline', 'When a week has to be confirmed by'),
+} as const;
+
 export const properties = [
   {
     slug: 'hazelwood',
