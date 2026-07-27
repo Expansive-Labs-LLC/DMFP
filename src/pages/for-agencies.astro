@@ -40,7 +40,7 @@ const telHref = digits ? `tel:+1${digits}` : undefined;
       rows={[
         { head: 'Minimum contract', cells: [t.minTerm] },
         { head: 'Maximum contract', cells: [t.maxTerm] },
-        { head: 'Rate — one bedroom, per week', cells: [t.rateRoomWeekly] },
+        { head: 'Rate — one bedroom, per week', cells: [`From ${t.rateRoomWeeklyFrom} — see the unit table`] },
         { head: 'Rate — one unit, per week', cells: [t.rateUnitWeekly] },
         { head: 'Rate — whole building, per week', cells: [t.rateHouseWeekly] },
         { head: 'In the rate', cells: [t.utilities.included] },
@@ -65,10 +65,11 @@ const telHref = digits ? `tel:+1${digits}` : undefined;
       cost-share. <strong>They are not equivalent</strong> — compare before you place anyone.
     </p>
     <FactTable
-      columns={['Unit', 'Bedrooms', 'Full baths', 'Kitchen', 'Other space']}
+      columns={['Unit', 'Room / week', 'Bedrooms', 'Full baths', 'Kitchen', 'Other space']}
       rows={home.divisible.list.map((u) => ({
         head: u.label,
         cells: [
+          u.roomRateWeekly,
           String(u.bedrooms),
           String(u.bathroomsFull),
           u.kitchen,

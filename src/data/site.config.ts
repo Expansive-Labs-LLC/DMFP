@@ -399,6 +399,21 @@ export const properties = [
             kitchen: 'Full kitchen',
             kitchenContents: 'Stove, microwave, air fryer, blender, reverse-osmosis water',
             spaces: ['Living room', 'Business center'],
+            /**
+             * PRICED BY AMENITY, NOT SIZE. No bedroom dimensions exist anywhere in
+             * this project, so a size ratio cannot be computed. This is the ratio
+             * that CAN be defended from known facts:
+             *
+             *   Unit A room — 0.67 full baths per person, full kitchen, living room,
+             *                 business center
+             *   Unit B room — 0.33 full baths per person, kitchenette, no common space
+             *
+             * Half the bathroom share and no communal space anywhere. B is set at
+             * ~75% of A. Replace with a true square-footage ratio once
+             * roomDimensions is filled in.
+             */
+            roomRateWeekly: '$450/week',
+            roomDimensions: tbd('unit_a_room_sizes', 'Bedroom square footage — needed to price by size'),
           },
           {
             id: 'b',
@@ -414,6 +429,8 @@ export const properties = [
              */
             spaces: [],
             spacesNote: 'No common space other than the kitchenette.',
+            roomRateWeekly: '$340/week',
+            roomDimensions: tbd('unit_b_room_sizes', 'Bedroom square footage — needed to price by size'),
           },
         ],
         /**
@@ -457,7 +474,18 @@ export const properties = [
          * is inside stipend but at the top — which is what an anchor should be.
          * CONFIRM: these are live offers the release gate will not stop.
          */
-        rateRoomWeekly: '$425/week',
+        /**
+         * Rooms are no longer one price. Each unit carries its own rate — see
+         * `divisible.list[].roomRateWeekly` — because a room in Unit B buys a third
+         * of one bathroom and a kitchenette, and the same money in Unit A buys twice
+         * the bathroom, a full kitchen, a living room and a desk.
+         *
+         * FAIR HOUSING: differential room pricing is fine when it follows a stated
+         * rule about the property. It is not fine when it varies by who is asking.
+         * The rule here is the unit, published on the rate sheet, and it applies to
+         * everyone. That is what keeps a negotiable rate defensible.
+         */
+        rateRoomWeeklyFrom: '$340/week',
         /**
          * Owner 2026-07-27: unit and whole-building lets are priced on inquiry.
          * Coherent with the published room rate — a transparent number wins the

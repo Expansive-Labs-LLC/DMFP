@@ -92,8 +92,8 @@ const avail = home.availability;
         <p class="small">
           Renovation underway. First occupancy {avail.availableFrom}. Applications are open now.
         </p>
-        <p class="data mono rate"><Fact value={home.terms.rateRoomWeekly} /></p>
-        <p class="small muted">one bedroom, per week</p>
+        <p class="data mono rate">from <Fact value={home.terms.rateRoomWeeklyFrom} /></p>
+        <p class="small muted">one bedroom, per week — {home.divisible.list.map((u) => `${u.label} ${u.roomRateWeekly}`).join(', ')}</p>
         <p class="data mono rate"><Fact value={home.terms.rateUnitWeekly} /></p>
         <p class="small muted">one of {home.divisible.units} units, per week</p>
         <p class="data mono rate"><Fact value={home.terms.rateHouseWeekly} /></p>
