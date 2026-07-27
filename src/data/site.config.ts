@@ -425,9 +425,9 @@ export const properties = [
              */
             roomRateWeekly: 'from $385/week',
             rooms: [
-              { id: 'r1', label: 'Room 1', widthFt: 10.5, lengthFt: 10.5, rateWeekly: '$385/week' },
-              { id: 'r2', label: 'Room 2', widthFt: 13.5, lengthFt: 14.5, rateWeekly: '$510/week' },
-              { id: 'r3', label: 'Room 3', widthFt: 11.5, lengthFt: 13.5, rateWeekly: '$450/week' },
+              { id: 'r1', label: 'Room 1', widthFt: 10.5, lengthFt: 10.5, floor: tbd('room_1_floor'), rateWeekly: '$385/week' },
+              { id: 'r2', label: 'Room 2', widthFt: 13.5, lengthFt: 14.5, floor: tbd('room_2_floor'), rateWeekly: '$510/week' },
+              { id: 'r3', label: 'Room 3', widthFt: 11.5, lengthFt: 13.5, floor: tbd('room_3_floor'), rateWeekly: '$450/week' },
             ],
           },
           {
@@ -446,9 +446,10 @@ export const properties = [
             spacesNote: 'No common space other than the kitchenette.',
             roomRateWeekly: 'from $290/week',
             rooms: [
-              { id: 'r4', label: 'Room 4', widthFt: 9.5, lengthFt: 8.5, rateWeekly: '$290/week' },
-              { id: 'r5', label: 'Room 5', widthFt: 12, lengthFt: 10.5, rateWeekly: '$360/week' },
-              { id: 'r6', label: 'Room 6', widthFt: 11.5, lengthFt: 11.5, rateWeekly: '$370/week' },
+              { id: 'r4', label: 'Room 4', widthFt: 9.5, lengthFt: 8.5, floor: tbd('room_4_floor'), rateWeekly: '$290/week' },
+              /** Owner 2026-07-27: rooms 5 and 6 are third floor. -10% for the climb. */
+              { id: 'r5', label: 'Room 5', widthFt: 12, lengthFt: 10.5, floor: 'Third floor', rateWeekly: '$325/week' },
+              { id: 'r6', label: 'Room 6', widthFt: 11.5, lengthFt: 11.5, floor: 'Third floor', rateWeekly: '$330/week' },
             ],
           },
         ],
@@ -509,7 +510,15 @@ export const properties = [
         roomPricingRule:
           'Half of each room rate is the same for every room — private lockable door, bathroom ' +
           'access, kitchen, internet, cleaning, cameras. The other half scales with the room\'s floor ' +
-          'area against the average for its unit.',
+          'area against the average for its unit. Third-floor rooms are then reduced 10% for the climb.',
+        /**
+         * Factual only. Describe the stairs, never who can manage them — §9 and
+         * COMPLIANCE.md ban "must be able to" and "able bodied", and a physical
+         * capability requirement in a housing advert is a disability problem. State
+         * the floor and the flights and let the reader decide.
+         */
+        accessNote: 'The house is stairs only; there is no lift.',
+        stairFlights: tbd('stair_flights_to_third', 'Flights from entry to the third floor'),
         /**
          * Owner 2026-07-27: unit and whole-building lets are priced on inquiry.
          * Coherent with the published room rate — a transparent number wins the

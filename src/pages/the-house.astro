@@ -71,6 +71,10 @@ import { property, home } from '../data/site.config';
 
     <h2>Rooms and rates</h2>
     <p class="measure small">{home.terms.roomPricingRule}</p>
+    <p class="measure small access">
+      {home.terms.accessNote} Flights from the entry to the third floor:
+      {' '}<Fact value={home.terms.stairFlights} />.
+    </p>
     {
       home.divisible.list.map((u) => (
         <div class="unit-block">
@@ -84,6 +88,7 @@ import { property, home } from '../data/site.config';
                 <span class="rm">{r.label}</span>
                 <span class="mono dim">{r.widthFt} × {r.lengthFt} ft</span>
                 <span class="mono area">{(r.widthFt * r.lengthFt).toFixed(0)} sq ft</span>
+                <span class="small floor"><Fact value={r.floor} /></span>
                 <span class="mono rate-cell">{r.rateWeekly}</span>
               </li>
             ))}
@@ -176,11 +181,13 @@ import { property, home } from '../data/site.config';
   .rooms-list li { display: grid; grid-template-columns: 1fr auto; gap: var(--s1) var(--s4);
                    padding: var(--s2) 0; border-bottom: 1px solid var(--limestone); }
   @media (min-width: 560px) {
-    .rooms-list li { grid-template-columns: 6rem 1fr 6rem 6rem; align-items: baseline; }
+    .rooms-list li { grid-template-columns: 5.5rem 1fr 5.5rem 7rem 6rem; align-items: baseline; }
   }
   .rm { font-weight: 600; }
   .dim, .area { color: var(--text-muted); }
   .rate-cell { color: var(--sodium-deep); font-weight: 600; text-align: right; }
+  .floor { color: var(--text-muted); }
+  .access { border-left: 3px solid var(--limestone-edge); padding-left: var(--s3); }
   .appliances { list-style: none; padding: 0; margin: var(--s4) 0; max-width: var(--measure);
                 display: flex; flex-wrap: wrap; gap: var(--s2); }
   .appliances li { border: 1px solid var(--limestone-edge); padding: var(--s1) var(--s3);

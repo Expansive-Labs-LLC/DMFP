@@ -85,13 +85,18 @@ const telHref = digits ? `tel:+1${digits}` : undefined;
 
     <h2>Rooms</h2>
     <p class="measure small">{home.terms.roomPricingRule}</p>
+    <p class="measure small">
+      {home.terms.accessNote} Flights to the third floor: <Fact value={home.terms.stairFlights} />.
+      Tell anyone you place which floor their room is on.
+    </p>
     <FactTable
-      columns={['Room', 'Unit', 'Size', 'Floor area', 'Per week']}
+      columns={['Room', 'Unit', 'Floor', 'Size', 'Floor area', 'Per week']}
       rows={home.divisible.list.flatMap((u) =>
         u.rooms.map((r) => ({
           head: r.label,
           cells: [
             u.label,
+            r.floor,
             `${r.widthFt} × ${r.lengthFt} ft`,
             `${(r.widthFt * r.lengthFt).toFixed(0)} sq ft`,
             r.rateWeekly,
