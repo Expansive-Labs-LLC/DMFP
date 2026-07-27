@@ -23,8 +23,22 @@ import { property, home } from '../data/site.config';
       they're done. Target: <Fact value={property.rehab.completionTarget} />.
     </p>
 
-    <h2>Kitchen</h2>
-    <p class="measure">Two kitchens. Appliances: <Fact value={home.kitchen.appliances} />.</p>
+    <h2>Kitchens</h2>
+    <p class="measure">
+      {home.kitchens} kitchens, so six people are not sharing one stove.
+    </p>
+    <ul class="appliances">
+      {home.kitchen.appliances.map((a) => <li>{a}</li>)}
+    </ul>
+    <p class="measure">
+      <strong>{home.kitchen.water}.</strong> Filtered water from the tap and in the ice, not a jug in
+      the fridge.
+    </p>
+    <p class="measure small">
+      The kitchen drawing also shows {home.kitchen.fromPlan.join(' and ').toLowerCase()}, but that plan
+      is not an as-built survey. Refrigerator: <Fact value={home.kitchen.refrigerator} />.
+      Same equipment in both kitchens: <Fact value={home.kitchen.sameInBothKitchens} />.
+    </p>
     <p class="measure">Cookware: <Fact value={home.kitchen.cookware} />.</p>
 
     <h2>Laundry</h2>
@@ -126,6 +140,10 @@ import { property, home } from '../data/site.config';
 </Base>
 <style>
   section { padding-block: var(--s12) var(--s8); }
+  .appliances { list-style: none; padding: 0; margin: var(--s4) 0; max-width: var(--measure);
+                display: flex; flex-wrap: wrap; gap: var(--s2); }
+  .appliances li { border: 1px solid var(--limestone-edge); padding: var(--s1) var(--s3);
+                   border-radius: 2px; font-size: 0.9375rem; }
   .plan { margin-block: var(--s8); }
   .plan h3 { margin-bottom: var(--s3); }
   .planned { font-weight: 400; font-size: 0.8125rem; letter-spacing: 0.04em;

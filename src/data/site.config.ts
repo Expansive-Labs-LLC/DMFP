@@ -357,7 +357,19 @@ export const properties = [
       },
       kitchen: {
         count: 2,
-        appliances: tbd('kitchen_appliances'),
+        /** Owner 2026-07-26. A furnished-rental deal-breaker, so it gets its own section. */
+        appliances: ['Stove', 'Microwave', 'Air fryer', 'Blender'],
+        /**
+         * The kitchen drawing also shows a dishwasher and a sink. That plan is marked
+         * `planned`, not as-built, so they are listed separately from the owner's
+         * confirmed appliance list rather than merged into it.
+         */
+        fromPlan: ['Dishwasher', 'Sink'],
+        /** Reverse osmosis, plumbed to both outlets — owner 2026-07-26. */
+        water: 'Reverse-osmosis filter, plumbed to the tap and to the ice maker',
+        /** Not stated. An ice maker implies a fridge, but implication is not a fact. */
+        refrigerator: tbd('kitchen_refrigerator'),
+        sameInBothKitchens: tbd('kitchen_parity', 'Are both kitchens equipped the same?'),
         cookware: tbd('kitchen_cookware'),
       },
       /**
