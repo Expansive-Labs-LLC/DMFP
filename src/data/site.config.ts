@@ -271,7 +271,18 @@ export const meals = {
    * is the one sentence on the site a reader cannot check.
    */
   chefs: tbd('chef_partners', 'Which chefs, and what the relationship actually is'),
-  dietary: tbd('dietary_accommodations', 'Allergies, halal, kosher, vegetarian — what can be handled'),
+  /** Owner 2026-07-27: any and all. */
+  dietary: 'Any dietary requirement. Tell us what you need and the menu is built to it.',
+  /**
+   * "Any and all" is an unbounded promise, and for a severe allergy it is a safety
+   * commitment rather than a menu preference. Six residents share two kitchens, so
+   * cross-contamination is an operational question with a real answer — dedicated
+   * prep surfaces, separate storage, sealed delivery, or a frank "we cannot
+   * guarantee an allergen-free kitchen". Saying how is more reassuring to an
+   * allergic reader than saying yes, and it is the difference between a
+   * hospitality promise and one somebody could get hurt relying on.
+   */
+  allergyProtocol: tbd('allergy_protocol', 'How severe allergies are handled in a shared kitchen'),
   sampleMenu: tbd('sample_menu', 'One real week, so the menu is not an abstraction'),
   orderBy: tbd('meal_order_deadline', 'When a week has to be confirmed by'),
 } as const;
