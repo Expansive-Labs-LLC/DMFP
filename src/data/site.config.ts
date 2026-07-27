@@ -260,6 +260,15 @@ export const services: Service[] = [
     liveFrom: tbd('org_portal_live_from', 'A date is the price of appearing on the site'),
   },
   {
+    id: 'grill',
+    name: 'BBQ grill',
+    description: 'Outdoor grill, shared by the house.',
+    included: true,
+    /** Owner 2026-07-27: "will be available" — future tense, so it carries a date. */
+    status: 'launching',
+    liveFrom: 'September 2026',
+  },
+  {
     id: 'business-center',
     name: 'Business center',
     description:
