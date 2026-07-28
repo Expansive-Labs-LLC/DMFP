@@ -76,6 +76,10 @@ import { isTbd } from '../lib/fact';
         differently — ask. Unit and whole-building rates are quoted on inquiry.
       </p>
     )}
+    <p class="measure small">
+      Each room is shown per week and per month. The monthly rate needs a stay of at least
+      {' '}{home.terms.minTermMonthly}.
+    </p>
     <p class="measure small access">
       {home.terms.accessNote}
     </p>
@@ -94,6 +98,7 @@ import { isTbd } from '../lib/fact';
                 <span class="mono area">{(r.widthFt * r.lengthFt).toFixed(0)} sq ft</span>
                 <span class="small floor"><Fact value={r.floor} /></span>
                 <span class="mono rate-cell">{r.rateWeekly}</span>
+                <span class="mono rate-cell alt">{r.rateMonthly}</span>
               </li>
             ))}
           </ul>
@@ -184,11 +189,14 @@ import { isTbd } from '../lib/fact';
   .rooms-list li { display: grid; grid-template-columns: 1fr auto; gap: var(--s1) var(--s4);
                    padding: var(--s2) 0; border-bottom: 1px solid var(--limestone); }
   @media (min-width: 560px) {
-    .rooms-list li { grid-template-columns: 5.5rem 1fr 5.5rem 7rem 6rem; align-items: baseline; }
+    /* Six columns since the monthly rate joined the row — the last two are the rates. */
+    .rooms-list li { grid-template-columns: 5.5rem 1fr 5.5rem 7rem 6rem 7rem; align-items: baseline; }
   }
   .rm { font-weight: 600; }
   .dim, .area { color: var(--text-muted); }
   .rate-cell { color: var(--sodium-deep); font-weight: 600; text-align: right; }
+  /* Weekly is the product; monthly is a way of paying for a long stay. Weight follows that. */
+  .rate-cell.alt { color: var(--text-muted); font-weight: 500; }
   .floor { color: var(--text-muted); }
   .access { border-left: 3px solid var(--limestone-edge); padding-left: var(--s3); }
   .appliances { list-style: none; padding: 0; margin: var(--s4) 0; max-width: var(--measure);

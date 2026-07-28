@@ -91,7 +91,10 @@ const avail = home.availability;
           Renovation underway. First occupancy {avail.availableFrom}. Applications are open now.
         </p>
         <p class="data mono rate">from <Fact value={home.terms.rateRoomWeeklyFrom} /></p>
-        <p class="small muted">per bedroom, per week</p>
+        <p class="small muted">
+          per bedroom, per week — or from {home.terms.rateRoomMonthlyFrom} on a stay of
+          {' '}{home.terms.minTermMonthly} or more
+        </p>
         <p class="small"><a href="/the-house#rooms">All six rooms and rates →</a></p>
       </article>
     </div>
@@ -104,8 +107,9 @@ const avail = home.availability;
       <p>
         The house has {home.bedrooms} bedrooms, {home.bathroomsFull} full bathrooms and {home.kitchens}
         kitchens — a full kitchen and a kitchenette. It is furnished, with laundry in the house and its
-        own entrance. Rooms are let by the week, from {home.terms.minWeeks} week — a clinical contract
-        is usually {home.terms.typicalContractWeeks} weeks. Two kitchens and {home.bathroomsFull} full
+        own entrance. Rooms are let by the week, from {home.terms.minWeeks} week, and priced by the month
+        for a stay of {home.terms.minTermMonthly} or more — a clinical contract is usually
+        {' '}{home.terms.typicalContractWeeks} weeks, which is three months. Two kitchens and {home.bathroomsFull} full
         bathrooms means six people are not queuing for one of each. The building also divides into {home.divisible.units} self-contained units with
         separately split utilities, so it can be taken a room at a time, a unit at a time, or whole.
         Food, laundry and cleaning are available on top, so a week here does not have to include a

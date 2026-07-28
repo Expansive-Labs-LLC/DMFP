@@ -443,6 +443,100 @@ export const meals = {
   orderBy: tbd('meal_order_deadline', 'When a week has to be confirmed by'),
 } as const;
 
+/**
+ * MONTHLY BILLING — owner 2026-07-28, quoted alongside the weekly rate.
+ *
+ * This partly reverses the 2026-07-26 decision that weekly billing "replaces the
+ * 30-day minimum and the monthly rate". That decision was right that a weekly
+ * serviced room is a different product from a monthly furnished lease. What it missed
+ * is that the customer shops in months: a 13-week contract is three months to a
+ * clinician, and Furnished Finder — where they actually look — lists monthly. Both
+ * units are now quoted; weekly stays the default because the product is weekly.
+ *
+ * `multiplier: 4` means a month costs four weeks, against 4.33 weeks in an average
+ * month — about a 7.6% discount for committing to a month. MARKET-DERIVED, NOT
+ * OWNER-SET. Confirm it: it is the difference between a competitive monthly headline
+ * and giving away a week of revenue on every stay.
+ *
+ * READ THIS BEFORE PUBLISHING A MONTHLY RATE. Publishing a monthly figure changes who
+ * you are compared against. At the weekly grain a room competes with other serviced
+ * rooms; at $1,160–$2,040/month it sits next to whole one-bedroom apartments in
+ * Detroit, which is a harder comparison and one the weekly framing was hiding. That is
+ * an argument for publishing it — the reader was going to do the multiplication
+ * anyway — but not for publishing it without knowing the comparison changed.
+ */
+export const monthlyBilling = {
+  multiplier: 4,
+  /**
+   * 31 days, and the number is load-bearing rather than tidy.
+   *
+   * Michigan levies 6% use tax on rooms and lodging, with an exemption for continuous
+   * occupancy of MORE THAN ONE MONTH. A "monthly" rate defined as four weeks is 28
+   * days, which is less than a month, so it would stay fully taxable while looking to
+   * a customer like it had crossed the line. 31 days clears the threshold on any
+   * calendar month.
+   *
+   * Two consequences, and neither is a detail:
+   *
+   * 1. Weekly stays are taxable and monthly stays are probably not, so the two rates
+   *    are not the same product priced two ways and a flat multiplier between them is
+   *    an approximation. If the weekly rate is not already carrying 6% somewhere, that
+   *    is an unbilled liability on every weekly let, not a rounding question.
+   *
+   * 2. Crossing one month is also roughly where a stay stops looking like lodging and
+   *    starts looking like a tenancy — the exact concern behind the 26-week ceiling in
+   *    `maxTerm` and ADR-0002. Monthly pricing does not create that question, but it
+   *    makes it the normal case rather than the edge case, and Michigan
+   *    landlord-tenant obligations do not care what the agreement is titled.
+   *
+   * Neither is a thing to resolve from a config comment. `lodging_tax_treatment` gates
+   * saying anything about tax on the site.
+   */
+  minDays: 31,
+  taxTreatment: tbd(
+    'lodging_tax_treatment',
+    'CPA/counsel: does 6% MI use tax apply to the weekly lets, and is the >1-month exemption clean?'
+  ),
+} as const;
+
+const money = (usd: number) => `$${usd.toLocaleString('en-US')}`;
+export const perWeek = (usd: number) => `${money(usd)}/week`;
+export const perMonth = (usd: number) => `${money(usd * monthlyBilling.multiplier)}/month`;
+
+/**
+ * Room rates live here as ONE number each. The weekly and monthly display strings are
+ * derived, so the two can never disagree — the same reason `parkingSpec` exists. A
+ * monthly figure typed by hand next to a weekly one is one edit away from a page
+ * quoting a rate that was never agreed.
+ */
+interface RoomSeed {
+  id: string;
+  label: string;
+  widthFt: number;
+  lengthFt: number;
+  floor: string;
+  weeklyUsd: number;
+}
+const room = (r: RoomSeed) => ({
+  ...r,
+  rateWeekly: perWeek(r.weeklyUsd),
+  rateMonthly: perMonth(r.weeklyUsd),
+});
+const cheapestWeekly = (rooms: ReturnType<typeof room>[]) =>
+  Math.min(...rooms.map((r) => r.weeklyUsd));
+
+const unitARooms = [
+  room({ id: 'r1', label: 'Room 1', widthFt: 10.5, lengthFt: 10.5, floor: 'Second floor', weeklyUsd: 385 }),
+  room({ id: 'r2', label: 'Room 2', widthFt: 13.5, lengthFt: 14.5, floor: 'Second floor', weeklyUsd: 510 }),
+  room({ id: 'r3', label: 'Room 3', widthFt: 11.5, lengthFt: 13.5, floor: 'Second floor', weeklyUsd: 450 }),
+];
+/** Owner 2026-07-27: rooms 5 and 6 are third floor. -10% for the climb. */
+const unitBRooms = [
+  room({ id: 'r4', label: 'Room 4', widthFt: 9.5, lengthFt: 8.5, floor: 'Second floor', weeklyUsd: 290 }),
+  room({ id: 'r5', label: 'Room 5', widthFt: 12, lengthFt: 10.5, floor: 'Third floor', weeklyUsd: 325 }),
+  room({ id: 'r6', label: 'Room 6', widthFt: 11.5, lengthFt: 11.5, floor: 'Third floor', weeklyUsd: 330 }),
+];
+
 export const properties = [
   {
     slug: 'hazelwood',
@@ -519,12 +613,9 @@ export const properties = [
              * Room 1 (110 sqft, Unit A). Bigger room, lower price, because the unit
              * around it is worth less. That is the rule working, not a mistake.
              */
-            roomRateWeekly: 'from $385/week',
-            rooms: [
-              { id: 'r1', label: 'Room 1', widthFt: 10.5, lengthFt: 10.5, floor: 'Second floor', rateWeekly: '$385/week' },
-              { id: 'r2', label: 'Room 2', widthFt: 13.5, lengthFt: 14.5, floor: 'Second floor', rateWeekly: '$510/week' },
-              { id: 'r3', label: 'Room 3', widthFt: 11.5, lengthFt: 13.5, floor: 'Second floor', rateWeekly: '$450/week' },
-            ],
+            roomRateWeekly: `from ${perWeek(cheapestWeekly(unitARooms))}`,
+            roomRateMonthly: `from ${perMonth(cheapestWeekly(unitARooms))}`,
+            rooms: unitARooms,
           },
           {
             id: 'b',
@@ -540,13 +631,9 @@ export const properties = [
              */
             spaces: [],
             spacesNote: 'No common space other than the kitchenette.',
-            roomRateWeekly: 'from $290/week',
-            rooms: [
-              { id: 'r4', label: 'Room 4', widthFt: 9.5, lengthFt: 8.5, floor: 'Second floor', rateWeekly: '$290/week' },
-              /** Owner 2026-07-27: rooms 5 and 6 are third floor. -10% for the climb. */
-              { id: 'r5', label: 'Room 5', widthFt: 12, lengthFt: 10.5, floor: 'Third floor', rateWeekly: '$325/week' },
-              { id: 'r6', label: 'Room 6', widthFt: 11.5, lengthFt: 11.5, floor: 'Third floor', rateWeekly: '$330/week' },
-            ],
+            roomRateWeekly: `from ${perWeek(cheapestWeekly(unitBRooms))}`,
+            roomRateMonthly: `from ${perMonth(cheapestWeekly(unitBRooms))}`,
+            rooms: unitBRooms,
           },
         ],
         /**
@@ -568,6 +655,13 @@ export const properties = [
          * product from a monthly furnished lease, and the copy follows the terms.
          */
         billingPeriod: 'week' as const,
+        /**
+         * Both grains are quoted, weekly first. The order matters: weekly is the
+         * product and monthly is a way of paying for a long one, not a second product
+         * with its own terms. See `monthlyBilling` for why the monthly minimum is 31
+         * days rather than 28 and what crossing one month does to tax and tenancy.
+         */
+        billingPeriods: ['week', 'month'] as const,
         minWeeks: 1,
         typicalContractWeeks: 13,
         /**
@@ -601,12 +695,23 @@ export const properties = [
          * The rule here is the unit, published on the rate sheet, and it applies to
          * everyone. That is what keeps a negotiable rate defensible.
          */
-        rateRoomWeeklyFrom: '$290/week',
-        /** Published so a differential can be shown to be a rule, not a judgement call. */
+        rateRoomWeeklyFrom: perWeek(cheapestWeekly([...unitARooms, ...unitBRooms])),
+        rateRoomMonthlyFrom: perMonth(cheapestWeekly([...unitARooms, ...unitBRooms])),
+        /**
+         * Published so a differential can be shown to be a rule, not a judgement call.
+         *
+         * The monthly sentence is part of that, not a footnote. Fair housing tolerates
+         * differential pricing that follows a stated rule about the property and not
+         * about who is asking — so a monthly discount has to be the same multiple for
+         * everyone, published, and not something negotiated per applicant. One
+         * multiplier applied to every room keeps the whole rate sheet defensible.
+         */
         roomPricingRule:
           'Half of each room rate is the same for every room — private lockable door, bathroom ' +
           'access, kitchen, internet, cleaning, cameras. The other half scales with the room\'s floor ' +
-          'area against the average for its unit. Third-floor rooms are then reduced 10% for the climb.',
+          'area against the average for its unit. Third-floor rooms are then reduced 10% for the climb. ' +
+          `A month is priced at ${monthlyBilling.multiplier} weeks, the same for every room, so a ` +
+          'monthly stay is about 8% below the weekly rate over the same period.',
         /**
          * Factual only. Describe the stairs, never who can manage them — §9 and
          * COMPLIANCE.md ban "must be able to" and "able bodied", and a physical
@@ -672,6 +777,12 @@ export const properties = [
          * the real number.
          */
         minTerm: '1 week',
+        /**
+         * The monthly rate needs its own minimum, and it is not "1 month". Anything
+         * short of 31 days misses the >1-month use tax exemption while still being
+         * sold as monthly — see `monthlyBilling.minDays`.
+         */
+        minTermMonthly: `${monthlyBilling.minDays} days`,
         maxTerm: '26 weeks',
         /** Owner 2026-07-27. */
         paymentTerms: 'Net 15',

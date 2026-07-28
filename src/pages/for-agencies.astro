@@ -40,10 +40,12 @@ const telHref = digits ? `tel:+1${digits}` : undefined;
       columns={['Item', 'Value']}
       rows={[
         { head: 'Minimum contract', cells: [t.minTerm] },
+        { head: 'Minimum for the monthly rate', cells: [t.minTermMonthly] },
         { head: 'Maximum contract', cells: [t.maxTerm] },
         { head: 'Rate — one bedroom, per week', cells: [`From ${t.rateRoomWeeklyFrom} — see the unit table`] },
-        { head: 'Rate — one unit, per week', cells: [t.rateUnitWeekly] },
-        { head: 'Rate — whole building, per week', cells: [t.rateHouseWeekly] },
+        { head: 'Rate — one bedroom, per month', cells: [`From ${t.rateRoomMonthlyFrom} — see the unit table`] },
+        { head: 'Rate — one unit', cells: [t.rateUnitWeekly] },
+        { head: 'Rate — whole building', cells: [t.rateHouseWeekly] },
         { head: 'In the rate', cells: [t.utilities.included] },
         { head: 'Billed separately', cells: [`Parking ${home.parking.priceWeekly}, ${home.parking.availability}`] },
         { head: 'Deposit', cells: [t.deposit] },
@@ -66,11 +68,12 @@ const telHref = digits ? `tel:+1${digits}` : undefined;
       cost-share. <strong>They are not equivalent</strong> — compare before you place anyone.
     </p>
     <FactTable
-      columns={['Unit', 'Room / week', 'Bedrooms', 'Full baths', 'Kitchen', 'Other space']}
+      columns={['Unit', 'Room / week', 'Room / month', 'Bedrooms', 'Full baths', 'Kitchen', 'Other space']}
       rows={home.divisible.list.map((u) => ({
         head: u.label,
         cells: [
           u.roomRateWeekly,
+          u.roomRateMonthly,
           String(u.bedrooms),
           String(u.bathroomsFull),
           u.kitchen,
@@ -89,7 +92,7 @@ const telHref = digits ? `tel:+1${digits}` : undefined;
       {home.terms.accessNote} Tell anyone you place which floor their room is on.
     </p>
     <FactTable
-      columns={['Room', 'Unit', 'Floor', 'Size', 'Floor area', 'Per week']}
+      columns={['Room', 'Unit', 'Floor', 'Size', 'Floor area', 'Per week', 'Per month']}
       rows={home.divisible.list.flatMap((u) =>
         u.rooms.map((r) => ({
           head: r.label,
@@ -99,6 +102,7 @@ const telHref = digits ? `tel:+1${digits}` : undefined;
             `${r.widthFt} × ${r.lengthFt} ft`,
             `${(r.widthFt * r.lengthFt).toFixed(0)} sq ft`,
             r.rateWeekly,
+            r.rateMonthly,
           ],
         }))
       )}
