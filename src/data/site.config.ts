@@ -106,6 +106,24 @@ export const site = {
     phone: '(734) 489-2708',
     /** /for-agencies leads with a named human, not a form. */
     name: 'Derek DeJonghe',
+    /**
+     * Owner 2026-07-28: DMFP is Derek and Hayley — one of three husband-and-wife
+     * businesses in the food programme.
+     *
+     * RECORDED, NOT PUBLISHED, and that is deliberate. Putting a person's name on a live
+     * website is the exact thing that just went wrong with the chefs: their names were
+     * published before anyone asked them. A spouse is not an exception to that. Nothing
+     * renders Hayley's name until `partnerPublicationConfirmed` resolves — and being
+     * asked to be on a business's marketing site is a real decision, not a formality.
+     *
+     * Surname assumed nowhere. It is probably DeJonghe and probably is not worth guessing.
+     */
+    partner: 'Hayley',
+    partnerSurname: tbd('dmfp_hayley_surname', 'Hayley\'s surname as she wants it written'),
+    partnerPublicationConfirmed: tbd(
+      'dmfp_partner_publication',
+      'Has Hayley agreed to be named on the public site, and in what wording?'
+    ),
   },
   response: {
     /** A public commitment — the inbox has to be able to keep it. */
@@ -440,14 +458,33 @@ export const meals = {
       name: 'M Cantina',
       url: 'https://www.mcantina.com/our-chef',
       chef: 'Junior Merino',
+      /**
+       * Owner 2026-07-28: M Cantina is Junior and Heidi, a husband-and-wife business, and
+       * naming only Junior misdescribes it. All three businesses in the food programme are
+       * couples — J&T's is Juan and Tabitha, DMFP is Derek and Hayley.
+       *
+       * Consequence for the gate below: `permissionConfirmed` now means BOTH of them have
+       * agreed, not one on the other's behalf.
+       *
+       * Surname and role deliberately absent. We were told she is a principal and nothing
+       * more, and inventing "Heidi Merino" or "co-owner" would repeat exactly the mistake
+       * this file keeps having to correct.
+       */
+      partner: 'Heidi',
+      partnerSurname: tbd('mcantina_heidi_surname', 'Heidi\'s surname and how she wants to be named'),
       role: 'Develops the rotating weekly menu',
       address: '13214 Michigan Ave, Dearborn',
       /** Precise wording matters: invited to cook AT the James Beard House is not a James Beard Award. */
       credentials: 'Star Chefs Award winner, invited chef at the James Beard House',
     },
+    /**
+     * Owner 2026-07-28: both are husband-and-wife businesses, so "both businesses" means
+     * four people. One partner agreeing is not the other agreeing, and the token does not
+     * resolve until Juan, Tabitha, Junior and Heidi have each said yes to the wording.
+     */
     permissionConfirmed: tbd(
       'chef_partner_permission',
-      'Have both businesses agreed in writing to be named on this site?'
+      'Have Juan, Tabitha, Junior and Heidi each agreed in writing to the exact wording?'
     ),
   },
   /** Owner 2026-07-27: any and all. */
