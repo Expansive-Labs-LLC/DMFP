@@ -4,12 +4,25 @@ import Base from '../layouts/Base.astro';
 import Fact from '../components/Fact.astro';
 import { machine } from '../lib/fact';
 import FactTable from '../components/FactTable.astro';
-import { site, property, home, services } from '../data/site.config';
+import { site, property, home, services, serviceDisplay } from '../data/site.config';
 const t = home.terms;
 const a = home.availability;
 const ap = property.applications;
 /** Derive the dial string from config — never write a number twice. */
 const partnerPortal = services.find((sv) => sv.id === 'partner-portal');
+
+/**
+ * The priced opt-ins. `price` is the filter that matters: partner-portal is also
+ * `included: false` but is not a service anyone buys, and listing it under a price
+ * table would read as a chargeable extra that does not exist. Status-gated like
+ * everywhere else — §3.4.
+ */
+const optionalServices = services.filter(
+  (sv) =>
+    !sv.included &&
+    sv.price !== undefined &&
+    (sv.status === 'live' || (serviceDisplay.showNonLive && sv.status === 'launching'))
+);
 const digits = machine(site.contact.phone)?.replace(/\D/g, '');
 const telHref = digits ? `tel:+1${digits}` : undefined;
 ---
@@ -52,6 +65,24 @@ const telHref = digits ? `tel:+1${digits}` : undefined;
         { head: 'Payment terms', cells: [t.paymentTerms] },
         { head: 'Lead time needed', cells: [t.leadTime] },
       ]} />
+
+    <h2>Optional services</h2>
+    {site.optionalServicesNote.map((p) => <p class="measure">{p}</p>)}
+    <FactTable
+      columns={['Service', 'Price', 'Available', 'What it is']}
+      rows={optionalServices.map((sv) => ({
+        head: sv.name,
+        cells: [
+          sv.price,
+          sv.status === 'live' ? 'Now' : sv.liveFrom,
+          sv.description,
+        ],
+      }))}
+    />
+    <p class="measure small">
+      Decline all of it and nothing about the room changes. Take all of it and it arrives on one
+      invoice, {t.paymentTerms}.
+    </p>
 
     <h2>Access and monitoring</h2>
     <p class="measure">

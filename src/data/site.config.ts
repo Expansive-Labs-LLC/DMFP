@@ -122,6 +122,29 @@ export const site = {
     'No on-site staff.',
     'Renters insurance is not provided.',
   ],
+  /**
+   * /for-agencies §Optional services — owner 2026-07-28.
+   *
+   * A coordinator looking at six priced add-ons under a room rate is going to think
+   * "nickel-and-diming", so the copy says it first. Same instinct as `notIncluded`:
+   * naming the awkward thing is what makes the rest credible.
+   *
+   * DELIBERATELY SILENT ON PER DIEM — owner 2026-07-28, and it is a deliberate
+   * omission rather than an oversight. The /meals per diem claim is already narrowed
+   * to the two tiers that clear the Detroit ceiling, and inviting a coordinator to
+   * reason about reimbursement categories here would rest an argument on ground that
+   * is not solid yet. Do not add it back without resolving the top tier first.
+   */
+  optionalServicesNote: [
+    'This may look like nickel-and-diming. It is closer to the opposite, and the difference ' +
+      'matters most to whoever approves the spend. The room rate is complete without any of what ' +
+      'follows — power, gas, water and sewage are in it, internet and laundry are in the house, ' +
+      'and a resident who takes nothing else has a furnished room with a lockable door. Nothing ' +
+      'below is added unless it is asked for.',
+    'We keep them separate rather than folding them in because a bundle would put a number on ' +
+      'the room that is not the room, and it would mean the resident who cooks pays for the one ' +
+      'who does not. Priced apart, you decide per placement what is included and what is not.',
+  ],
   /** How long inquiry emails are kept. A retention claim needs a real number. */
   inquiryRetention: tbd('inquiry_retention', 'How long inquiry emails are kept before deletion'),
   documents: {
