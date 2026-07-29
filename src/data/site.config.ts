@@ -1030,18 +1030,18 @@ export const properties = [
        */
       method: driveTimes.method,
       measuredAt: driveTimes.measuredAt,
+      /**
+       * ORDER IS DELIBERATE — owner 2026-07-28: Henry Ford first.
+       *
+       * It is also what the measurements say. Henry Ford is 1.4 miles and 6 minutes;
+       * DMC is 3.4 miles and 8–9. Leading with the nearer, larger anchor is the honest
+       * order as well as the intended one, and it is the campus the New Center
+       * build-out is happening on.
+       *
+       * Display order follows this array everywhere it is rendered. Do not re-sort it
+       * in a component.
+       */
       facilities: [
-        {
-          id: 'dmc',
-          name: 'Detroit Medical Center',
-          nameConfirmed: false,
-          destAddress: driveTimes.facilities.dmc.dest,
-          coords: tbd('facility_dmc_coords'),
-          distance: driveTimes.facilities.dmc.distance,
-          driveTime: driveTimes.facilities.dmc.driveTime,
-          samples: driveTimes.facilities.dmc.samples,
-          transit: driveTimes.facilities.dmc.transit ?? tbd('facility_dmc_transit'),
-        },
         {
           id: 'hfh',
           name: 'Henry Ford Hospital',
@@ -1052,6 +1052,17 @@ export const properties = [
           driveTime: driveTimes.facilities.hfh.driveTime,
           samples: driveTimes.facilities.hfh.samples,
           transit: driveTimes.facilities.hfh.transit ?? tbd('facility_hfh_transit'),
+        },
+        {
+          id: 'dmc',
+          name: 'Detroit Medical Center',
+          nameConfirmed: false,
+          destAddress: driveTimes.facilities.dmc.dest,
+          coords: tbd('facility_dmc_coords'),
+          distance: driveTimes.facilities.dmc.distance,
+          driveTime: driveTimes.facilities.dmc.driveTime,
+          samples: driveTimes.facilities.dmc.samples,
+          transit: driveTimes.facilities.dmc.transit ?? tbd('facility_dmc_transit'),
         },
       ] as Facility[],
     },
