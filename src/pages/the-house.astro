@@ -121,9 +121,6 @@ import { isTbd } from '../lib/fact';
         an inventory of what is in it today.
       </p>
     )}
-    {!isTbd(home.bedroomFurnishings.bedSize) && (
-      <p class="measure small">Bed size: <Fact value={home.bedroomFurnishings.bedSize} />.</p>
-    )}
     {!isTbd(home.bedroomFurnishings.storageByRoom) && (
       <p class="measure small">
         Storage by room: <Fact value={home.bedroomFurnishings.storageByRoom} />.

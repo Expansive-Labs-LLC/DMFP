@@ -539,6 +539,12 @@ interface RoomSeed {
   lengthFt: number;
   floor: string;
   weeklyUsd: number;
+  /**
+   * Owner 2026-07-28. Per room because it is not uniform, and it is a material
+   * difference rather than a spec detail — a twin and a queen are different products
+   * to an adult booking three months.
+   */
+  bedSize: 'Queen' | 'Twin';
 }
 const room = (r: RoomSeed) => ({
   ...r,
@@ -549,16 +555,47 @@ const cheapestWeekly = (rooms: ReturnType<typeof room>[]) =>
   Math.min(...rooms.map((r) => r.weeklyUsd));
 
 const unitARooms = [
-  room({ id: 'r1', label: 'Room 1', widthFt: 10.5, lengthFt: 10.5, floor: 'Second floor', weeklyUsd: 385 }),
-  room({ id: 'r2', label: 'Room 2', widthFt: 13.5, lengthFt: 14.5, floor: 'Second floor', weeklyUsd: 510 }),
-  room({ id: 'r3', label: 'Room 3', widthFt: 11.5, lengthFt: 13.5, floor: 'Second floor', weeklyUsd: 450 }),
+  room({ id: 'r1', label: 'Room 1', widthFt: 10.5, lengthFt: 10.5, floor: 'Second floor', weeklyUsd: 385, bedSize: 'Queen' }),
+  room({ id: 'r2', label: 'Room 2', widthFt: 13.5, lengthFt: 14.5, floor: 'Second floor', weeklyUsd: 510, bedSize: 'Queen' }),
+  room({ id: 'r3', label: 'Room 3', widthFt: 11.5, lengthFt: 13.5, floor: 'Second floor', weeklyUsd: 450, bedSize: 'Queen' }),
 ];
 /** Owner 2026-07-27: rooms 5 and 6 are third floor. -10% for the climb. */
 const unitBRooms = [
-  room({ id: 'r4', label: 'Room 4', widthFt: 9.5, lengthFt: 8.5, floor: 'Second floor', weeklyUsd: 290 }),
-  room({ id: 'r5', label: 'Room 5', widthFt: 12, lengthFt: 10.5, floor: 'Third floor', weeklyUsd: 325 }),
-  room({ id: 'r6', label: 'Room 6', widthFt: 11.5, lengthFt: 11.5, floor: 'Third floor', weeklyUsd: 330 }),
+  /**
+   * Owner 2026-07-28: Room 4 is the only twin. At 81 sq ft it is also the smallest
+   * room, so the twin is the constraint being answered rather than a downgrade chosen
+   * for its own sake.
+   *
+   * PRICING QUESTION, unresolved. Room 4 is the only twin in the house, 36% smaller
+   * than Room 5, and priced only 11% below it. `roomPricingRule` explains rates by
+   * floor area and by the climb to the third floor; bed size is not in the rule, so
+   * the one room that is materially a lesser product is not discounted for the thing
+   * that makes it lesser. Either the rule should account for it or $290 should come
+   * down. Owner's call, but it will be the first room a coordinator queries.
+   */
+  room({ id: 'r4', label: 'Room 4', widthFt: 9.5, lengthFt: 8.5, floor: 'Second floor', weeklyUsd: 290, bedSize: 'Twin' }),
+  room({ id: 'r5', label: 'Room 5', widthFt: 12, lengthFt: 10.5, floor: 'Third floor', weeklyUsd: 325, bedSize: 'Queen' }),
+  room({ id: 'r6', label: 'Room 6', widthFt: 11.5, lengthFt: 11.5, floor: 'Third floor', weeklyUsd: 330, bedSize: 'Queen' }),
 ];
+
+/**
+ * The bed line for the furnishings list, derived from the rooms rather than written
+ * beside them so the two can never disagree. Names the EXCEPTION rather than the
+ * majority: "queen in every room" with a twin in Room 4 unmentioned is the kind of
+ * true-on-average statement someone discovers on arrival.
+ */
+const bedSummary = () => {
+  const all = [...unitARooms, ...unitBRooms];
+  const bySize = new Map<string, string[]>();
+  for (const r of all) bySize.set(r.bedSize, [...(bySize.get(r.bedSize) ?? []), r.label]);
+  if (bySize.size === 1) return `Bed — ${[...bySize.keys()][0].toLowerCase()}`;
+  const ranked = [...bySize.entries()].sort((a, b) => b[1].length - a[1].length);
+  const [majority, ...rest] = ranked;
+  const exceptions = rest
+    .map(([size, labels]) => `${labels.join(' and ')} (${size.toLowerCase()})`)
+    .join(', ');
+  return `Bed — ${majority[0].toLowerCase()} in every room except ${exceptions}`;
+};
 
 export const properties = [
   {
@@ -685,38 +722,40 @@ export const properties = [
         asBuilt: false,
         forOccupancy: 'September 2026',
         items: [
-          'Bed',
+          bedSummary(),
+          'Closet with hanging space',
           'Side table',
           'Dresser or armoire',
           'Small desk and chair',
           'TV',
         ],
         /**
-         * Owner gave storage as "dresser and or armoire". Recorded as "or" on the page
-         * because "and/or" tells a reader nothing, and this is not a detail: a clinician
-         * with a fortnight of scrubs needs to know whether the room has hanging space or
-         * drawers. Which room gets which is the open part.
+         * Owner gave storage as "dresser and or armoire", recorded as "or" because
+         * and/or tells a reader nothing.
+         *
+         * Owner 2026-07-28 also confirmed every bedroom has a closet with hanging space,
+         * which settles the part that actually mattered — nobody is hanging scrubs off a
+         * door hook because their room drew the dresser. What is left is which room gets
+         * which case, and that is now a detail rather than a material term.
          */
         storageByRoom: tbd(
           'bedroom_storage_by_room',
           'Which rooms get a dresser, which get an armoire, which get both'
         ),
         /**
-         * Unstated and material. A furnished let lives or dies on this — twin and queen
-         * are different products — and the rooms run from 81 to 196 sq ft, so a single
-         * answer for all six is unlikely.
-         */
-        bedSize: tbd('bedroom_bed_size', 'Bed size, per room — the rooms are not the same size'),
-        /**
-         * CONFIRM AGAINST ROOM 4 BEFORE THIS GOES OUT. Room 4 is 9.5 × 8.5 ft — 81 sq
-         * ft, the smallest in the house. Five pieces of furniture plus a bed is a lot to
-         * put in it, and a queen alone would take roughly 40% of the floor. "Every
-         * bedroom includes" is a promise made about the smallest room, not the average
-         * one, and a resident who arrives to find no desk has been told something untrue.
+         * NARROWED 2026-07-28, not resolved. Room 4 is 9.5 × 8.5 ft — 81 sq ft, the
+         * smallest in the house — and it takes a twin rather than a queen, which is the
+         * point of the twin. The closet is built in, so it costs no floor either.
+         *
+         * Still worth measuring before publishing "every bedroom": a twin, side table,
+         * dresser or armoire, desk and chair all have to stand in 81 sq ft with a door
+         * that opens. "Every bedroom includes" is a promise about the smallest room, not
+         * the average one, and a resident who arrives to find no desk has been told
+         * something untrue.
          */
         fitsSmallestRoom: tbd(
           'furnishings_fit_room_4',
-          'Does the full furniture list physically fit Room 4 at 81 sq ft?'
+          'Does the list fit Room 4 at 81 sq ft, with a twin and the closet built in?'
         ),
       },
       laundry: 'in-unit' as const,

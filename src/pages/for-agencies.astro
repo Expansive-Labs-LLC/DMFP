@@ -123,13 +123,14 @@ const telHref = digits ? `tel:+1${digits}` : undefined;
       {home.terms.accessNote} Tell anyone you place which floor their room is on.
     </p>
     <FactTable
-      columns={['Room', 'Unit', 'Floor', 'Size', 'Floor area', 'Per week', 'Per month']}
+      columns={['Room', 'Unit', 'Floor', 'Bed', 'Size', 'Floor area', 'Per week', 'Per month']}
       rows={home.divisible.list.flatMap((u) =>
         u.rooms.map((r) => ({
           head: r.label,
           cells: [
             u.label,
             r.floor,
+            r.bedSize,
             `${r.widthFt} × ${r.lengthFt} ft`,
             `${(r.widthFt * r.lengthFt).toFixed(0)} sq ft`,
             r.rateWeekly,
