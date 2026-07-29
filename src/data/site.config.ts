@@ -683,6 +683,17 @@ export const properties = [
             bedrooms: 3,
             bathroomsFull: 1,
             kitchen: 'Kitchenette',
+            /**
+             * Still open, but no longer blank. The kitchenette floorplan — owner
+             * 2026-07-28 — draws a 4-burner range, a dishwasher, a sink and an 8'4"
+             * counter run. That stays a TBD rather than becoming the answer because the
+             * drawing is `asBuilt: false`: it is what the room is meant to contain, not
+             * what has been installed in a house still in rehab. Confirm on site, then
+             * state it.
+             *
+             * If it holds, "kitchenette" undersells this room and the word is doing
+             * pricing work it may not deserve — see `kitchen.unitMapping`.
+             */
             kitchenContents: tbd('unit_b_kitchenette_contents', 'A kitchenette is not a kitchen — what is in it?'),
             /**
              * Owner 2026-07-27: no common space beyond the kitchenette. Recorded as
@@ -1045,10 +1056,40 @@ export const properties = [
       },
       kitchen: {
         /**
-         * One full kitchen (Unit B) and one kitchenette (Unit A). "2 kitchens" was
-         * accurate as a count and misleading as a claim — a kitchenette may not have
-         * a stove, and six people sharing one real kitchen is a different offer.
+         * "2 kitchens" was accurate as a count and misleading as a claim — a kitchenette
+         * may not have a stove, and six people sharing one real kitchen is a different
+         * offer. Hence the split into `full` and `kitchenettes`.
+         *
+         * UNRESOLVED CONTRADICTION, found 2026-07-28. WHICH UNIT HAS THE FULL KITCHEN IS
+         * STATED TWO WAYS IN THIS FILE.
+         *
+         * This comment previously read "one full kitchen (Unit B) and one kitchenette
+         * (Unit A)". `divisible.list` says the opposite: Unit A is 'Full kitchen', Unit B
+         * is 'Kitchenette'. The pages render `divisible.list`, so the live site says Unit
+         * A has the full kitchen — but nobody has confirmed which of the two is right,
+         * and the assertion has been removed from this comment rather than picked.
+         *
+         * The floorplan makes it worse rather than better. Owner 2026-07-28 says that
+         * drawing is the kitchenette, and it shows a 4-burner range, a dishwasher, a sink
+         * and an 8'4" counter run. Meanwhile Unit A's "full kitchen" is recorded as
+         * stove, microwave, air fryer and blender — countertop appliances, no dishwasher,
+         * no counter dimension. On the documents alone the kitchenette reads as the
+         * better-equipped room, which is the wrong way round.
+         *
+         * WHY IT IS NOT COSMETIC. The room pricing rationale rests on it: "the unit base
+         * carries the amenity gap — Unit A 0.67 baths per person with a full kitchen,
+         * living room and business center; Unit B 0.33 baths, a kitchenette, no common
+         * space." If the kitchens are the other way round, Unit A's premium is partly
+         * unearned and every Unit B room is underpriced. It also compounds the mapping
+         * caveat already recorded on `roomRateWeekly`: "Unit 1" and "Unit 2" were mapped
+         * to A and B in order and never confirmed.
+         *
+         * Resolve by walking the house, not by reading this file.
          */
+        unitMapping: tbd(
+          'kitchen_unit_mapping',
+          'Which unit has the full kitchen and which the kitchenette? Config states both ways; pricing depends on it'
+        ),
         count: 2,
         full: 1,
         kitchenettes: 1,
@@ -1104,13 +1145,25 @@ export const properties = [
       floorplans: [
         {
           id: 'kitchen',
-          label: 'Kitchen',
+          label: 'Kitchenette',
           image: tbd('floorplan_kitchen', 'Save as src/assets/floorplan-kitchen.png'),
           asBuilt: false,
           /** Read off the drawing, not measured on site. */
           dimensions: '8\'4" along the counter run',
           fixtures: '4-burner range (2\'4" × 2\'4"), dishwasher, sink',
-          whichKitchen: tbd('floorplan_kitchen_which', 'Which of the 2 kitchens is this?'),
+          /**
+           * Owner 2026-07-28: this drawing is the kitchenette. Recorded as "the
+           * kitchenette" and NOT as a unit, deliberately — see `kitchen.unitMapping`.
+           * Which unit the kitchenette sits in is a separate and currently contradicted
+           * question, and answering it here would smuggle in a claim the owner did not
+           * make.
+           *
+           * Note what the drawing puts in a kitchenette: a 4-burner range, a dishwasher,
+           * a sink and an 8'4" counter run. That is a well-equipped small kitchen, and it
+           * bears on both `unit_b_kitchenette_contents` and on how large the amenity gap
+           * between the units really is.
+           */
+          whichKitchen: 'The kitchenette',
         },
         {
           id: 'house',
