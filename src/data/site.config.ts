@@ -750,6 +750,44 @@ export const properties = [
           'Which rooms get a window unit and which get a portable one'
         ),
         /**
+         * PLANNED — owner 2026-07-28: the window and portable units are the interim
+         * answer; the intent is a ductless mini split in each bedroom.
+         *
+         * status 'planned', so this renders NOWHERE — §3.4, and the same rule the partner
+         * portal follows. There is no date, and a dateless upgrade on a housing page is a
+         * promise a resident will hold you to: someone who books in September partly
+         * because mini splits are "coming" has been sold something with no delivery
+         * commitment behind it. Give it a date and it may appear, badged, like any other
+         * `launching` item.
+         *
+         * The interim copy stays exactly as it is. "Its own window or portable unit" is
+         * true today, and adding "for now" would raise the when question the site cannot
+         * answer.
+         *
+         * WORTH KNOWING FOR SEQUENCING — this upgrade would close three open questions at
+         * once, not just one:
+         *
+         * - `heating`. Mini splits are heat pumps, so they heat as well as cool. That
+         *   makes this a heating decision as much as a cooling one, and it answers the
+         *   per-room-versus-one-thermostat problem in both directions.
+         * - `central_air`. Ductless per room is the answer, rather than a question.
+         * - `bedroom_ac_type_by_room` becomes moot.
+         *
+         * And the economics point the other way from "temporary". Window and portable
+         * units are the least efficient cooling there is, and power is an included
+         * utility — so the owner carries the running cost of the interim solution every
+         * summer it stays. The inefficiency of the stopgap is the business case for the
+         * replacement, which argues for a date sooner than "future" rather than later.
+         */
+        plannedUpgrade: {
+          what: 'Ductless mini split in each bedroom, replacing the window and portable units',
+          status: 'planned' as const,
+          liveFrom: tbd(
+            'minisplit_target_date',
+            'When mini splits land — needed before this can appear on the site at all'
+          ),
+        },
+        /**
          * Per-room units imply there is no central cooling, but implication is not a
          * fact and a reader may well assume central air in a renovated house. Say which.
          */
@@ -761,6 +799,11 @@ export const properties = [
          * is controlled matters as much as what it is: if cooling is per room and heat is
          * one thermostat for the house, that is the friction the AC units just solved,
          * reappearing in January.
+         *
+         * Answer this one on its own rather than waiting on `plannedUpgrade`. Mini splits
+         * would settle it, but they have no date, and the first winter arrives whether or
+         * not they do. Whatever heats the house in January 2027 is what the page has to
+         * describe.
          */
         heating: tbd('heating', 'What heats the house, and is it controlled per room or per house?'),
         /**
