@@ -106,6 +106,30 @@ import { isTbd } from '../lib/fact';
       ))
     }
 
+    <h2>In every bedroom</h2>
+    <p class="measure">
+      {home.bedroomFurnishings.asBuilt ? 'Every bedroom has' : 'Every bedroom will have'}
+      {' '}the following from {home.bedroomFurnishings.forOccupancy}. The desk is in the room —
+      it is separate from the three in the business center.
+    </p>
+    <ul class="furnishings">
+      {home.bedroomFurnishings.items.map((i) => <li>{i}</li>)}
+    </ul>
+    {!home.bedroomFurnishings.asBuilt && (
+      <p class="measure small">
+        The house is being renovated, so this is what each room is being furnished with rather than
+        an inventory of what is in it today.
+      </p>
+    )}
+    {!isTbd(home.bedroomFurnishings.bedSize) && (
+      <p class="measure small">Bed size: <Fact value={home.bedroomFurnishings.bedSize} />.</p>
+    )}
+    {!isTbd(home.bedroomFurnishings.storageByRoom) && (
+      <p class="measure small">
+        Storage by room: <Fact value={home.bedroomFurnishings.storageByRoom} />.
+      </p>
+    )}
+
     <h2>Business center</h2>
     <p class="measure">
       A dedicated room with 3 desks. Each has a monitor, keyboard and mouse on a single dongle, so one
@@ -198,6 +222,8 @@ import { isTbd } from '../lib/fact';
   /* Weekly is the product; monthly is a way of paying for a long stay. Weight follows that. */
   .rate-cell.alt { color: var(--text-muted); font-weight: 500; }
   .floor { color: var(--text-muted); }
+  .furnishings { margin: var(--s3) 0; padding-left: var(--s6); max-width: var(--measure); }
+  .furnishings li + li { margin-top: var(--s1); }
   .access { border-left: 3px solid var(--limestone-edge); padding-left: var(--s3); }
   .appliances { list-style: none; padding: 0; margin: var(--s4) 0; max-width: var(--measure);
                 display: flex; flex-wrap: wrap; gap: var(--s2); }

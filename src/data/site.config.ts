@@ -669,6 +669,56 @@ export const properties = [
         sharedSpaces: tbd('shared_spaces_across_units', 'Business center and living room are in Unit A — shared or not?'),
       },
       furnished: true,
+      /**
+       * Bedroom furnishings — owner 2026-07-28.
+       *
+       * `furnished: true` was previously the whole statement on this, which is a claim
+       * with no content in it. Someone deciding what to ship, or whether a room works
+       * as a place to sit for three months, needs the inventory.
+       *
+       * NOT AS-BUILT, and the copy has to say so. Same rule the floorplans follow: the
+       * house is in rehab, so this is the specified furnishing for first occupancy, not
+       * what is in the rooms today. `asBuilt: false` is what lets the page say "will
+       * include" and stay true — §13.4 also requires the date label on anything future.
+       */
+      bedroomFurnishings: {
+        asBuilt: false,
+        forOccupancy: 'September 2026',
+        items: [
+          'Bed',
+          'Side table',
+          'Dresser or armoire',
+          'Small desk and chair',
+          'TV',
+        ],
+        /**
+         * Owner gave storage as "dresser and or armoire". Recorded as "or" on the page
+         * because "and/or" tells a reader nothing, and this is not a detail: a clinician
+         * with a fortnight of scrubs needs to know whether the room has hanging space or
+         * drawers. Which room gets which is the open part.
+         */
+        storageByRoom: tbd(
+          'bedroom_storage_by_room',
+          'Which rooms get a dresser, which get an armoire, which get both'
+        ),
+        /**
+         * Unstated and material. A furnished let lives or dies on this — twin and queen
+         * are different products — and the rooms run from 81 to 196 sq ft, so a single
+         * answer for all six is unlikely.
+         */
+        bedSize: tbd('bedroom_bed_size', 'Bed size, per room — the rooms are not the same size'),
+        /**
+         * CONFIRM AGAINST ROOM 4 BEFORE THIS GOES OUT. Room 4 is 9.5 × 8.5 ft — 81 sq
+         * ft, the smallest in the house. Five pieces of furniture plus a bed is a lot to
+         * put in it, and a queen alone would take roughly 40% of the floor. "Every
+         * bedroom includes" is a promise made about the smallest room, not the average
+         * one, and a resident who arrives to find no desk has been told something untrue.
+         */
+        fitsSmallestRoom: tbd(
+          'furnishings_fit_room_4',
+          'Does the full furniture list physically fit Room 4 at 81 sq ft?'
+        ),
+      },
       laundry: 'in-unit' as const,
       entrance: 'private' as const,
       terms: {
