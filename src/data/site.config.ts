@@ -723,12 +723,46 @@ export const properties = [
         forOccupancy: 'September 2026',
         items: [
           bedSummary(),
+          'Air conditioning — its own window or portable unit, set in the room',
           'Closet with hanging space',
           'Side table',
           'Dresser or armoire',
           'Small desk and chair',
           'TV',
         ],
+        /**
+         * Owner 2026-07-28: a window or portable unit per bedroom.
+         *
+         * The selling point is not the cooling, it is the control. Six adults on
+         * opposing shifts sharing one thermostat is a genuine source of friction, and a
+         * night-shift resident sleeping 08:30–17:30 is asleep through the hottest part
+         * of a Detroit afternoon while the day-shift residents are out. Per-room control
+         * is the answer to that, and it is worth saying rather than burying in a list.
+         *
+         * BUSINESS NOTE, not site copy. `utilities.included` covers power. Six
+         * individually controlled AC units, with residents carrying no marginal cost for
+         * running them, is an uncapped summer expense the owner absorbs — and the
+         * incentive for a resident to moderate is zero. Worth pricing before the first
+         * July rather than discovering it on a bill.
+         */
+        acTypeByRoom: tbd(
+          'bedroom_ac_type_by_room',
+          'Which rooms get a window unit and which get a portable one'
+        ),
+        /**
+         * Per-room units imply there is no central cooling, but implication is not a
+         * fact and a reader may well assume central air in a renovated house. Say which.
+         */
+        centralAir: tbd('central_air', 'Is per-room AC the whole cooling story, or is there central air too?'),
+        /**
+         * NOT STATED ANYWHERE ON THE SITE, and more material than the cooling in this
+         * city. Gas is in the included utilities, which hints at gas heat, but a hint is
+         * not an answer — and a clinician signing for a Detroit winter will ask. How it
+         * is controlled matters as much as what it is: if cooling is per room and heat is
+         * one thermostat for the house, that is the friction the AC units just solved,
+         * reappearing in January.
+         */
+        heating: tbd('heating', 'What heats the house, and is it controlled per room or per house?'),
         /**
          * Owner gave storage as "dresser and or armoire", recorded as "or" because
          * and/or tells a reader nothing.
@@ -752,6 +786,11 @@ export const properties = [
          * that opens. "Every bedroom includes" is a promise about the smallest room, not
          * the average one, and a resident who arrives to find no desk has been told
          * something untrue.
+         *
+         * The AC choice now feeds into this. A window unit takes no floor; a portable one
+         * takes floor plus clearance for its vent hose. In Room 4 that is the difference
+         * between the list fitting and not, so `bedroom_ac_type_by_room` is the cheaper
+         * question to answer first — give Room 4 the window unit and this gets easier.
          */
         fitsSmallestRoom: tbd(
           'furnishings_fit_room_4',

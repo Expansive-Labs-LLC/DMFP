@@ -115,6 +115,11 @@ import { isTbd } from '../lib/fact';
     <ul class="furnishings">
       {home.bedroomFurnishings.items.map((i) => <li>{i}</li>)}
     </ul>
+    <p class="measure">
+      The air conditioning is per room and set in the room. Six people on opposing shifts do not
+      have to agree on a temperature, and someone sleeping through a July afternoon can cool their
+      own room without cooling the house.
+    </p>
     {!home.bedroomFurnishings.asBuilt && (
       <p class="measure small">
         The house is being renovated, so this is what each room is being furnished with rather than
