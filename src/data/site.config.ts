@@ -470,8 +470,16 @@ export const meals = {
        * more, and inventing "Heidi Merino" or "co-owner" would repeat exactly the mistake
        * this file keeps having to correct.
        */
+      /**
+       * Owner 2026-08-01: cannot confirm Heidi's surname and would rather not ask. The
+       * surname TBD is removed rather than left open — an unanswerable question is not a
+       * task. Correspondence uses first names for both, matching the J&T letter.
+       *
+       * If they agree to be named on the site, how Heidi is written is part of agreeing the
+       * exact wording, which is what `permissionConfirmed` already covers. It does not need
+       * a token of its own.
+       */
       partner: 'Heidi',
-      partnerSurname: tbd('mcantina_heidi_surname', 'Heidi\'s surname and how she wants to be named'),
       role: 'Develops the rotating weekly menu',
       address: '13214 Michigan Ave, Dearborn',
       /** Precise wording matters: invited to cook AT the James Beard House is not a James Beard Award. */
