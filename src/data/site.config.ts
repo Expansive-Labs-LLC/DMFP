@@ -1159,7 +1159,25 @@ export const properties = [
       quietHours: tbd('quiet_hours'),
       availability: {
         status: 'pre_leasing' as const,
+        /**
+         * Owner 2026-08-01: "with all these renovations we might need till 2027 before we
+         * open." September 2026 is therefore a TARGET and not a commitment, and the site has
+         * to say so.
+         *
+         * This is not a cosmetic distinction. `applications.open` is true, the fee is $15, and
+         * every page carries September 2026 — so until this said otherwise we were taking
+         * money and applications against a date the owner had begun to doubt. Someone paying
+         * $15 to apply for a September room is entitled to know it might be 2027 BEFORE they
+         * pay, not after.
+         *
+         * `availableFrom` stays as the target because a dated future offering is still the
+         * rule (§13.4) and a vague one is worse. What changes is that `targetMayMove` renders
+         * beside it everywhere the date appears.
+         */
         availableFrom: 'September 2026',
+        targetMayMove:
+          'That is our target rather than a commitment. The renovation may push first ' +
+          'occupancy into 2027, and we would rather say so now than move the date on you later.',
         exactDate: tbd('availability_exact_date'),
       },
       /**

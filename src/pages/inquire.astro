@@ -17,6 +17,8 @@ const a = home.availability;
   <section class="wrap stack">
     <h1 class="display-l">Apply for {a.availableFrom.split(' ')[0]}.</h1>
 
+    <p class="measure notice">{a.targetMayMove}</p>
+
     <div class="measure stack">
       <p><strong>What this form does.</strong> It sends an inquiry. It is not the application.</p>
       <ol class="steps">
@@ -71,6 +73,7 @@ const a = home.availability;
   </section>
 </Base>
 <style>
+  .notice { border-left: 3px solid var(--signal); padding-left: var(--s3); }
   section { padding-block: var(--s12) var(--s8); }
   .steps { max-width: var(--measure); padding-left: var(--s6); }
   .steps li + li { margin-top: var(--s2); }
