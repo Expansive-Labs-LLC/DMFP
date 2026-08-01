@@ -685,17 +685,6 @@ export const properties = [
             bathroomsFull: 2,
             kitchen: 'Full kitchen',
             kitchenContents: 'Stove, microwave, air fryer, blender, reverse-osmosis water',
-            /**
-             * Owner 2026-08-01: a commercial ice machine in Unit A, so cold water is never
-             * an issue.
-             *
-             * Note this pairs with the basement freezers going to Unit 2 — each unit gets
-             * something the other does not, which reads as a deliberate balance rather than
-             * an accident. If Unit 2 turns out to be Unit B, that partly offsets Unit B's
-             * weakest feature (one bath for three bedrooms and no common space) and is worth
-             * weighing when the Room 4 pricing question is revisited.
-             */
-            iceMachine: 'Commercial ice machine',
             spaces: ['Living room', 'Business center'],
             /**
              * Dimensions owner-supplied 2026-07-27. "Unit 1" and "Unit 2" mapped to
@@ -838,36 +827,9 @@ export const properties = [
          * summer it stays. The inefficiency of the stopgap is the business case for the
          * replacement, which argues for a date sooner than "future" rather than later.
          */
-        /**
-         * REVISED 2026-07-28 → 2026-08-01. Owner first described this as "mini splits in
-         * each room"; the current description is "each unit will have its own HVAC mini
-         * split so the rentee can control their own climate".
-         *
-         * THOSE ARE NOT THE SAME SYSTEM AND THE DIFFERENCE IS A LIVE CLAIM ON THE SITE.
-         * /the-house currently says, of the interim window and portable units: "The air
-         * conditioning is per room and set in the room. Six people on opposing shifts do
-         * not have to agree on a temperature." That is true today. One mini split per unit
-         * with a single indoor head would make three bedrooms share a zone, which would
-         * turn a genuine selling point into a downgrade — the residents most affected being
-         * exactly the night-shift sleepers the line was written for.
-         *
-         * The likely resolution is that this means a multi-zone system: one outdoor
-         * condenser per unit driving three independently controlled indoor heads. That
-         * matches "so the rentee can control their own climate" and preserves the claim.
-         * But "one per unit" and "per-room control" only coexist in the multi-zone reading,
-         * so it needs confirming rather than assuming — `minisplit_zoning` gates it.
-         *
-         * Still `planned` with no date, so it renders nowhere (§3.4). If it has in fact
-         * moved into the September scope alongside the freezers and the ice machine, it
-         * needs a date before it can appear at all.
-         */
         plannedUpgrade: {
-          what: 'One ductless mini split system per unit, replacing the window and portable units',
+          what: 'Ductless mini split in each bedroom, replacing the window and portable units',
           status: 'planned' as const,
-          zoning: tbd(
-            'minisplit_zoning',
-            'One head per unit, or a multi-zone system with a head per bedroom? Per-room control is a live claim'
-          ),
           liveFrom: tbd(
             'minisplit_target_date',
             'When mini splits land — needed before this can appear on the site at all'
@@ -925,58 +887,6 @@ export const properties = [
           'furnishings_fit_room_4',
           'Does the list fit Room 4 at 81 sq ft, with a twin and the closet built in?'
         ),
-      },
-      /**
-       * Climate outside the bedrooms — owner 2026-08-01. Bedroom cooling is recorded on
-       * `bedroomFurnishings`; this is everything else.
-       */
-      climate: {
-        /**
-         * Owner 2026-08-01: common space held at 71°F year round.
-         *
-         * "Year round" is the useful half — it means the shared areas are heated as well
-         * as cooled, which is the first thing this file has ever been able to say about
-         * heat. It does NOT answer `bedroomFurnishings.heating`, which is about the
-         * bedrooms and about what runs the system, so that stays open.
-         *
-         * Worth publishing as a fixed number rather than a vague "climate controlled".
-         * A set point is a fact a reader can judge, and stating it also sets the honest
-         * expectation that it is not theirs to change — which is the trade for nobody
-         * else changing it either.
-         */
-        commonSpaceSetpoint: '71°F',
-        commonSpaceNote: 'Shared areas are held at a steady temperature year round rather than set by whoever is up.',
-        residentAdjustable: false,
-      },
-      /**
-       * Basement — owner 2026-08-01.
-       *
-       * ACCESS RULE RECORDED VERBATIM AND DELIBERATELY NOT TRANSLATED. The owner said the
-       * freezers are for "unit 2", or for everyone if the house lets room by room or on a
-       * full licence. This file names units A and B, and the A/B ↔ 1/2 mapping is the one
-       * already flagged as unconfirmed on `roomRateWeekly` — the note there says getting it
-       * wrong "moves every price". Writing "Unit B" here would silently resolve that
-       * mapping on no evidence, so it says Unit 2 until someone confirms which is which.
-       *
-       * The rule itself is a real answer to a question the site has open in another form:
-       * `shared_spaces_across_units` asks what a unit tenant gets versus a room tenant.
-       * This is the same question for the basement, and it is answered — exclusive when let
-       * by the unit, shared when let by room or whole house.
-       */
-      basement: {
-        deepFreezers: 2,
-        accessRule: 'Exclusive to Unit 2 when the units let separately; shared when the house lets room by room or as a whole.',
-        unitMapping: tbd(
-          'basement_freezer_unit',
-          'Owner said "unit 2" — confirm whether that is Unit A or Unit B before this is published'
-        ),
-        /**
-         * Every bedroom is on the second or third floor and the house is stairs only, so
-         * a basement amenity means more stairs, not fewer. State the flights the same way
-         * `accessNote` does — a fact about the building, never a requirement about who can
-         * use it.
-         */
-        access: tbd('basement_access', 'Stairs down to the basement, and whether the door is locked'),
       },
       laundry: 'in-unit' as const,
       entrance: 'private' as const,
