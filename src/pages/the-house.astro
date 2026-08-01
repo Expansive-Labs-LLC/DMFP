@@ -125,23 +125,17 @@ import { isTbd } from '../lib/fact';
       round. {home.climate.commonSpaceNote}
     </p>
 
-    <h2>Ice and freezer space</h2>
+    <h2>Ice</h2>
     <p class="measure">
       {home.divisible.list[0].label} has a {home.divisible.list[0].iceMachine?.toLowerCase()}, so
-      cold water is never the thing you are waiting on. There are also
-      {' '}{home.basement.deepFreezers} deep freezers in the basement — useful if you shop once for
-      a fortnight rather than every few days.
+      cold water is never the thing you are waiting on.
     </p>
     {/*
-      The access rule names "Unit 2", and this page names units A and B. Until
-      `basement_freezer_unit` resolves which is which, printing both on one page asks the
-      reader to reconcile something we cannot. Say what is true and answerable instead.
+      The basement freezers are deliberately absent. Whether residents get access at all is
+      an open question (`basement_resident_access`) that the owner reopened after this page
+      briefly advertised them. An amenity nobody has decided to offer should not be on a
+      page somebody books from — and taking it down is cheaper than taking it back.
     */}
-    <p class="measure small">
-      {isTbd(home.basement.unitMapping)
-        ? 'Who gets the freezers depends on whether the house is let by the room, by the unit or as a whole — ask before you book if it matters to you.'
-        : home.basement.accessRule}
-    </p>
     {!home.bedroomFurnishings.asBuilt && (
       <p class="measure small">
         The house is being renovated, so this is what each room is being furnished with rather than

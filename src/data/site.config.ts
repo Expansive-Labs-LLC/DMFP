@@ -862,12 +862,24 @@ export const properties = [
          * needs a date before it can appear at all.
          */
         plannedUpgrade: {
-          what: 'One ductless mini split system per unit, replacing the window and portable units',
+          what: 'One multi-zone ductless mini split per unit, with an independently controlled head in each bedroom',
+          /**
+           * ZONING RESOLVED, owner 2026-08-01: multi-zone, one head per bedroom. One
+           * outdoor condenser serves each unit; each bedroom keeps its own control.
+           *
+           * This is the reading that preserves the live claim on /the-house — "the air
+           * conditioning is per room and set in the room" — so the upgrade improves the
+           * thing we already sell rather than quietly removing it. A single-head-per-unit
+           * system would have put three bedrooms on one zone and made a night-shift
+           * sleeper share a thermostat with two people who are out all day.
+           *
+           * SPECIFY IT THIS WAY WHEN QUOTING. "A mini split for each unit" is what an
+           * installer will price as one head. The quote needs to say multi-zone with a head
+           * per bedroom, or the cheap bid wins and the feature is gone before anyone
+           * notices.
+           */
+          zoning: 'Multi-zone — one condenser per unit, one head per bedroom',
           status: 'planned' as const,
-          zoning: tbd(
-            'minisplit_zoning',
-            'One head per unit, or a multi-zone system with a head per bedroom? Per-room control is a live claim'
-          ),
           liveFrom: tbd(
             'minisplit_target_date',
             'When mini splits land — needed before this can appear on the site at all'
@@ -965,10 +977,51 @@ export const properties = [
        */
       basement: {
         deepFreezers: 2,
-        accessRule: 'Exclusive to Unit 2 when the units let separately; shared when the house lets room by room or as a whole.',
-        unitMapping: tbd(
-          'basement_freezer_unit',
-          'Owner said "unit 2" — confirm whether that is Unit A or Unit B before this is published'
+        /**
+         * Owner 2026-08-01 confirmed "unit 2" means **Unit B** — so this no longer depends
+         * on the A/B ↔ 1/2 mapping at all. That mapping stays open on `roomRateWeekly`
+         * where it governs which unit's room dimensions are which; one direct answer about
+         * freezers is not evidence about floorplans.
+         */
+        freezersWouldServe: 'Unit B',
+        /**
+         * RESIDENT ACCESS IS NOT DECIDED, and until it is, nothing about freezers renders.
+         * Owner 2026-08-01 asked whether offering them to residents is a good idea at all,
+         * and proposed instead: door off the basement, let only storage customers in, keep
+         * the freezers for the house's own use. That is the better instinct, for reasons
+         * worth writing down.
+         *
+         * AGAINST RESIDENT ACCESS:
+         * - A shared deep freezer in a house with 13-week turnover fills with unlabelled,
+         *   abandoned food that nobody owns and nobody clears — and there is no on-site
+         *   staff to clear it. `notIncluded` says so in as many words.
+         * - It is a food-safety surface in a house where `allergy_protocol` is still open.
+         *   Shared frozen food and a meal programme with unresolved allergen handling do
+         *   not belong in the same building without a written rule.
+         * - Basement access means residents in the plant room. Stairs-only house, building
+         *   mechanicals down there, and no interior cameras by design.
+         * - It is off-strategy. The whole offer is "you should not have to shop and cook."
+         *   A deep freezer is an amenity for somebody with a car, a warehouse-club card and
+         *   a year's horizon. That is not a clinician on a 13-week contract.
+         * - As compensation for Unit B's single bathroom and absent common space, a freezer
+         *   is a poor trade and would not survive a coordinator comparing the two units.
+         *
+         * FOR DOORING IT OFF:
+         * - It gives the `bin-storage` product a physical home. That service sells at
+         *   $60/month with no stated location anywhere in this file, which is a gap.
+         * - PDQ locks are already specified on every door, so a basement door that opens
+         *   only for storage customers is buildable with what is already planned.
+         *
+         * ONE THING TO CHECK BEFORE THE STAFF-FREEZER VERSION IS ASSUMED SAFE. Storing
+         * inventory for a paid meal programme in a residential basement may sit in the same
+         * regulatory space as the on-site kitchen offer that was withdrawn from the J&T
+         * proposal on 2026-07-29 — a licensed food business generally has to operate from
+         * an approved facility. Ask the health department the same question, at the same
+         * time, about both.
+         */
+        residentAccess: tbd(
+          'basement_resident_access',
+          'Do residents get basement/freezer access at all, or is it storage customers only with freezers for house use?'
         ),
         /**
          * Every bedroom is on the second or third floor and the house is stairs only, so
