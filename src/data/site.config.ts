@@ -975,62 +975,21 @@ export const properties = [
        * This is the same question for the basement, and it is answered — exclusive when let
        * by the unit, shared when let by room or whole house.
        */
-      basement: {
-        deepFreezers: 2,
-        /**
-         * Owner 2026-08-01 confirmed "unit 2" means **Unit B** — so this no longer depends
-         * on the A/B ↔ 1/2 mapping at all. That mapping stays open on `roomRateWeekly`
-         * where it governs which unit's room dimensions are which; one direct answer about
-         * freezers is not evidence about floorplans.
-         */
-        freezersWouldServe: 'Unit B',
-        /**
-         * RESIDENT ACCESS IS NOT DECIDED, and until it is, nothing about freezers renders.
-         * Owner 2026-08-01 asked whether offering them to residents is a good idea at all,
-         * and proposed instead: door off the basement, let only storage customers in, keep
-         * the freezers for the house's own use. That is the better instinct, for reasons
-         * worth writing down.
-         *
-         * AGAINST RESIDENT ACCESS:
-         * - A shared deep freezer in a house with 13-week turnover fills with unlabelled,
-         *   abandoned food that nobody owns and nobody clears — and there is no on-site
-         *   staff to clear it. `notIncluded` says so in as many words.
-         * - It is a food-safety surface in a house where `allergy_protocol` is still open.
-         *   Shared frozen food and a meal programme with unresolved allergen handling do
-         *   not belong in the same building without a written rule.
-         * - Basement access means residents in the plant room. Stairs-only house, building
-         *   mechanicals down there, and no interior cameras by design.
-         * - It is off-strategy. The whole offer is "you should not have to shop and cook."
-         *   A deep freezer is an amenity for somebody with a car, a warehouse-club card and
-         *   a year's horizon. That is not a clinician on a 13-week contract.
-         * - As compensation for Unit B's single bathroom and absent common space, a freezer
-         *   is a poor trade and would not survive a coordinator comparing the two units.
-         *
-         * FOR DOORING IT OFF:
-         * - It gives the `bin-storage` product a physical home. That service sells at
-         *   $60/month with no stated location anywhere in this file, which is a gap.
-         * - PDQ locks are already specified on every door, so a basement door that opens
-         *   only for storage customers is buildable with what is already planned.
-         *
-         * ONE THING TO CHECK BEFORE THE STAFF-FREEZER VERSION IS ASSUMED SAFE. Storing
-         * inventory for a paid meal programme in a residential basement may sit in the same
-         * regulatory space as the on-site kitchen offer that was withdrawn from the J&T
-         * proposal on 2026-07-29 — a licensed food business generally has to operate from
-         * an approved facility. Ask the health department the same question, at the same
-         * time, about both.
-         */
-        residentAccess: tbd(
-          'basement_resident_access',
-          'Do residents get basement/freezer access at all, or is it storage customers only with freezers for house use?'
-        ),
-        /**
-         * Every bedroom is on the second or third floor and the house is stairs only, so
-         * a basement amenity means more stairs, not fewer. State the flights the same way
-         * `accessNote` does — a fact about the building, never a requirement about who can
-         * use it.
-         */
-        access: tbd('basement_access', 'Stairs down to the basement, and whether the door is locked'),
-      },
+      /**
+       * CLOSED 2026-08-01, owner: freezers are not part of the offer and the topic is shut.
+       *
+       * Two deep freezers exist in the basement as a fact about the building. They are not
+       * a resident amenity, they render nowhere, and no open question here depends on them.
+       * The short version of why, so it does not get reopened by someone reading the
+       * appliance list: a shared freezer in a house with 13-week turnover and no on-site
+       * staff fills with abandoned food nobody clears, and the offer's whole premise is
+       * that a clinician should not have to shop and cook in the first place.
+       *
+       * The basement is therefore just building fabric for now. If it is ever doored off,
+       * the useful thing it could do is give `bin-storage` a physical location, which that
+       * $60/month service still lacks — but that is a storage question, not a freezer one.
+       */
+      basement: { deepFreezers: 2, residentAmenity: false },
       laundry: 'in-unit' as const,
       entrance: 'private' as const,
       terms: {
