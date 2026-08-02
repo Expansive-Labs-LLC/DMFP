@@ -1380,6 +1380,34 @@ export const properties = [
       streetViewCaptured: 'July 2022',
       streetViewNote: 'Taken before the current renovation.',
     },
+    /**
+     * Renderings are NOT photos and are kept out of `photos` on purpose, so that
+     * nothing which reads `photos` can ever pick one up. These are drawings of work
+     * that has not been done: they render through <Rendering />, which stamps the
+     * image itself, never through <ImageSlot />.
+     *
+     * The rule that makes this safe to have on a public site at all: a rendering may
+     * only show work we have actually commissioned, and the `today` prop must say
+     * what is on the ground now. A drawing of work we are merely considering is an
+     * advertisement for a house that does not exist.
+     *
+     * When something is built, it leaves here and becomes a photo. Nothing gets
+     * relabelled in place.
+     */
+    renderings: {
+      /**
+       * Front yard concept, August 2026 — a generated reference image, not a
+       * landscape architect's drawing and not a survey. It is the taste direction
+       * given to the contractor in the landscaping brief: flagstone as the main
+       * move, lawn reduced to one contained shape, few species repeated. The lot
+       * width, grade, step count and neighbouring houses are all wrong in it.
+       *
+       * Nothing is built and there is no budget approved, which is why the caption
+       * on /the-house commits to no date.
+       */
+      frontYard: 'rendering-front-yard.jpg',
+      frontYardToday: 'a cracked concrete path, patchy lawn and overgrown shrubs.',
+    },
     rehab: {
       status: 'in_progress' as const,
       completionTarget: tbd('rehab_completion_target'),

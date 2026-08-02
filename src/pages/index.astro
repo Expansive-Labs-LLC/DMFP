@@ -8,6 +8,16 @@ import { property, home, services, serviceDisplay } from '../data/site.config';
 import { isTbd } from '../lib/fact';
 import Fact from '../components/Fact.astro';
 import StreetView from '../components/StreetView.astro';
+import Rendering from '../components/Rendering.astro';
+import { assetUsable } from '../lib/asset';
+
+/**
+ * The rendering's lead-in paragraph is worthless without the image, and in launch
+ * mode the image is the part that drops out. Gate both together, or the front page
+ * ships "here is where the front of the house is going" above nothing.
+ */
+const LAUNCH = import.meta.env.PUBLIC_LAUNCH === '1';
+const showFrontYard = !LAUNCH || assetUsable(property.renderings.frontYard);
 
 const nearest = property.commute.facilities[0];
 const liveServices = services.filter((s) => s.status === 'live');
@@ -38,6 +48,22 @@ const avail = home.availability;
         capturedLabel={property.photos.streetViewCaptured}
         note={property.photos.streetViewNote}
       />
+
+      {showFrontYard && (
+      <>
+      <p class="measure">
+        That photograph is from {property.photos.streetViewCaptured}, before any of the current work.
+        Here is where the front of the house is going — <strong>a design concept, not built, and with
+        no date set.</strong>
+      </p>
+      <Rendering
+        value={property.renderings.frontYard}
+        alt="the front of the house with a wide flagstone path, planted beds behind a low stone wall, and a small lawn"
+        caption="Flagstone path to the front steps, planting held in defined beds, and the lawn reduced to one small shape."
+        today={property.renderings.frontYardToday}
+      />
+      </>
+      )}
 
     </div>
   </section>

@@ -1,0 +1,158 @@
+---
+/**
+ * A design rendering of work that has NOT been done yet.
+ *
+ * Deliberately NOT <ImageSlot />. That component's contract is "the property as it
+ * stands today", and its own comment forbids stock photography of a finished unit
+ * because it would be a lie about a construction site. A rendering of unbuilt work
+ * is the same class of claim, and routing it through the photo component would
+ * quietly launder it into one. Hence a separate component with a separate promise:
+ * this is a proposal, and the page says so in three places at once.
+ *
+ * The three, and why it takes three:
+ *   1. A badge burned over the image itself, top-left. A caption below the image is
+ *      defeated by the two most likely ways this picture travels — a right-click
+ *      save and a social-card preview. The overlay goes with the pixels.
+ *   2. Alt text that opens with "Design concept", so a screen reader hears the
+ *      status before the description, not after it.
+ *   3. A caption that says what is actually there today, because "not built yet"
+ *      invites the question and leaving it unanswered is the same as overselling.
+ *
+ * Same honesty guards as <ImageSlot />: a filename set but absent from disk is a
+ * mistake rather than a placeholder, an image too small for its slot is a mistake
+ * too, and in launch mode an unusable slot renders nothing rather than a token.
+ *
+ * If a rendering is ever built for real, it stops being a rendering. Move the file
+ * to a photo slot and delete the config entry — do not relabel it here.
+ */
+import { Image } from 'astro:assets';
+import { isTbd } from '../lib/fact';
+import { MIN_SLOT_WIDTH } from '../lib/asset';
+
+const LAUNCH = import.meta.env.PUBLIC_LAUNCH === '1';
+
+interface Props {
+  /** Filename under src/assets/, or a Tbd. */
+  value: unknown;
+  /** Described WITHOUT the status prefix; the component adds it. */
+  alt: string;
+  /** What the drawing proposes. */
+  caption: string;
+  /** What is on the ground today. Required — see the header comment. */
+  today: string;
+  /** Overlay wording. Short enough to survive a narrow viewport on one line. */
+  badge?: string;
+  width?: number;
+  height?: number;
+  why?: string;
+}
+const {
+  value,
+  alt,
+  caption,
+  today,
+  badge = 'Concept — not built',
+  width = 1200,
+  height = 800,
+  why = 'A design has been commissioned; nothing is built.',
+} = Astro.props;
+
+const assets = import.meta.glob<{ default: ImageMetadata }>('../assets/*.{jpg,jpeg,png,webp,avif}', {
+  eager: true,
+});
+const key = typeof value === 'string' ? `../assets/${value}` : null;
+const img = key ? assets[key]?.default : undefined;
+
+const missingFile = typeof value === 'string' && !img;
+/** Shared with the page gate in ../lib/asset, so the two cannot disagree. */
+const MIN_WIDTH = MIN_SLOT_WIDTH;
+const tooSmall = img && img.width < MIN_WIDTH;
+const usable = img && !tooSmall;
+---
+
+{(!LAUNCH || usable) && (
+<figure class="rendering">
+  {
+    usable ? (
+      <div class="frame">
+        <Image src={img} alt={`Design concept, not built: ${alt}`} widths={[480, 800, 1200]} loading="lazy" />
+        <span class="stamp" aria-hidden="true">{badge}</span>
+      </div>
+    ) : (
+      <div class="placeholder" style={`aspect-ratio:${width}/${height}`} role="img" aria-label={`Design concept, not built: ${alt}`}>
+        <span class="badge">TODO</span>
+        <span class="what">
+          {tooSmall
+            ? `Too small: ${img!.width}x${img!.height}px, needs ${MIN_WIDTH}px wide`
+            : missingFile
+            ? `Missing file: src/assets/${value}`
+            : isTbd(value)
+              ? `{{TBD:${(value as any).token}}}`
+              : 'Rendering not drawn yet'}
+        </span>
+        <span class="why small">{why}</span>
+      </div>
+    )
+  }
+  <figcaption class="small">
+    <strong>Design concept, not built.</strong>{' '}{caption}{' '}<span class="muted">Today: {today}</span>
+  </figcaption>
+</figure>
+)}
+
+<style>
+  .rendering {
+    margin: 0;
+  }
+  /* The stamp is positioned against this, so the box must hug the image exactly. */
+  .frame {
+    position: relative;
+    display: block;
+  }
+  .frame :global(img) {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid var(--limestone-edge);
+  }
+  .stamp {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--brick);
+    color: var(--paper);
+    padding: 0.35em 0.7em;
+  }
+  .placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s2);
+    text-align: center;
+    padding: var(--s6);
+    background: var(--paper-sunk);
+    border: 1px dashed var(--limestone-edge);
+    color: var(--text-muted);
+  }
+  .badge {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    background: var(--brick);
+    color: var(--paper);
+    padding: 0.1em 0.5em;
+    border-radius: 2px;
+  }
+  .what {
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+  }
+  figcaption {
+    margin-top: var(--s2);
+  }
+</style>
