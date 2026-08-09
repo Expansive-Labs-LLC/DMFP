@@ -9,3 +9,9 @@ TODO.md
 
 # Never commit — the key must not enter this public repo's history
 .env
+
+# Personal/financial documents. This repo is public — these must never be tracked.
+# Move them out of the working tree entirely when convenient.
+*.pdf
+Screenshot*.png
+DeJonghe_*

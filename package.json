@@ -19,7 +19,8 @@
     "check:compliance": "node scripts/check-compliance.mjs",
     "prepare": "node .husky/install.mjs",
     "measure:commute": "node scripts/drive-times.mjs",
-    "build:launch": "PUBLIC_LAUNCH=1 astro build"
+    "build:launch": "PUBLIC_LAUNCH=1 astro build",
+    "build:coming-soon": "PUBLIC_LAUNCH=1 PUBLIC_COMING_SOON=1 astro build"
   },
   "type": "module",
   "dependencies": {

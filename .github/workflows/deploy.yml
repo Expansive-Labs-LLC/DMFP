@@ -61,6 +61,25 @@ jobs:
             'dist/**/*.html'
           fail: true
 
+      # Owner decision 2026-08-08: until launch the ONLY public surface is the
+      # coming-soon page. Everything above still verifies the full site so launch
+      # never waits on rot; this rebuild prunes the artifact to the placeholder.
+      # LAUNCH: delete this step and the assert below — the verified full dist
+      # then uploads as-is. That is the whole swap.
+      - name: Reduce artifact to coming-soon surface
+        run: npm run build
+        env:
+          PUBLIC_LAUNCH: '1'
+          PUBLIC_COMING_SOON: '1'
+          PUBLIC_GOOGLE_MAPS_EMBED_KEY: ${{ vars.PUBLIC_GOOGLE_MAPS_EMBED_KEY }}
+
+      # The artifact must be the placeholder, not the site — assert it, don't trust it.
+      - name: Assert coming-soon surface
+        run: |
+          test "$(find dist -name '*.html' | wc -l)" = "1"
+          grep -q "Coming soon" dist/index.html
+          node scripts/check-compliance.mjs
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
